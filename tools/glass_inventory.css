@@ -33,7 +33,7 @@
             /* segmented controls (top mode tabs + bag tabs) */
             body#inventory-window .inventory-mode-tabs,
             body#inventory-window #inventory-bag-tabs {
-                box-sizing: border-box; padding: 3dp; gap: 2dp;
+                box-sizing: border-box; padding: 3dp 0dp; gap: 0dp;
                 background-color: transparent; border-width: 0dp;
                 decorator: tiled-box(gl-track-tl, gl-track-t, gl-track-tr, gl-track-l, gl-track-c, gl-track-r, gl-track-bl, gl-track-b, gl-track-br);
             }
@@ -41,7 +41,7 @@
             body#inventory-window #inventory-bag-tabs { position: relative; height: 26dp; margin: 2dp 0dp 8dp 0dp; border-radius: 13dp; }
             body#inventory-window .inventory-tab,
             body#inventory-window .inventory-tab:hover {
-                flex: 1; min-width: 0; padding: 0dp 4dp; text-align: center;
+                flex: none; width: 33.333%; min-width: 0; padding: 0dp 2dp; text-align: center; box-sizing: border-box;
                 decorator: none; background-color: transparent;
                 border-width: 0dp; font-effect: none;
                 color: rgba(255,255,255,170);
@@ -60,17 +60,17 @@
             /* the glass pill slides under the selected tab (tabs paint above it: position relative, later in the page).
                Lefts/widths in dp: track padding 3dp, gap 2dp, three equal tabs. */
             body#inventory-window .gl-slider {
-                position: absolute; top: 3dp; left: 3dp;
+                position: absolute; top: 3dp;
                 decorator: tiled-box(gl-pill-tl, gl-pill-t, gl-pill-tr, gl-pill-l, gl-pill-c, gl-pill-r, gl-pill-bl, gl-pill-b, gl-pill-br);
                 transition: left 0.28s cubic-out;
                 pointer-events: none;
             }
-            body#inventory-window .inventory-mode-tabs > .gl-slider { width: 45.3dp; height: 16dp; }
-            body#inventory-window .inventory-mode-tabs > .gl-slider.at1 { left: 50.3dp; }
-            body#inventory-window .inventory-mode-tabs > .gl-slider.at2 { left: 97.7dp; }
-            body#inventory-window #inventory-bag-tabs > .gl-slider { width: 81.7dp; height: 20dp; }
-            body#inventory-window #inventory-bag-tabs > .gl-slider.at1 { left: 86.7dp; }
-            body#inventory-window #inventory-bag-tabs > .gl-slider.at2 { left: 170.3dp; }
+            /* thirds of the track: each pill is 31.5% wide, centred in its third */
+            body#inventory-window .gl-slider { left: 0.9%; width: 31.5%; }
+            body#inventory-window .gl-slider.at1 { left: 34.2%; }
+            body#inventory-window .gl-slider.at2 { left: 67.5%; }
+            body#inventory-window .inventory-mode-tabs > .gl-slider { height: 16dp; }
+            body#inventory-window #inventory-bag-tabs > .gl-slider { height: 20dp; }
             body#inventory-window .inventory-bag-label { color: white; text-align: center; line-height: 20dp; height: 20dp; }
 
             /* slots */
@@ -91,6 +91,6 @@
 
             /* open: fade + settle (glass_open.lua starts it on every show) */
             body#inventory-window { transform-origin: 50% 0% 0; }
-            @keyframes gl-open-a { 0% { opacity: 0; transform: translateY(10dp) scale(0.96); } 100% { opacity: 1; transform: translateY(0dp) scale(1); } }
-            @keyframes gl-open-b { 0% { opacity: 0; transform: translateY(10dp) scale(0.96); } 100% { opacity: 1; transform: translateY(0dp) scale(1); } }
+            @keyframes gl-open-a { 0% { opacity: 0; transform: translateY(5dp) scale(0.985); } 100% { opacity: 1; transform: translateY(0dp) scale(1); } }
+            @keyframes gl-open-b { 0% { opacity: 0; transform: translateY(5dp) scale(0.985); } 100% { opacity: 1; transform: translateY(0dp) scale(1); } }
 

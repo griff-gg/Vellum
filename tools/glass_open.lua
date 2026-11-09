@@ -7,7 +7,7 @@ pcall(function()
         flip = not flip
         doc:SetClass('gl-shown-a', flip)
         doc:SetClass('gl-shown-b', not flip)
-        doc.style.animation = '0.26s cubic-out 1 ' .. (flip and 'gl-open-a' or 'gl-open-b')
+        doc.style.animation = '0.15s cubic-out 1 ' .. (flip and 'gl-open-a' or 'gl-open-b')
     end
     doc:AddEventListener('show', function() pcall(opened) end)
     opened()
