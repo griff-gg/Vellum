@@ -29,7 +29,8 @@ def _mask(size, box, radius):
     return np.asarray(m, dtype=np.float32) / 255.0
 
 
-def glass_panel(margin, radius, tint, rim_top, rim_mid, rim_bottom, sheen, shadow, shadow_dy, shadow_blur, edge=4):
+def glass_panel(margin, radius, tint, rim_top, rim_mid, rim_bottom, sheen, shadow, shadow_dy, shadow_blur, edge=4,
+                inner_top=0):
     """One 9-slice glass panel.
 
     margin  dp of shadow room around the glass (the element's padding must cover it)
@@ -76,6 +77,12 @@ def glass_panel(margin, radius, tint, rim_top, rim_mid, rim_bottom, sheen, shado
     for i in range(3):
         out[..., i] = tint[i] / 255.0 * ta
     out[..., 3] = ta + out[..., 3] * (1 - ta)
+    # recessed look: a dark inner edge along the top that fades out over 3dp (inner_top = its strength)
+    if inner_top:
+        a = glass * np.clip(1 - (y - m) / (3 * k), 0, 1) ** 2 * inner_top / 255.0
+        for i in range(3):
+            out[..., i] = out[..., i] * (1 - a)
+        out[..., 3] = a + out[..., 3] * (1 - a)
     # white layers: sheen, then rim (premultiplied "over")
     for a in (sheen_a, rim * rim_a):
         for i in range(3):
@@ -134,7 +141,8 @@ def close_icon(hover, radius=13):
     return out
 
 
-def gauge_fill(w, h, radius, top, bottom, alpha, rim, rim_a, hl_a, inset=0.5, res=RES, ss=SS):
+def gauge_fill(w, h, radius, top, bottom, alpha, rim, rim_a, hl_a, inset=0.5, rim_top_a=None, sheen=0,
+               res=RES, ss=SS):
     """A gauge fill: rounded bar (w x h dp) with a vertical colour gradient, thin rim and a bright top line."""
     k = res * ss
     W, H = w * k, h * k
@@ -153,7 +161,10 @@ def gauge_fill(w, h, radius, top, bottom, alpha, rim, rim_a, hl_a, inset=0.5, re
     a = inner * alpha / 255.0
     out[..., :3] = col * a[..., None]
     out[..., 3] = a
-    for layer, c in ((rim_m * rim_a / 255.0, rim), (hl, (255, 255, 255))):
+    ty = (y - ins) / max(H - 2 * ins, 1)                       # 0 at the top of the bar, 1 at the bottom
+    rim_alpha = rim_a if rim_top_a is None else rim_top_a + (rim_a - rim_top_a) * np.clip(ty, 0, 1) ** 0.6
+    sheen_l = inner * np.clip(1 - ty / 0.55, 0, 1) ** 1.5 * sheen / 255.0   # soft white over the upper half
+    for layer, c in ((sheen_l, (255, 255, 255)), (rim_m * rim_alpha / 255.0, rim), (hl, (255, 255, 255))):
         for i in range(3):
             out[..., i] = (c[i] / 255.0) * layer + out[..., i] * (1 - layer)
         out[..., 3] = layer + out[..., 3] * (1 - layer)
