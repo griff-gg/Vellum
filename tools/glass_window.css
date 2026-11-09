@@ -187,5 +187,4 @@ W .window-resize-handle:hover { decorator: image(gl-grip-h); }
 
 /* special frames */
 W.window-small { padding: 24dp 20dp 20dp 20dp; }
-body#game-system-menu { padding: 20dp; }
 body#respawn.waiting { decorator: none; }
