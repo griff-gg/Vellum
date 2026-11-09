@@ -1,0 +1,31 @@
+<rml>
+    <head>
+        <title>Selected target</title>
+        <link type="text/rcss" href="../styles/html.css" />
+        <link type="text/rcss" href="../styles/spritesheet_gauge.css" />
+        <link type="text/rcss" href="../styles/gauge.css" />
+        <link type="text/rcss" href="../styles/spritesheet_stateicon.css" />
+        <link type="text/rcss" href="../styles/components.css" />
+        <style>
+            body { position: absolute; top: 50dp; left: 50%; width: 240dp; margin-left: -120dp; z-index: -20; pointer-events: none; }
+            #focused-target-root.duel { margin-top: 50dp; }
+            #target-name { font-size: 14dp; font-weight: 820; line-height: 20dp; max-height: 40dp; overflow: hidden; word-break: break-word; text-align: center; font-effect: outline(1dp black); }
+            #target-statuses { width: 100%; }
+            .target-status-icon { pointer-events: auto; }
+        </style>
+    <link type="text/rcss" href="../styles/glass_frame.css" />
+<link type="text/rcss" href="../styles/glass_overlays.css" />
+</head>
+    <body id="focused-target" onclick="ignore">
+        <!-- The model binds on a child: a body-level model attaches after parsing, too late for data-for templates. -->
+        <div id="focused-target-root" data-model="focused-target" data-if="visible" data-class-duel="duel">
+            <div id="target-name" data-style-color="color">{{name}}</div>
+            <gauge id="target-health" class="ui-vitals horizontal-sm-md red" animation-enabled="false" data-if="show_health" data-attr-gmax="max_hp" data-attr-gvalue="hp">
+                <span><label id="value" /> / <label id="max" /></span>
+            </gauge>
+            <div id="target-statuses" class="ui-status-icons">
+                <span class="target-status-icon" data-for="status, index : statuses" data-attr-status-index="index"><img data-attr-sprite="status.sprite"/></span>
+            </div>
+        </div>
+    </body>
+</rml>

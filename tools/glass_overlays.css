@@ -1,0 +1,93 @@
+/* Glass overlays and HUD-style windows (system message, announce, quest tracker, summon gauge, duel board, store signs,
+   speech bubbles, notification bells, skill effects, focused target, chat, quickbar). Linked into those pages after their own styles.
+   Rule of thumb here: the game draws colour, borders and radius fine; no shadows, blur or opacity animation. */
+
+/* ---- tooltips / banners ---- */
+body#game-system-message { decorator: none; background: rgba(26, 30, 40, 205); border: 1dp rgba(255, 255, 255, 70); border-radius: 14dp; }
+body#game-system-message #window-content { decorator: none; background-color: transparent; border-width: 0dp; }
+body#game-announce { background: rgba(26, 30, 40, 222); border-top: 1dp rgba(255, 255, 255, 60); border-bottom: 1dp rgba(255, 255, 255, 60); }
+body#game-announce #content { font-effect: shadow(0dp 1dp rgba(0, 0, 0, 170)); }
+body#common-modal-overlay { background: rgba(12, 16, 24, 150); }
+
+/* ---- duel scoreboard ---- */
+.duel-board { background-color: rgba(26, 30, 40, 205); border: 1dp rgba(255, 255, 255, 75); border-radius: 14dp; font-effect: shadow(0dp 1dp rgba(0, 0, 0, 150)); }
+.duel-name { color: rgba(255, 255, 255, 225); }
+.duel-score { color: rgb(255, 255, 255); }
+.duel-vs { color: rgb(255, 255, 255); font-effect: shadow(0dp 1dp rgba(0, 0, 0, 160)); }
+.duel-round { color: rgba(255, 255, 255, 190); font-effect: shadow(0dp 1dp rgba(0, 0, 0, 160)); }
+
+/* ---- quest tracker ---- */
+#quest-area { border-radius: 12dp; }
+#quest-area.hidden { background: rgba(26, 30, 40, 80); }
+#quest-area.hidden:hover, #quest-area.visible:hover { background: rgba(26, 30, 40, 150); }
+.quest-item { border-radius: 10dp; }
+.quest-name { color: rgb(255, 255, 255); }
+.setting-items { background-color: rgba(26, 30, 40, 235); border: 1dp rgba(255, 255, 255, 85); border-radius: 12dp; }
+#game-quest-tracker button.minus.toggle { decorator: image(gl-m-minus); }
+#game-quest-tracker button.minus.toggle:hover, #game-quest-tracker button.minus.toggle:active { decorator: image(gl-m-minus-h); }
+#game-quest-tracker button.plus.toggle { decorator: image(gl-m-plus); }
+#game-quest-tracker button.plus.toggle:hover, #game-quest-tracker button.plus.toggle:active { decorator: image(gl-m-plus-h); }
+
+/* ---- summon gauge ---- */
+#gauge-area { border-radius: 12dp; }
+#gauge-area:hover { background: rgba(26, 30, 40, 190); }
+#summons { font-effect: shadow(0dp 1dp rgba(0, 0, 0, 170)); }
+.despawntip .despawntiptext { background-color: rgba(26, 30, 40, 235); border-radius: 8dp; color: rgb(255, 255, 255); }
+
+/* ---- store signs ---- */
+.shop-frame { decorator: none; background-color: rgba(26, 30, 40, 215); border: 1dp rgba(255, 255, 255, 90); border-radius: 10dp; }
+.shop-title { color: rgb(255, 255, 255); }
+.shop-selection { border-color: rgba(255, 255, 255, 220); border-radius: 10dp; }
+
+/* ---- speech bubbles (frosted dark glass, white text; the channel only tints the rim) ---- */
+.bubble-frame { border: 1dp rgba(255, 255, 255, 110); border-radius: 12dp; background-color: rgba(26, 30, 40, 232); }
+.world-bubble-text { color: rgb(255, 255, 255); }
+.bubble[channel=party] .bubble-frame { border-color: rgba(140, 200, 225, 210); background-color: rgba(26, 30, 40, 232); }
+.bubble[channel=group] .bubble-frame { border-color: rgba(150, 160, 205, 210); background-color: rgba(26, 30, 40, 232); }
+.bubble[channel=clan] .bubble-frame { border-color: rgba(255, 200, 90, 210); background-color: rgba(26, 30, 40, 232); }
+.bubble[channel=shout] .bubble-frame { border-color: rgba(255, 90, 90, 230); background-color: rgba(26, 30, 40, 232); }
+
+/* ---- notification bells ---- */
+.notification-bell { decorator: image(gl-bell); }
+.notification-bell.blink, .notification-bell:hover, .notification-bell:active { decorator: image(gl-bell-h); }
+
+/* ---- skill effects + focused target: soft shadow instead of the stock outline ---- */
+#skill-hud { font-effect: shadow(0dp 1dp rgba(0, 0, 0, 180)); }
+.skill-tooltip-name { color: rgb(255, 255, 255); }
+#target-name { font-effect: shadow(0dp 1dp rgba(0, 0, 0, 180)); }
+
+/* ---- chat box: frosted backing behind messages and input, layout untouched ---- */
+#virtual-messages, #virtual-system {
+    decorator: none; background-color: rgba(26, 30, 40, 120); border-radius: 12dp; font-effect: shadow(0dp 1dp rgba(0, 0, 0, 180));
+}
+#input-container { decorator: none; background-color: rgba(26, 30, 40, 120); border-radius: 12dp; }
+#input-tab-container { font-effect: shadow(0dp 1dp rgba(0, 0, 0, 180)); }
+#game-chat-box #input-tab-container .ui-tab, #game-chat-box #input-tab-container .ui-tab:hover {
+    decorator: none; background-color: transparent; border-width: 0dp; border-radius: 8dp; color: rgba(255, 255, 255, 170); font-effect: none;
+}
+#game-chat-box #input-tab-container .ui-tab:hover { color: rgb(255, 255, 255); }
+#game-chat-box #input-tab-container .ui-tab.selected, #game-chat-box #input-tab-container .ui-tab:selected, #game-chat-box #input-tab-container .ui-tab.active {
+    color: rgb(255, 255, 255);
+    decorator: tiled-box(gl-pill-tl, gl-pill-t, gl-pill-tr, gl-pill-l, gl-pill-c, gl-pill-r, gl-pill-bl, gl-pill-b, gl-pill-br);
+}
+
+/* ---- quickbar ---- */
+body#quickbar { font-effect: shadow(0dp 1dp rgba(0, 0, 0, 170)); }
+handle.quickbar-container:hover[move_target] {
+    decorator: tiled-box(gl-hud-tl, gl-hud-t, gl-hud-tr, gl-hud-l, gl-hud-c, gl-hud-r, gl-hud-bl, gl-hud-b, gl-hud-br) border-box;
+}
+.slot-bg {
+    left: 2dp; top: 2dp; width: 37dp; height: 37dp; opacity: 1;
+    decorator: tiled-box(gl-slot-tl, gl-slot-t, gl-slot-tr, gl-slot-l, gl-slot-c, gl-slot-r, gl-slot-bl, gl-slot-b, gl-slot-br);
+}
+.sep-v, .sep-end, body.vertical .sep-v, body.vertical .sep-end { decorator: none; }
+.keybind-label { font-effect: shadow(0dp 1dp rgba(0, 0, 0, 190)); }
+
+#game-chat-box input[type="text"] { background-color: rgba(0, 0, 0, 70); color: rgb(255, 255, 255); border: 1dp rgba(255, 255, 255, 80); border-radius: 10dp; }
+#game-chat-box input[type="text"]:focus { border-color: rgb(255, 255, 255); }
+#game-chat-box select { decorator: none; background-color: rgba(0, 0, 0, 70); color: rgb(255, 255, 255); border: 1dp rgba(255, 255, 255, 80); border-radius: 10dp; }
+#game-chat-box select selectarrow { decorator: image(gl-chev); }
+#game-chat-box select:not([disabled]) selectarrow:hover { decorator: image(gl-chev-h); }
+#game-chat-box select selectbox { background: rgba(26, 30, 40, 245); border: 1dp rgba(255, 255, 255, 90); border-radius: 10dp; }
+#game-chat-box select option { border-top-width: 0dp; color: rgb(255, 255, 255); }
+#game-chat-box select option:not([disabled]):hover, #game-chat-box select option:not([disabled])[selected] { decorator: none; background: rgba(255, 255, 255, 45); }

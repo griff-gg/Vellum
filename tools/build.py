@@ -48,7 +48,9 @@ def _groove(radius):   # recessed frosted groove: dark inner edge on top, bright
     return dict(margin=0, radius=radius, tint=(255, 255, 255, 30), rim_top=120, rim_mid=110, rim_bottom=190, sheen=0,
                 shadow=0, shadow_dy=0, shadow_blur=1, inner_top=110)
 HUDWIN = dict(WINDOW, margin=6, shadow_dy=2, shadow_blur=2.5)   # the window glass with a tighter shadow that fits 6dp
-PIECES += (('gl-gbg-lg', _groove(6)), ('gl-gbg-md', _groove(4)), ('gl-gbg-sm', _groove(2)), ('gl-gbg-xs', _groove(1)),
+SLOT = dict(margin=0, radius=8, tint=(255, 255, 255, 26), rim_top=150, rim_mid=110, rim_bottom=170, sheen=0,
+            shadow=0, shadow_dy=0, shadow_blur=1, inner_top=100)
+PIECES += (('gl-slot', SLOT), ('gl-gbg-lg', _groove(6)), ('gl-gbg-md', _groove(4)), ('gl-gbg-sm', _groove(2)), ('gl-gbg-xs', _groove(1)),
            ('gl-slt', dict(SB_TRACK, radius=4)), ('gl-hud', HUDWIN))
 
 # Monotone gauge fills: HP dark, MP light, everything else mid-grey.
@@ -60,6 +62,24 @@ FILLS = (('gl-f-dark-lg', 185, 18, 5, DARK, 2), ('gl-f-light-lg', 185, 18, 5, LI
          ('gl-f-mid-exp', 185, 7, 3, MID, 1),
          ('gl-f-dark-md', 99, 11, 4, DARK, 1), ('gl-f-mid-md', 99, 11, 4, MID, 1),
          ('gl-f-dark-sm', 99, 7, 2, DARK, 0.5), ('gl-f-light-sm', 99, 7, 2, LIGHT, 0.5))
+
+
+# menu strip button id -> glyph (tools/glass_menu: generated css below)
+MENU = {'gamearena-scoreboard': 'bars', 'item-mall': 'bag', 'premium-storage': 'star', 'character': 'person',
+        'game-arena': 'swords', 'group-manager-menu': 'users', 'inventory': 'box', 'skill-list': 'bolt', 'quest-list': 'list',
+        'friend-list': 'heart', 'party-finder': 'search', 'mail': 'envelope', 'clan': 'shield', 'system': 'gear', 'menu-toggle': 'menu'}
+MENU_KINDS = sorted(set(MENU.values()))
+
+
+def menu_css():
+    out = ['/* Glass menu strip (written by tools/build.py) */',
+           '#game-menu-hud button { width: 30dp; height: 30dp; opacity: 1; transition: transform 0.14s cubic-out; }',
+           '#game-menu-hud button:hover { transform: scale(1.08); }', '#game-menu-hud button:active { transform: scale(0.92); }',
+           '#game-menu-hud #menu-toggle { margin-left: 16dp; }']
+    for bid, kind in MENU.items():
+        out.append('#game-menu-hud #%s { decorator: image(gl-mb-%s); }' % (bid, kind))
+        out.append('#game-menu-hud #%s:hover, #game-menu-hud #%s:active { decorator: image(gl-mb-%s-h); }' % (bid, bid, kind))
+    return chr(10).join(out) + chr(10)
 
 
 def sprites():
@@ -76,6 +96,11 @@ def sprites():
         for st in ('n', 'h'):
             out.append(('gl-m-%s%s' % (kind, '' if st == 'n' else '-h'), art.round_icon(kind, st, radius=11)))
     out += [('gl-m-sun', art.plain_glyph('sun')), ('gl-m-moon', art.plain_glyph('moon'))]
+    for kind in MENU_KINDS:                                     # the right-hand menu strip, 30dp
+        for st in ('n', 'h'):
+            out.append(('gl-mb-%s%s' % (kind, '' if st == 'n' else '-h'), art.round_icon(kind, st, radius=15)))
+    for st in ('n', 'h'):                                       # notification bell, 36dp
+        out.append(('gl-bell' + ('' if st == 'n' else '-h'), art.round_icon('bell', st, radius=18)))
     for kind in ('cb', 'rd'):
         for st in ('off', 'off-h', 'on', 'on-h', 'p', 'd', 'd-on'):
             out.append(('gl-%s-%s' % (kind, st), art.toggle(kind, st)))
@@ -165,6 +190,10 @@ def window_css():
     text = '/* Shared glass window look (written by tools/build.py) */\n' + scoped(css, GLASS_WINDOWS) + '\n' + OPEN_KEYFRAMES
     open(os.path.join(OUT, 'styles', 'glass_window.css'), 'w', encoding='utf-8', newline='').write(text)
     open(os.path.join(OUT, 'styles', 'glass_tabs.css'), 'w', encoding='utf-8', newline='').write(tabs_css())
+    open(os.path.join(OUT, 'styles', 'glass_menu.css'), 'w', encoding='utf-8', newline='').write(menu_css())
+    comp = os.path.join(OUT, 'styles', 'components.css')
+    shared = open(os.path.join(ROOT, 'tools', 'glass_shared.css'), encoding='utf-8').read()
+    open(comp, 'w', encoding='utf-8', newline='').write(open(comp, encoding='utf-8').read() + shared)
     # the art + rules load with the window templates; they only match the ids above (and the gauges/HUD pages)
     for tname in sorted(os.listdir(os.path.join(OUT, 'templates'))):
         if not tname.endswith('.html'):
@@ -179,7 +208,7 @@ def window_css():
                       '        <link type="text/rcss" href="../styles/glass_tabs.css" />' + chr(10) +
                       '        <link type="text/rcss" href="../styles/glass_window.css" />')
         open(tpl, 'w', encoding='utf-8', newline='').write(t)
-    for name in ('glass_gauge.css', 'glass_hud.css', 'glass_options.css', 'glass_minimap.css'):
+    for name in ('glass_gauge.css', 'glass_hud.css', 'glass_options.css', 'glass_minimap.css', 'glass_overlays.css'):
         shutil.copy2(os.path.join(ROOT, 'tools', name), os.path.join(OUT, 'styles', name))
 
 
@@ -220,7 +249,7 @@ def glass_css():
 
 def build():
     import runpy
-    for script in ('patch_inventory.py', 'patch_windows.py', 'patch_zone.py', 'patch_generic.py', 'patch_tabs.py'):   # regenerate src/game pages from upstream
+    for script in ('patch_inventory.py', 'patch_windows.py', 'patch_zone.py', 'patch_generic.py', 'patch_tabs.py', 'patch_overlays.py'):   # regenerate src/game pages from upstream
         runpy.run_path(os.path.join(ROOT, 'tools', script))
     shutil.rmtree(OUT, ignore_errors=True)
     shutil.copytree(UP, OUT)

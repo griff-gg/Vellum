@@ -229,7 +229,70 @@ def _glyph(kind, n):
         r = 0.26 * n
         d.ellipse((c - r, c - r, c + r, c + r), fill=255)
         d.ellipse((c - r * 0.1, c - r * 1.35, c + r * 1.55, c + r * 0.3), fill=0)
-    elif kind == 'entrust':
+    elif kind == 'person':
+        r = n * 0.1
+        d.ellipse((c - r, c - 0.16 * n - r, c + r, c - 0.16 * n + r), outline=255, width=wd)
+        d.arc((c - 0.22 * n, c - 0.02 * n, c + 0.22 * n, c + 0.46 * n), 180, 360, fill=255, width=wd)
+    elif kind == 'users':
+        t = max(wd - 1, 2)
+        for dx in (-0.13, 0.13):
+            r = n * 0.075
+            d.ellipse((c + dx * n - r, c - 0.16 * n - r, c + dx * n + r, c - 0.16 * n + r), outline=255, width=t)
+            d.arc((c + dx * n - 0.14 * n, c - 0.04 * n, c + dx * n + 0.14 * n, c + 0.30 * n), 180, 360, fill=255, width=t)
+    elif kind == 'swords':
+        for sg in (1, -1):
+            d.line((c - 0.24 * n * sg, c - 0.24 * n, c + 0.24 * n * sg, c + 0.24 * n), fill=255, width=wd)
+            px, py = c + 0.12 * n * sg, c + 0.12 * n
+            wx, wy = -0.7071 * 0.09 * n, sg * 0.7071 * 0.09 * n
+            d.line((px - wx, py - wy, px + wx, py + wy), fill=255, width=wd)
+    elif kind == 'box':
+        d.rounded_rectangle((c - 0.22 * n, c - 0.2 * n, c + 0.22 * n, c + 0.24 * n), radius=int(n * 0.05), outline=255, width=wd)
+        d.line((c - 0.22 * n, c - 0.05 * n, c + 0.22 * n, c - 0.05 * n), fill=255, width=wd)
+        d.line((c - 0.07 * n, c + 0.06 * n, c + 0.07 * n, c + 0.06 * n), fill=255, width=wd)
+    elif kind == 'bolt':
+        pts = [(0.05, -0.28), (-0.15, 0.04), (-0.02, 0.04), (-0.07, 0.28), (0.15, -0.06), (0.02, -0.06)]
+        d.polygon([(c + x * n, c + y * n) for x, y in pts], fill=255)
+    elif kind == 'list':
+        for dy in (-0.15, 0, 0.15):
+            d.line((c - 0.08 * n, c + dy * n, c + 0.24 * n, c + dy * n), fill=255, width=wd)
+            r = n * 0.035
+            d.ellipse((c - 0.24 * n - r, c + dy * n - r, c - 0.24 * n + r, c + dy * n + r), fill=255)
+    elif kind == 'heart':
+        pts = []
+        for i in range(60):
+            t = i / 60 * 2 * np.pi
+            x = 16 * np.sin(t) ** 3
+            y = -(13 * np.cos(t) - 5 * np.cos(2 * t) - 2 * np.cos(3 * t) - np.cos(4 * t))
+            pts.append((c + x * n * 0.0155, c + 0.02 * n + y * n * 0.0155))
+        d.polygon(pts, fill=255)
+    elif kind == 'search':
+        r = 0.15 * n
+        d.ellipse((c - 0.05 * n - r, c - 0.05 * n - r, c - 0.05 * n + r, c - 0.05 * n + r), outline=255, width=wd)
+        d.line((c + 0.07 * n, c + 0.07 * n, c + 0.25 * n, c + 0.25 * n), fill=255, width=wd)
+    elif kind == 'envelope':
+        d.rounded_rectangle((c - 0.26 * n, c - 0.18 * n, c + 0.26 * n, c + 0.18 * n), radius=int(n * 0.04), outline=255, width=wd)
+        d.line([(c - 0.26 * n, c - 0.16 * n), (c, c + 0.04 * n), (c + 0.26 * n, c - 0.16 * n)], fill=255, width=max(wd - 1, 2), joint='curve')
+    elif kind == 'shield':
+        d.polygon([(c - 0.21 * n, c - 0.24 * n), (c + 0.21 * n, c - 0.24 * n), (c + 0.21 * n, c + 0.04 * n),
+                   (c, c + 0.28 * n), (c - 0.21 * n, c + 0.04 * n)], outline=255, width=wd)
+    elif kind == 'gear':
+        r = 0.12 * n
+        d.ellipse((c - r, c - r, c + r, c + r), outline=255, width=wd)
+        for i in range(8):
+            ang = i * np.pi / 4
+            d.line((c + 0.17 * n * np.cos(ang), c + 0.17 * n * np.sin(ang), c + 0.27 * n * np.cos(ang), c + 0.27 * n * np.sin(ang)),
+                   fill=255, width=wd + 2)
+    elif kind == 'menu':
+        for dy in (-0.14, 0, 0.14):
+            d.line((c - 0.2 * n, c + dy * n, c + 0.2 * n, c + dy * n), fill=255, width=wd)
+    elif kind == 'bell':
+        d.arc((c - 0.17 * n, c - 0.24 * n, c + 0.17 * n, c + 0.1 * n), 180, 360, fill=255, width=wd)
+        d.line((c - 0.17 * n, c - 0.07 * n, c - 0.22 * n, c + 0.15 * n), fill=255, width=wd)
+        d.line((c + 0.17 * n, c - 0.07 * n, c + 0.22 * n, c + 0.15 * n), fill=255, width=wd)
+        d.line((c - 0.25 * n, c + 0.15 * n, c + 0.25 * n, c + 0.15 * n), fill=255, width=wd)
+        r = n * 0.045
+        d.ellipse((c - r, c + 0.22 * n - r, c + r, c + 0.22 * n + r), fill=255)
+    elif kind in ('entrust', 'star'):
         pts = []
         for i in range(10):
             ang = -np.pi / 2 + i * np.pi / 5
