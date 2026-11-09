@@ -30,6 +30,10 @@
         .group-directory-label { padding: 6dp; margin-bottom: 0; }
         .group-help { padding: 6dp; }
     </style>
+<style>
+@keyframes gl-open-a { 0% { opacity: 0; transform: translateY(5dp) scale(0.985); } 100% { opacity: 1; transform: translateY(0dp) scale(1); } }
+@keyframes gl-open-b { 0% { opacity: 0; transform: translateY(5dp) scale(0.985); } 100% { opacity: 1; transform: translateY(0dp) scale(1); } }
+</style>
 <script>
 -- Glass: each time the window opens it fades and settles in, then a streak of light crosses the glass.
 -- Two identical keyframe sets (-a / -b): switching to the other one restarts the animation.

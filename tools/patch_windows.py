@@ -30,9 +30,13 @@ def swap(s, old, new, name):
     return s.replace(old, new)
 
 
+# The inventory (which animates fine) carries its keyframes inside the page, so these pages do too.
+KEYFRAMES = (NL + '@keyframes gl-open-a { 0% { opacity: 0; transform: translateY(5dp) scale(0.985); } 100% { opacity: 1; transform: translateY(0dp) scale(1); } }' +
+             NL + '@keyframes gl-open-b { 0% { opacity: 0; transform: translateY(5dp) scale(0.985); } 100% { opacity: 1; transform: translateY(0dp) scale(1); } }' + NL)
+
 for name in PAGES:
     s = load(name)
-    s = swap(s, '</head>', '<script>' + NL + lua + '</script>' + NL + '</head>', name)
+    s = swap(s, '</head>', '<style>' + KEYFRAMES + '</style>' + NL + '<script>' + NL + lua + '</script>' + NL + '</head>', name)
     save(name, s)
 
 for name in OVERLAYS:

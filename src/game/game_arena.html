@@ -6,6 +6,10 @@
     <link type="text/rcss" href="../styles/spritesheet_currencyicon.css" />
     <link type="text/rcss" href="arena_browser.css" />
     <script src="/data/ui/themes/rose/game/game_arena.lua" />
+<style>
+@keyframes gl-open-a { 0% { opacity: 0; transform: translateY(5dp) scale(0.985); } 100% { opacity: 1; transform: translateY(0dp) scale(1); } }
+@keyframes gl-open-b { 0% { opacity: 0; transform: translateY(5dp) scale(0.985); } 100% { opacity: 1; transform: translateY(0dp) scale(1); } }
+</style>
 <script>
 -- Glass: each time the window opens it fades and settles in, then a streak of light crosses the glass.
 -- Two identical keyframe sets (-a / -b): switching to the other one restarts the animation.
