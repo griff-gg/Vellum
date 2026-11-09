@@ -99,16 +99,16 @@ i = s.index('<!-- Item Mall button -->')
 j = s.index('</button>', i) + len('</button>')
 s = s[:i] + s[j:]
 # long zone names scroll inside their box (Spotify style); the collapsed pill shows the coordinates too
-s = swap(s, '<span id="zone-name">{{zone_name}}</span>', '<span id="zone-name"><span id="zone-name-text" class="gl-mq">{{zone_name}}</span></span>', name)
-s = swap(s, '<span id="zone-name-min">{{zone_name}}</span>', '<span id="zone-name-min"><span id="zone-name-min-text" class="gl-mq">{{zone_name}}</span></span>', name)
+s = swap(s, '<span id="zone-name">{{zone_name}}</span>', '<masked id="zone-name" mask-radius="5%"><span id="zone-name-text" class="gl-mq">{{zone_name}}</span></masked>', name)
+s = swap(s, '<span id="zone-name-min">{{zone_name}}</span>', '<masked id="zone-name-min" mask-radius="5%"><span id="zone-name-min-text" class="gl-mq">{{zone_name}}</span></masked>', name)
 s = swap(s, '<span id="time-min">{{server_time}}</span>', '<span id="time-min">{{server_time}}</span>' + NL + '<span id="coords-min">{{player_coordinates}}</span>', name)
 s = swap(s, '<div id="minimap-root" data-model="minimap">', '<div id="minimap-root" data-model="minimap">' + NL + '<div id="gl-tick"></div>', name)
 mm_lua = open(os.path.join(ROOT, 'tools', 'glass_minimap.lua'), encoding='utf-8').read()
 assert '<' not in mm_lua and '&' not in mm_lua
-kf = ['@keyframes gl-pill-a { from { opacity: 0.2; transform: scale(1, 4.2); } to { opacity: 1; transform: scale(1, 1); } }',
-      '@keyframes gl-pill-b { from { opacity: 0.2; transform: scale(1, 4.2); } to { opacity: 1; transform: scale(1, 1); } }',
-      '@keyframes gl-panel-a { from { opacity: 0.2; transform: scale(1, 0.24); } to { opacity: 1; transform: scale(1, 1); } }',
-      '@keyframes gl-panel-b { from { opacity: 0.2; transform: scale(1, 0.24); } to { opacity: 1; transform: scale(1, 1); } }',
+kf = ['@keyframes gl-pill-a { from { opacity: 0; transform: scale(1.1, 1.1); } to { opacity: 1; transform: scale(1, 1); } }',
+      '@keyframes gl-pill-b { from { opacity: 0; transform: scale(1.1, 1.1); } to { opacity: 1; transform: scale(1, 1); } }',
+      '@keyframes gl-panel-a { from { opacity: 0; transform: scale(0.9, 0.9); } to { opacity: 1; transform: scale(1, 1); } }',
+      '@keyframes gl-panel-b { from { opacity: 0; transform: scale(0.9, 0.9); } to { opacity: 1; transform: scale(1, 1); } }',
       '@keyframes gl-tk-a { from { opacity: 0; } to { opacity: 0.02; } }',
       '@keyframes gl-tk-b { from { opacity: 0; } to { opacity: 0.02; } }',
       '#gl-tick { position: absolute; left: 0dp; top: 0dp; width: 1dp; height: 1dp; opacity: 0; pointer-events: none; }',
