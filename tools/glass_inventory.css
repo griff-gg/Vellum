@@ -94,10 +94,3 @@
             @keyframes gl-open-a { 0% { opacity: 0; transform: translateY(10dp) scale(0.96); } 100% { opacity: 1; transform: translateY(0dp) scale(1); } }
             @keyframes gl-open-b { 0% { opacity: 0; transform: translateY(10dp) scale(0.96); } 100% { opacity: 1; transform: translateY(0dp) scale(1); } }
 
-            /* light sweep: a streak crosses the glass once after it opens; the clip box is the glass (inside the shadow room) */
-            body#inventory-window > .gl-sweep-clip { position: absolute; top: 12dp; left: 12dp; right: 12dp; bottom: 12dp; overflow: hidden; pointer-events: none; }
-            body#inventory-window .gl-sweep { position: absolute; top: -20dp; left: -170dp; width: 160dp; height: 480dp; decorator: image(gl-sweep); pointer-events: none; }
-            body#inventory-window.gl-shown-a .gl-sweep { animation: 0.85s 0.25s cubic-in-out 1 gl-sweep-a; }
-            body#inventory-window.gl-shown-b .gl-sweep { animation: 0.85s 0.25s cubic-in-out 1 gl-sweep-b; }
-            @keyframes gl-sweep-a { from { left: -170dp; } to { left: 300dp; } }
-            @keyframes gl-sweep-b { from { left: -170dp; } to { left: 300dp; } }

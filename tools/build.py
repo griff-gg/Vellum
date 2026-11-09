@@ -52,12 +52,8 @@ def glass_css():
              '@spritesheet glass-frame {', '    src: ../imgs/%s;' % fn, '    resolution: 2x;']
     lines += ['    %s: %dpx %dpx %dpx %dpx;' % ((k,) + v) for k, v in rects.items()]
     lines += ['}', '']
-    sw = art.sweep()
-    sw_fn = sheet('glass_sweep', sw)
-    lines += ['@spritesheet glass-sweep {', '    src: ../imgs/%s;' % sw_fn, '    resolution: 1x;',
-              '    gl-sweep: 0px 0px %dpx %dpx;' % sw.size, '}', '']
-    open(os.path.join(OUT, 'styles', 'glass_frame.css'), 'w', encoding='utf-8', newline='').write('\n'.join(lines))
-    sw = sw_fn
+    open(os.path.join(OUT, 'styles', 'glass_frame.css'), 'w', encoding='utf-8', newline='').write(chr(10).join(lines))
+    sw = ''
     print('art', fn, sw)
 
 
