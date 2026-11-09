@@ -118,7 +118,9 @@ GLASS_WINDOWS = ('game-arena', 'group-manager', '#group-settings-panel', 'game-o
                  'game-reinforcement', 'respawn', 'game-style-change', 'tutorial', 'game-world-map',
                  'ui_gamearena_scoreboard', 'personal-vending', 'item-mall', 'common-message-box', 'game-system-menu',
                  'game-clan', 'game-friend-list', 'game-mail', 'game-personal-store', 'game-personal-store-management',
-                 'storage', 'game-avatar-store', 'npc-shop', 'skills')
+                 'storage', 'game-avatar-store', 'npc-shop', 'skills',
+                 'external-character-create', 'external-tos', '#avatar-selection-window', '#login-container .window-box',
+                 '#external-login-queue .window-box', 'game-crafting')
 # Scripts the glass windows run on open: fade/settle in (tools/glass_open.lua).
 OPEN_KEYFRAMES = '''@keyframes gl-open-a { 0% { opacity: 0; transform: translateY(5dp) scale(0.985); } 100% { opacity: 1; transform: translateY(0dp) scale(1); } }
 @keyframes gl-open-b { 0% { opacity: 0; transform: translateY(5dp) scale(0.985); } 100% { opacity: 1; transform: translateY(0dp) scale(1); } }
@@ -188,6 +190,8 @@ def tabs_css():
 def window_css():
     css = open(os.path.join(ROOT, 'tools', 'glass_window.css'), encoding='utf-8').read()
     text = '/* Shared glass window look (written by tools/build.py) */\n' + scoped(css, GLASS_WINDOWS) + '\n' + OPEN_KEYFRAMES
+    # crafting keeps its title and close button one level down (inside a data-model div), so those rules use descendant selectors
+    text = text.replace('body#game-crafting > ', 'body#game-crafting ')
     open(os.path.join(OUT, 'styles', 'glass_window.css'), 'w', encoding='utf-8', newline='').write(text)
     open(os.path.join(OUT, 'styles', 'glass_tabs.css'), 'w', encoding='utf-8', newline='').write(tabs_css())
     open(os.path.join(OUT, 'styles', 'glass_menu.css'), 'w', encoding='utf-8', newline='').write(menu_css())

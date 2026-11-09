@@ -20,6 +20,8 @@ PAGES = [   # (page, extra stylesheet or None)
     ('game/skill_hud.html', None),
     ('game/notification_buttons.html', None),
     ('common/modal_overlay.html', None),
+    ('external/login.html', None),
+    ('external/login_queue.html', None),
 ]
 
 for name, extra in PAGES:

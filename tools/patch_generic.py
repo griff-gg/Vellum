@@ -37,6 +37,10 @@ PAGES = {
     'game/personal_vending.html': [],
     'game/item_mall.html': [],
     'common/message_box.html': [],
+    'external/character_create.html': [],
+    'external/tos.html': [],
+    'external/avatar_selection.html': [],
+    'game/crafting.html': [],
     # the system menu has no body id; the shared rules need one
     'game/system_menu.html': [('<body open-sound="3" close-sound="4" template="window-fixed-size">',
                                '<body id="game-system-menu" open-sound="3" close-sound="4" template="window-fixed-size">')],

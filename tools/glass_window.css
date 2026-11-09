@@ -108,11 +108,11 @@ W button.default[disabled] {
 }
 
 /* text boxes */
-W input[type="text"] {
+W input[type="text"], W input[type="email"], W input[type="password"] {
     background-color: rgba(0, 0, 0, 70); color: rgb(255, 255, 255);
     border: 1dp rgba(255, 255, 255, 80); border-radius: 10dp;
 }
-W input[type="text"]:focus { border-color: rgb(246, 200, 118); }
+W input[type="text"]:focus, W input[type="email"]:focus, W input[type="password"]:focus { border-color: rgb(246, 200, 118); }
 
 /* list rows */
 W .ui-list-row, W .ui-list > listbox-item { border-radius: 8dp; transition: background-color 0.14s cubic-out, color 0.14s cubic-out, border-color 0.14s cubic-out, transform 0.14s cubic-out, opacity 0.14s cubic-out; }

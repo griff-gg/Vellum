@@ -91,3 +91,14 @@ handle.quickbar-container:hover[move_target] {
 #game-chat-box select selectbox { background: rgba(26, 30, 40, 245); border: 1dp rgba(255, 255, 255, 90); border-radius: 10dp; }
 #game-chat-box select option { border-top-width: 0dp; color: rgb(255, 255, 255); }
 #game-chat-box select option:not([disabled]):hover, #game-chat-box select option:not([disabled])[selected] { decorator: none; background: rgba(255, 255, 255, 45); }
+
+/* ---- login + queue: the inner .window-box becomes the glass panel ---- */
+#login-container .window-box, #external-login-queue .window-box { padding: 26dp 28dp; font-effect: shadow(0dp 1dp rgba(0, 0, 0, 130)); }
+.email-suggestions-list { background-color: rgba(26, 30, 40, 245); border: 1dp rgba(255, 255, 255, 90); border-radius: 10dp; }
+.email-suggestion-item { border-radius: 8dp; }
+.email-suggestion-item:hover { background-color: rgba(255, 255, 255, 45); }
+.email-remove:hover { color: rgb(255, 255, 255); }
+button#suggestions { decorator: image(gl-chev); width: 24dp; height: 22dp; background-color: transparent; border-width: 0dp; }
+button#suggestions:hover { decorator: image(gl-chev-h); }
+#tos:hover { color: rgb(255, 255, 255); }
+#queue-position { color: rgb(255, 255, 255); }
