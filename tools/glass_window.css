@@ -59,9 +59,18 @@ W .ui-tab:hover {
 }
 W .ui-tab:hover { color: rgb(255, 255, 255); }
 W .ui-tab.selected, W .ui-tab.active, W .ui-tab:selected {
-    color: rgb(255, 255, 255); background-color: transparent; border-width: 0dp;
-    decorator: tiled-box(gl-pill-tl, gl-pill-t, gl-pill-tr, gl-pill-l, gl-pill-c, gl-pill-r, gl-pill-bl, gl-pill-b, gl-pill-br);
+    color: rgb(255, 255, 255); background-color: transparent; border-width: 0dp; decorator: none;
 }
+/* the glass pill is its own element that slides under the selected tab (a script moves it: at1 / at2) */
+W .ui-tab-strip { position: relative; }
+W .ui-tab { position: relative; }
+W .ui-tab-strip > .gl-slider {
+    position: absolute; top: 3dp; left: 0.9%; width: 31.5%; height: 24dp; pointer-events: none;
+    decorator: tiled-box(gl-pill-tl, gl-pill-t, gl-pill-tr, gl-pill-l, gl-pill-c, gl-pill-r, gl-pill-bl, gl-pill-b, gl-pill-br);
+    transition: left 0.28s cubic-out;
+}
+W .ui-tab-strip > .gl-slider.at1 { left: 34.2%; }
+W .ui-tab-strip > .gl-slider.at2 { left: 67.5%; }
 
 /* glass buttons (look only: each window keeps its own size). The glass art stays the same in every state;
    the fill and text colour fade and the button presses down a little, because artwork can't cross-fade. */

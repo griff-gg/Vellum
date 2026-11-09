@@ -34,9 +34,16 @@ def swap(s, old, new, name):
 KEYFRAMES = (NL + '@keyframes gl-open-a { 0% { opacity: 0; transform: translateY(5dp) scale(0.985); } 100% { opacity: 1; transform: translateY(0dp) scale(1); } }' +
              NL + '@keyframes gl-open-b { 0% { opacity: 0; transform: translateY(5dp) scale(0.985); } 100% { opacity: 1; transform: translateY(0dp) scale(1); } }' + NL)
 
+arena_tabs = open(os.path.join(ROOT, 'tools', 'glass_tabs_arena.lua'), encoding='utf-8').read()
+assert '<' not in arena_tabs and '&' not in arena_tabs
+
 for name in PAGES:
     s = load(name)
-    s = swap(s, '</head>', '<style>' + KEYFRAMES + '</style>' + NL + '<script>' + NL + lua + '</script>' + NL + '</head>', name)
+    extra = ''
+    if name == 'game_arena.html':   # sliding pill under the All / Dungeons / PvP tabs
+        s = swap(s, '<div class="ui-tab-strip">', '<div class="ui-tab-strip"><div class="gl-slider" id="gl-arena-slider"></div>', name)
+        extra = '<script>' + NL + arena_tabs + '</script>' + NL
+    s = swap(s, '</head>', '<style>' + KEYFRAMES + '</style>' + NL + '<script>' + NL + lua + '</script>' + NL + extra + '</head>', name)
     save(name, s)
 
 for name in OVERLAYS:
