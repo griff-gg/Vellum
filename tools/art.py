@@ -128,11 +128,11 @@ def close_icon(hover, radius=13):
     return out
 
 
-def gauge_fill(w, h, radius, top, bottom, alpha, rim, rim_a, hl_a, res=RES, ss=SS):
+def gauge_fill(w, h, radius, top, bottom, alpha, rim, rim_a, hl_a, inset=0.5, res=RES, ss=SS):
     """A gauge fill: rounded bar (w x h dp) with a vertical colour gradient, thin rim and a bright top line."""
     k = res * ss
     W, H = w * k, h * k
-    ins = ss                                   # 1 final px of breathing room
+    ins = int(inset * res * ss)                # breathing room (dp) between the groove and the bar
     rw = ss                                    # rim width, 1 final px
     mask = _mask((W, H), (ins, ins, W - 1 - ins, H - 1 - ins), max(radius * k - ins, 1))
     inner = _mask((W, H), (ins + rw, ins + rw, W - 1 - ins - rw, H - 1 - ins - rw), max(radius * k - ins - rw, 1))

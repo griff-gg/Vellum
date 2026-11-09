@@ -47,27 +47,27 @@ PIECES = (('gl-win', WINDOW), ('gl-track', TRACK), ('gl-pill', PILL),
 def _groove(radius):
     return dict(margin=0, radius=radius, tint=(255, 255, 255, 38), rim_top=150, rim_mid=95, rim_bottom=70, sheen=0,
                 shadow=0, shadow_dy=0, shadow_blur=1)
-HUDWIN = dict(margin=5, radius=14, tint=(22, 26, 36, 170), rim_top=175, rim_mid=80, rim_bottom=48, sheen=30,
-              shadow=100, shadow_dy=3, shadow_blur=5)
+HUDWIN = dict(WINDOW, margin=6)   # exactly the window glass, just less shadow room
 PIECES += (('gl-gbg-lg', _groove(8)), ('gl-gbg-md', _groove(4)), ('gl-gbg-sm', _groove(2)), ('gl-gbg-xs', _groove(1)),
            ('gl-slt', dict(SB_TRACK, radius=4)), ('gl-hud', HUDWIN))
 
 # Monotone gauge fills: HP dark, MP light, everything else mid-grey.
-DARK = dict(top=(62, 68, 82), bottom=(18, 20, 28), alpha=245, rim=(255, 255, 255), rim_a=120, hl_a=80)
-LIGHT = dict(top=(255, 255, 255), bottom=(206, 214, 226), alpha=248, rim=(118, 130, 150), rim_a=120, hl_a=235)
-MID = dict(top=(198, 206, 218), bottom=(138, 147, 160), alpha=240, rim=(255, 255, 255), rim_a=120, hl_a=140)
-FILLS = (('gl-f-dark-lg', 185, 26, 7, DARK), ('gl-f-light-lg', 185, 26, 7, LIGHT),
-         ('gl-f-mid-exp', 185, 9, 3, MID),
-         ('gl-f-dark-md', 99, 11, 4, DARK), ('gl-f-mid-md', 99, 11, 4, MID),
-         ('gl-f-dark-sm', 99, 7, 2, DARK), ('gl-f-light-sm', 99, 7, 2, LIGHT))
+DARK = dict(top=(72, 78, 94), bottom=(26, 29, 40), alpha=228, rim=(255, 255, 255), rim_a=120, hl_a=80)
+LIGHT = dict(top=(255, 255, 255), bottom=(222, 230, 242), alpha=214, rim=(118, 130, 150), rim_a=120, hl_a=235)
+MID = dict(top=(206, 214, 226), bottom=(150, 159, 172), alpha=215, rim=(255, 255, 255), rim_a=120, hl_a=140)
+# (name, w, h, radius, colours, inset dp): the large HUD bars sit inside their groove as slim glass pills
+FILLS = (('gl-f-dark-lg', 185, 26, 7, DARK, 3), ('gl-f-light-lg', 185, 26, 7, LIGHT, 3),
+         ('gl-f-mid-exp', 185, 9, 3, MID, 1),
+         ('gl-f-dark-md', 99, 11, 4, DARK, 1), ('gl-f-mid-md', 99, 11, 4, MID, 1),
+         ('gl-f-dark-sm', 99, 7, 2, DARK, 0.5), ('gl-f-light-sm', 99, 7, 2, LIGHT, 0.5))
 
 
 def sprites():
     """Single (non-sliced) sprites: name -> image."""
     out = [('gl-close', art.close_icon(False)), ('gl-close-h', art.close_icon(True)),
            ('gl-knob', art.knob(False)), ('gl-knob-h', art.knob(True))]
-    for name, w, h, r, c in FILLS:
-        out.append((name, art.gauge_fill(w, h, r, c['top'], c['bottom'], c['alpha'], c['rim'], c['rim_a'], c['hl_a'])))
+    for name, w, h, r, c, ins in FILLS:
+        out.append((name, art.gauge_fill(w, h, r, c['top'], c['bottom'], c['alpha'], c['rim'], c['rim_a'], c['hl_a'], ins)))
     for kind in ('options', 'leave', 'kick', 'entrust'):
         for st in ('n', 'h', 'd'):
             out.append(('gl-i-%s%s' % (kind, '' if st == 'n' else '-' + st), art.round_icon(kind, st)))

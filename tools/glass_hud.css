@@ -1,16 +1,16 @@
 /* Glass HUD, Party and Group (arena group) overlays. Linked into those three pages after their own styles. */
 
 /* ---------------- HUD ---------------- */
-#hud div.hud { width: 209dp; }
+#hud div.hud { width: 211dp; }
 #hud .window-fixed-size {
-    padding: 28dp 12dp 10dp 12dp;
+    padding: 29dp 13dp 11dp 13dp;
     background-color: transparent; border-width: 0dp;
     decorator: tiled-box(gl-hud-tl, gl-hud-t, gl-hud-tr, gl-hud-l, gl-hud-c, gl-hud-r, gl-hud-bl, gl-hud-b, gl-hud-br);
 }
 #hud > .window-title {
-    top: 9dp; left: 6dp; width: 70%; padding-left: 12dp; padding-top: 0dp;
-    line-height: 18dp; font-size: 11dp; font-weight: 800;
-    text-transform: uppercase; letter-spacing: 1.2dp;
+    top: 9dp; left: 6dp; width: 70%; padding-left: 14dp; padding-top: 0dp;
+    line-height: 18dp; font-size: 10dp; font-weight: 800;
+    text-transform: uppercase; letter-spacing: 1.6dp;
     color: rgba(255, 255, 255, 225); font-effect: shadow(0dp 1dp rgba(0,0,0,120));
 }
 #hud span.level, #hud b.weight { color: rgb(255, 255, 255); }

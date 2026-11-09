@@ -39,3 +39,6 @@ body gauge.horizontal-sm-sm.blue, body progress.horizontal-sm-sm.blue {
     decorator: tiled-box(gl-gbg-xs-tl, gl-gbg-xs-t, gl-gbg-xs-tr, gl-gbg-xs-l, gl-gbg-xs-c, gl-gbg-xs-r, gl-gbg-xs-bl, gl-gbg-xs-b, gl-gbg-xs-br);
     fill-image: gl-f-light-sm;
 }
+
+/* text on gauges: the same soft shadow the windows use (no stock black outline) */
+body gauge > span, body progress > span { font-effect: shadow(0dp 1dp rgba(0, 0, 0, 175)); font-weight: 700; }
