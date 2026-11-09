@@ -390,16 +390,170 @@
             }
 
         </style>
+        <style>
+@keyframes gl-pill-a { from { opacity: 0.2; transform: scale(1, 4.2); } to { opacity: 1; transform: scale(1, 1); } }
+@keyframes gl-pill-b { from { opacity: 0.2; transform: scale(1, 4.2); } to { opacity: 1; transform: scale(1, 1); } }
+@keyframes gl-panel-a { from { opacity: 0.2; transform: scale(1, 0.24); } to { opacity: 1; transform: scale(1, 1); } }
+@keyframes gl-panel-b { from { opacity: 0.2; transform: scale(1, 0.24); } to { opacity: 1; transform: scale(1, 1); } }
+@keyframes gl-tk-a { from { opacity: 0; } to { opacity: 0.02; } }
+@keyframes gl-tk-b { from { opacity: 0; } to { opacity: 0.02; } }
+#gl-tick { position: absolute; left: 0dp; top: 0dp; width: 1dp; height: 1dp; opacity: 0; pointer-events: none; }
+#gl-tick.tk-a { animation: 1.2s linear 1 gl-tk-a; }
+#gl-tick.tk-b { animation: 1.2s linear 1 gl-tk-b; }
+@keyframes gl-mq-4 { 0% { left: 0dp; } 16% { left: 0dp; } 50% { left: -4dp; } 66% { left: -4dp; } 100% { left: 0dp; } }
+.mq-4 { animation: 4s linear infinite gl-mq-4; }
+@keyframes gl-mq-8 { 0% { left: 0dp; } 16% { left: 0dp; } 50% { left: -8dp; } 66% { left: -8dp; } 100% { left: 0dp; } }
+.mq-8 { animation: 4s linear infinite gl-mq-8; }
+@keyframes gl-mq-12 { 0% { left: 0dp; } 16% { left: 0dp; } 50% { left: -12dp; } 66% { left: -12dp; } 100% { left: 0dp; } }
+.mq-12 { animation: 4s linear infinite gl-mq-12; }
+@keyframes gl-mq-16 { 0% { left: 0dp; } 16% { left: 0dp; } 50% { left: -16dp; } 66% { left: -16dp; } 100% { left: 0dp; } }
+.mq-16 { animation: 4s linear infinite gl-mq-16; }
+@keyframes gl-mq-20 { 0% { left: 0dp; } 16% { left: 0dp; } 50% { left: -20dp; } 66% { left: -20dp; } 100% { left: 0dp; } }
+.mq-20 { animation: 4s linear infinite gl-mq-20; }
+@keyframes gl-mq-24 { 0% { left: 0dp; } 16% { left: 0dp; } 50% { left: -24dp; } 66% { left: -24dp; } 100% { left: 0dp; } }
+.mq-24 { animation: 5s linear infinite gl-mq-24; }
+@keyframes gl-mq-28 { 0% { left: 0dp; } 16% { left: 0dp; } 50% { left: -28dp; } 66% { left: -28dp; } 100% { left: 0dp; } }
+.mq-28 { animation: 6s linear infinite gl-mq-28; }
+@keyframes gl-mq-32 { 0% { left: 0dp; } 16% { left: 0dp; } 50% { left: -32dp; } 66% { left: -32dp; } 100% { left: 0dp; } }
+.mq-32 { animation: 7s linear infinite gl-mq-32; }
+@keyframes gl-mq-36 { 0% { left: 0dp; } 16% { left: 0dp; } 50% { left: -36dp; } 66% { left: -36dp; } 100% { left: 0dp; } }
+.mq-36 { animation: 8s linear infinite gl-mq-36; }
+@keyframes gl-mq-40 { 0% { left: 0dp; } 16% { left: 0dp; } 50% { left: -40dp; } 66% { left: -40dp; } 100% { left: 0dp; } }
+.mq-40 { animation: 8s linear infinite gl-mq-40; }
+@keyframes gl-mq-44 { 0% { left: 0dp; } 16% { left: 0dp; } 50% { left: -44dp; } 66% { left: -44dp; } 100% { left: 0dp; } }
+.mq-44 { animation: 9s linear infinite gl-mq-44; }
+@keyframes gl-mq-48 { 0% { left: 0dp; } 16% { left: 0dp; } 50% { left: -48dp; } 66% { left: -48dp; } 100% { left: 0dp; } }
+.mq-48 { animation: 10s linear infinite gl-mq-48; }
+@keyframes gl-mq-52 { 0% { left: 0dp; } 16% { left: 0dp; } 50% { left: -52dp; } 66% { left: -52dp; } 100% { left: 0dp; } }
+.mq-52 { animation: 11s linear infinite gl-mq-52; }
+@keyframes gl-mq-56 { 0% { left: 0dp; } 16% { left: 0dp; } 50% { left: -56dp; } 66% { left: -56dp; } 100% { left: 0dp; } }
+.mq-56 { animation: 12s linear infinite gl-mq-56; }
+@keyframes gl-mq-60 { 0% { left: 0dp; } 16% { left: 0dp; } 50% { left: -60dp; } 66% { left: -60dp; } 100% { left: 0dp; } }
+.mq-60 { animation: 13s linear infinite gl-mq-60; }
+@keyframes gl-mq-64 { 0% { left: 0dp; } 16% { left: 0dp; } 50% { left: -64dp; } 66% { left: -64dp; } 100% { left: 0dp; } }
+.mq-64 { animation: 13s linear infinite gl-mq-64; }
+@keyframes gl-mq-68 { 0% { left: 0dp; } 16% { left: 0dp; } 50% { left: -68dp; } 66% { left: -68dp; } 100% { left: 0dp; } }
+.mq-68 { animation: 14s linear infinite gl-mq-68; }
+@keyframes gl-mq-72 { 0% { left: 0dp; } 16% { left: 0dp; } 50% { left: -72dp; } 66% { left: -72dp; } 100% { left: 0dp; } }
+.mq-72 { animation: 15s linear infinite gl-mq-72; }
+@keyframes gl-mq-76 { 0% { left: 0dp; } 16% { left: 0dp; } 50% { left: -76dp; } 66% { left: -76dp; } 100% { left: 0dp; } }
+.mq-76 { animation: 16s linear infinite gl-mq-76; }
+@keyframes gl-mq-80 { 0% { left: 0dp; } 16% { left: 0dp; } 50% { left: -80dp; } 66% { left: -80dp; } 100% { left: 0dp; } }
+.mq-80 { animation: 17s linear infinite gl-mq-80; }
+@keyframes gl-mq-84 { 0% { left: 0dp; } 16% { left: 0dp; } 50% { left: -84dp; } 66% { left: -84dp; } 100% { left: 0dp; } }
+.mq-84 { animation: 18s linear infinite gl-mq-84; }
+@keyframes gl-mq-88 { 0% { left: 0dp; } 16% { left: 0dp; } 50% { left: -88dp; } 66% { left: -88dp; } 100% { left: 0dp; } }
+.mq-88 { animation: 18s linear infinite gl-mq-88; }
+@keyframes gl-mq-92 { 0% { left: 0dp; } 16% { left: 0dp; } 50% { left: -92dp; } 66% { left: -92dp; } 100% { left: 0dp; } }
+.mq-92 { animation: 19s linear infinite gl-mq-92; }
+@keyframes gl-mq-96 { 0% { left: 0dp; } 16% { left: 0dp; } 50% { left: -96dp; } 66% { left: -96dp; } 100% { left: 0dp; } }
+.mq-96 { animation: 20s linear infinite gl-mq-96; }
+@keyframes gl-mq-100 { 0% { left: 0dp; } 16% { left: 0dp; } 50% { left: -100dp; } 66% { left: -100dp; } 100% { left: 0dp; } }
+.mq-100 { animation: 21s linear infinite gl-mq-100; }
+@keyframes gl-mq-104 { 0% { left: 0dp; } 16% { left: 0dp; } 50% { left: -104dp; } 66% { left: -104dp; } 100% { left: 0dp; } }
+.mq-104 { animation: 22s linear infinite gl-mq-104; }
+@keyframes gl-mq-108 { 0% { left: 0dp; } 16% { left: 0dp; } 50% { left: -108dp; } 66% { left: -108dp; } 100% { left: 0dp; } }
+.mq-108 { animation: 23s linear infinite gl-mq-108; }
+@keyframes gl-mq-112 { 0% { left: 0dp; } 16% { left: 0dp; } 50% { left: -112dp; } 66% { left: -112dp; } 100% { left: 0dp; } }
+.mq-112 { animation: 24s linear infinite gl-mq-112; }
+@keyframes gl-mq-116 { 0% { left: 0dp; } 16% { left: 0dp; } 50% { left: -116dp; } 66% { left: -116dp; } 100% { left: 0dp; } }
+.mq-116 { animation: 24s linear infinite gl-mq-116; }
+@keyframes gl-mq-120 { 0% { left: 0dp; } 16% { left: 0dp; } 50% { left: -120dp; } 66% { left: -120dp; } 100% { left: 0dp; } }
+.mq-120 { animation: 25s linear infinite gl-mq-120; }
+@keyframes gl-mq-124 { 0% { left: 0dp; } 16% { left: 0dp; } 50% { left: -124dp; } 66% { left: -124dp; } 100% { left: 0dp; } }
+.mq-124 { animation: 26s linear infinite gl-mq-124; }
+@keyframes gl-mq-128 { 0% { left: 0dp; } 16% { left: 0dp; } 50% { left: -128dp; } 66% { left: -128dp; } 100% { left: 0dp; } }
+.mq-128 { animation: 27s linear infinite gl-mq-128; }
+@keyframes gl-mq-132 { 0% { left: 0dp; } 16% { left: 0dp; } 50% { left: -132dp; } 66% { left: -132dp; } 100% { left: 0dp; } }
+.mq-132 { animation: 28s linear infinite gl-mq-132; }
+@keyframes gl-mq-136 { 0% { left: 0dp; } 16% { left: 0dp; } 50% { left: -136dp; } 66% { left: -136dp; } 100% { left: 0dp; } }
+.mq-136 { animation: 29s linear infinite gl-mq-136; }
+@keyframes gl-mq-140 { 0% { left: 0dp; } 16% { left: 0dp; } 50% { left: -140dp; } 66% { left: -140dp; } 100% { left: 0dp; } }
+.mq-140 { animation: 29s linear infinite gl-mq-140; }
+@keyframes gl-mq-144 { 0% { left: 0dp; } 16% { left: 0dp; } 50% { left: -144dp; } 66% { left: -144dp; } 100% { left: 0dp; } }
+.mq-144 { animation: 30s linear infinite gl-mq-144; }
+@keyframes gl-mq-148 { 0% { left: 0dp; } 16% { left: 0dp; } 50% { left: -148dp; } 66% { left: -148dp; } 100% { left: 0dp; } }
+.mq-148 { animation: 31s linear infinite gl-mq-148; }
+@keyframes gl-mq-152 { 0% { left: 0dp; } 16% { left: 0dp; } 50% { left: -152dp; } 66% { left: -152dp; } 100% { left: 0dp; } }
+.mq-152 { animation: 32s linear infinite gl-mq-152; }
+@keyframes gl-mq-156 { 0% { left: 0dp; } 16% { left: 0dp; } 50% { left: -156dp; } 66% { left: -156dp; } 100% { left: 0dp; } }
+.mq-156 { animation: 33s linear infinite gl-mq-156; }
+@keyframes gl-mq-160 { 0% { left: 0dp; } 16% { left: 0dp; } 50% { left: -160dp; } 66% { left: -160dp; } 100% { left: 0dp; } }
+.mq-160 { animation: 34s linear infinite gl-mq-160; }
+</style>
+<script>
+-- Glass minimap: Dynamic Island morph when collapsing / restoring, and a Spotify-style scroll for long zone names.
+-- Keyframes come in identical -a / -b pairs: switching to the other one restarts an animation.
+pcall(function()
+    local doc = document
+    local function by_id(i) return doc:GetElementById(i) end
+
+    -- morph: the state that just appeared springs in from the shape of the other one
+    local flip = false
+    local function island(id)
+        local e = by_id(id)
+        if not e then return end
+        flip = not flip
+        local name = (id == 'minimap-minimized') and 'gl-pill' or 'gl-panel'
+        e.style.animation = '0.5s back-out 1 ' .. name .. (flip and '-a' or '-b')
+    end
+    doc:AddEventListener('click', function(ev)
+        pcall(function()
+            local t = ev.target_element
+            while t and t ~= doc do
+                if t:IsClassSet('btn-minimize') then island('minimap-minimized') return end
+                if t:IsClassSet('btn-restore') then island('minimap-normal') return end
+                t = t.parent_node
+            end
+        end)
+    end)
+
+    -- marquee: text wider than its box scrolls back and forth (a class named mq plus the distance in dp picks the distance)
+    local MQ = { { text = 'zone-name-text', box = 'zone-name', dp = 112 },
+                 { text = 'zone-name-min-text', box = 'zone-name-min', dp = 120 } }
+    local last = {}
+    local function fit(m)
+        local t, b = by_id(m.text), by_id(m.box)
+        if not (t and b) then return end
+        local bw = b.client_width
+        if not (bw > 0) then return end
+        local over = (t.offset_width - bw) / (bw / m.dp)
+        local key = 0
+        if over > 1 then key = math.min(math.floor(over / 4 + 0.5) * 4, 160) end
+        if over > 1 and 4 > key then key = 4 end
+        if key ~= last[m.text] then
+            if last[m.text] and last[m.text] > 0 then t:SetClass('mq-' .. last[m.text], false) end
+            if key > 0 then t:SetClass('mq-' .. key, true) end
+            last[m.text] = key
+        end
+    end
+    -- a hidden element's animation ends once a second and wakes us up (zone names change as you travel)
+    local tick = by_id('gl-tick')
+    local tflip = false
+    local function step()
+        for _, m in ipairs(MQ) do pcall(fit, m) end
+        if tick then
+            tflip = not tflip
+            tick:SetClass('tk-a', tflip)
+            tick:SetClass('tk-b', not tflip)
+        end
+    end
+    if tick then tick:AddEventListener('animationend', function() pcall(step) end) end
+    pcall(step)
+end)
+</script>
         <link type="text/rcss" href="../styles/glass_minimap.css" />
     </head>
 
     <body id="game-minimap">
         <div id="minimap-root" data-model="minimap">
+<div id="gl-tick"></div>
             <!-- ─── Minimized state ─── -->
             <div id="minimap-minimized" data-class-hidden="!is_minimized">
                 <handle move_target="#document" style="position: absolute; left: 0; top: 0; width: 100%; height: 100%;"></handle>
-                <span id="zone-name-min">{{zone_name}}</span>
+                <span id="zone-name-min"><span id="zone-name-min-text" class="gl-mq">{{zone_name}}</span></span>
                 <span id="time-min">{{server_time}}</span>
+<span id="coords-min">{{player_coordinates}}</span>
                 <button class="btn-restore" data-event-click="toggle_minimize"></button>
             </div>
 
@@ -468,7 +622,7 @@
                 <div id="minimap-frame"></div>
 
                 <handle class="title" move_target="#document">
-                    <span id="zone-name">{{zone_name}}</span>
+                    <span id="zone-name"><span id="zone-name-text" class="gl-mq">{{zone_name}}</span></span>
                 </handle>
 
                 <!-- Minimize button -->
@@ -494,13 +648,7 @@
                     <span id="giftbox-tooltip-text"><str string-id="1253"></str></span>
                 </div>
 
-                <!-- Item Mall button -->
-                <button class="btn-itemmall" onclick="open_itemmall">
-                    <div class="minimap-tooltip minimap-tooltip-left">
-                        <span style="color: rgb(255, 255, 255)"><b><str string-id="795">Item Mall</str></b></span><br/>
-                        <span>Alt + B</span>
-                    </div>
-                </button>
+                
 
                 <!-- Zoom controls -->
                 <button class="btn-zoomin" data-event-click="zoom_in" onmouseup="update_map_position"></button>

@@ -94,5 +94,28 @@ s = swap(s, """                0% { decorator: image(GEN_BTN106); }
                 100% { decorator: image(GEN_BTN106); }""", """                0% { opacity: 1; }
                 50% { opacity: 0.35; }
                 100% { opacity: 1; }""", name)
-s = swap(s, '    </head>', '        <link type="text/rcss" href="../styles/glass_minimap.css" />' + NL + '    </head>', name)
+# item mall button removed (Alt+B still opens it)
+i = s.index('<!-- Item Mall button -->')
+j = s.index('</button>', i) + len('</button>')
+s = s[:i] + s[j:]
+# long zone names scroll inside their box (Spotify style); the collapsed pill shows the coordinates too
+s = swap(s, '<span id="zone-name">{{zone_name}}</span>', '<span id="zone-name"><span id="zone-name-text" class="gl-mq">{{zone_name}}</span></span>', name)
+s = swap(s, '<span id="zone-name-min">{{zone_name}}</span>', '<span id="zone-name-min"><span id="zone-name-min-text" class="gl-mq">{{zone_name}}</span></span>', name)
+s = swap(s, '<span id="time-min">{{server_time}}</span>', '<span id="time-min">{{server_time}}</span>' + NL + '<span id="coords-min">{{player_coordinates}}</span>', name)
+s = swap(s, '<div id="minimap-root" data-model="minimap">', '<div id="minimap-root" data-model="minimap">' + NL + '<div id="gl-tick"></div>', name)
+mm_lua = open(os.path.join(ROOT, 'tools', 'glass_minimap.lua'), encoding='utf-8').read()
+assert '<' not in mm_lua and '&' not in mm_lua
+kf = ['@keyframes gl-pill-a { from { opacity: 0.2; transform: scale(1, 4.2); } to { opacity: 1; transform: scale(1, 1); } }',
+      '@keyframes gl-pill-b { from { opacity: 0.2; transform: scale(1, 4.2); } to { opacity: 1; transform: scale(1, 1); } }',
+      '@keyframes gl-panel-a { from { opacity: 0.2; transform: scale(1, 0.24); } to { opacity: 1; transform: scale(1, 1); } }',
+      '@keyframes gl-panel-b { from { opacity: 0.2; transform: scale(1, 0.24); } to { opacity: 1; transform: scale(1, 1); } }',
+      '@keyframes gl-tk-a { from { opacity: 0; } to { opacity: 0.02; } }',
+      '@keyframes gl-tk-b { from { opacity: 0; } to { opacity: 0.02; } }',
+      '#gl-tick { position: absolute; left: 0dp; top: 0dp; width: 1dp; height: 1dp; opacity: 0; pointer-events: none; }',
+      '#gl-tick.tk-a { animation: 1.2s linear 1 gl-tk-a; }', '#gl-tick.tk-b { animation: 1.2s linear 1 gl-tk-b; }']
+for n in range(4, 164, 4):   # marquee: hold, slide n dp, hold, slide back; about 14 dp per second
+    kf.append('@keyframes gl-mq-%d { 0%% { left: 0dp; } 16%% { left: 0dp; } 50%% { left: -%ddp; } 66%% { left: -%ddp; } 100%% { left: 0dp; } }' % (n, n, n))
+    kf.append('.mq-%d { animation: %ds linear infinite gl-mq-%d; }' % (n, max(4, int(n * 0.21 + 0.5)), n))
+s = swap(s, '    </head>', '        <style>' + NL + NL.join(kf) + NL + '</style>' + NL + '<script>' + NL + mm_lua + '</script>' + NL +
+         '        <link type="text/rcss" href="../styles/glass_minimap.css" />' + NL + '    </head>', name)
 save(name, s)

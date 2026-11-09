@@ -68,17 +68,29 @@ body#game-minimap { width: 178dp; }
 #minimap-normal .btn-zoomout { right: 50dp; bottom: 48dp; decorator: image(gl-m-minus); }
 #minimap-normal .btn-zoomout:hover, #minimap-normal .btn-zoomout:active { decorator: image(gl-m-minus-h); }
 
-/* footer: day/night glyph + time on the left, coordinates on the right */
-.gl-dn { position: absolute; left: 18dp; top: 196dp; width: 20dp; height: 20dp; }
+/* footer: sun/moon, time and coordinates share one centre line (20dp row at y 195) */
+.gl-dn { position: absolute; left: 18dp; top: 195dp; width: 20dp; height: 20dp; }
 .gl-day { decorator: image(gl-m-sun); }
 .gl-night { decorator: image(gl-m-moon); }
 #coordinates-text, #time-text {
-    height: 16dp; line-height: 16dp; font-size: 12dp; font-weight: 700; color: rgba(255, 255, 255, 205);
+    height: 20dp; line-height: 20dp; font-size: 11dp; font-weight: 700; color: rgba(255, 255, 255, 205);
     font-effect: shadow(0dp 1dp rgba(0, 0, 0, 150));
 }
-#coordinates-text { left: auto; right: 18dp; bottom: 14dp; width: 80dp; text-align: right; }
-#time-area { left: 44dp; bottom: 14dp; width: 70dp; height: 16dp; text-align: left; }
-#time-text { width: 70dp; text-align: left; }
+#coordinates-text { left: auto; right: 18dp; top: 195dp; bottom: auto; width: 70dp; text-align: right; }
+#time-area { left: 44dp; top: 195dp; bottom: auto; width: 56dp; height: 20dp; text-align: left; }
+#time-text { width: 56dp; text-align: left; }
+
+/* zone names that don't fit scroll (glass_minimap.lua picks a .mq-<dp> class); the box clips them */
+.gl-mq { display: inline-block; position: relative; left: 0dp; white-space: nowrap; }
+#zone-name, #zone-name-min { overflow: hidden; }
+
+/* collapse / restore morph: grows from the top edge */
+#minimap-normal, #minimap-minimized { transform-origin: 50% 0% 0; }
+#minimap-minimized #coords-min {
+    position: absolute; left: 82dp; top: 28dp; width: 60dp; height: 14dp; font-size: 11dp; text-align: left;
+    color: rgba(255, 255, 255, 175); font-effect: shadow(0dp 1dp rgba(0, 0, 0, 120));
+}
+#minimap-minimized #time-min { width: 58dp; }
 
 /* tooltips */
 .minimap-tooltip { background-color: rgba(26, 30, 40, 238); border: 1dp rgba(255, 255, 255, 85); border-radius: 10dp; }
