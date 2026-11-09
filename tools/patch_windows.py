@@ -105,10 +105,10 @@ s = swap(s, '<span id="time-min">{{server_time}}</span>', '<span id="time-min">{
 s = swap(s, '<div id="minimap-root" data-model="minimap">', '<div id="minimap-root" data-model="minimap">' + NL + '<div id="gl-tick"></div>', name)
 mm_lua = open(os.path.join(ROOT, 'tools', 'glass_minimap.lua'), encoding='utf-8').read()
 assert '<' not in mm_lua and '&' not in mm_lua
-kf = ['@keyframes gl-pill-a { from { opacity: 0; transform: scale(1.1, 1.1); } to { opacity: 1; transform: scale(1, 1); } }',
-      '@keyframes gl-pill-b { from { opacity: 0; transform: scale(1.1, 1.1); } to { opacity: 1; transform: scale(1, 1); } }',
-      '@keyframes gl-panel-a { from { opacity: 0; transform: scale(0.9, 0.9); } to { opacity: 1; transform: scale(1, 1); } }',
-      '@keyframes gl-panel-b { from { opacity: 0; transform: scale(0.9, 0.9); } to { opacity: 1; transform: scale(1, 1); } }',
+kf = ['@keyframes gl-pill-a { from { transform: scale(1, 3.8); } to { transform: scale(1, 1); } }',
+      '@keyframes gl-pill-b { from { transform: scale(1, 3.8); } to { transform: scale(1, 1); } }',
+      '@keyframes gl-panel-a { from { transform: scale(1, 0.27); } to { transform: scale(1, 1); } }',
+      '@keyframes gl-panel-b { from { transform: scale(1, 0.27); } to { transform: scale(1, 1); } }',
       '@keyframes gl-tk-a { from { opacity: 0; } to { opacity: 0.02; } }',
       '@keyframes gl-tk-b { from { opacity: 0; } to { opacity: 0.02; } }',
       '#gl-tick { position: absolute; left: 0dp; top: 0dp; width: 1dp; height: 1dp; opacity: 0; pointer-events: none; }',

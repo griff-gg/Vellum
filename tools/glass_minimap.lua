@@ -1,17 +1,17 @@
--- Glass minimap: a bouncy pop when collapsing / restoring, and a Spotify-style scroll for long zone names.
+-- Glass minimap: a Dynamic Island style morph when collapsing / restoring (size only, no fading), and a Spotify-style scroll for long zone names.
 -- Keyframes come in identical -a / -b pairs: switching to the other one restarts an animation.
 pcall(function()
     local doc = document
     local function by_id(i) return doc:GetElementById(i) end
 
-    -- pop: the state that just appeared bounces in
+    -- morph: the state that just appeared springs in from the shape of the other one (no opacity: fades render badly here)
     local flip = false
     local function island(id)
         local e = by_id(id)
         if not e then return end
         flip = not flip
         local name = (id == 'minimap-minimized') and 'gl-pill' or 'gl-panel'
-        e.style.animation = '0.38s back-out 1 ' .. name .. (flip and '-a' or '-b')
+        e.style.animation = '0.45s back-out 1 ' .. name .. (flip and '-a' or '-b')
     end
 
     -- marquee: text wider than its box scrolls back and forth (a class named mq plus the distance in dp picks the distance).
