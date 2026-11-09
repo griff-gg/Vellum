@@ -49,7 +49,7 @@
 #group-leave:disabled { decorator: image(gl-i-leave-d); }
 #party-options, #group-settings { decorator: image(gl-i-options); }
 #party-options:hover, #group-settings:hover { decorator: image(gl-i-options-h); }
-#group-collapse { decorator: none; box-sizing: border-box; border: 1dp rgba(255, 255, 255, 120); border-radius: 10dp; background-color: rgba(255, 255, 255, 40); transition: background-color 0.14s cubic-out; }
+#group-collapse { decorator: none; box-sizing: border-box; border: 1dp rgba(255, 255, 255, 120); border-radius: 10dp; background-color: rgba(255, 255, 255, 40); transition: all 0.14s cubic-out; }
 #group-collapse:hover { border-color: rgba(255, 255, 255, 190); background-color: rgba(255, 255, 255, 80); }
 #group-collapse icon { color: rgb(255, 255, 255); }
 

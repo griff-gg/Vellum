@@ -55,7 +55,7 @@ W .ui-tab:hover {
     text-align: center; font-size: 12dp; font-effect: none;
     decorator: none; background-color: transparent; border-width: 0dp; border-radius: 0dp;
     color: rgba(255, 255, 255, 170);
-    transition: color background-color 0.16s cubic-out;
+    transition: all 0.16s cubic-out;
 }
 W .ui-tab:hover { color: rgb(255, 255, 255); }
 W .ui-tab.selected, W .ui-tab.active, W .ui-tab:selected {
@@ -69,7 +69,7 @@ W button.default {
     decorator: tiled-box(gl-btn-tl, gl-btn-t, gl-btn-tr, gl-btn-l, gl-btn-c, gl-btn-r, gl-btn-bl, gl-btn-b, gl-btn-br);
     background-color: rgba(255, 255, 255, 0); border-width: 0dp; border-radius: 12dp;
     color: rgba(255, 255, 255, 235); font-effect: shadow(0dp 1dp rgba(0,0,0,90));
-    transition: background-color color transform 0.16s cubic-out;
+    transition: all 0.16s cubic-out;
 }
 W button.default.selected:not([disabled]) {
     decorator: tiled-box(gl-pill-tl, gl-pill-t, gl-pill-tr, gl-pill-l, gl-pill-c, gl-pill-r, gl-pill-bl, gl-pill-b, gl-pill-br);
@@ -77,12 +77,13 @@ W button.default.selected:not([disabled]) {
 }
 W button.default:not([disabled]):hover,
 W button.default:not([disabled]):focus {
-    background-color: rgba(255, 255, 255, 52); color: rgb(255, 255, 255); border-width: 0dp;
+    background-color: rgba(255, 255, 255, 80); color: rgb(255, 255, 255); border-width: 0dp;
+    transform: scale(1.025);
 }
 W button.default:not([disabled]):active {
     background-color: rgba(0, 0, 0, 55); color: rgba(255, 255, 255, 215); border-width: 0dp;
-    transform: scale(0.97);
-    transition: background-color color transform 0.06s cubic-out;
+    transform: scale(0.95);
+    transition: all 0.06s cubic-out;
 }
 W button.default:disabled,
 W button.default[disabled] {
@@ -98,7 +99,7 @@ W input[type="text"] {
 W input[type="text"]:focus { border-color: rgb(246, 200, 118); }
 
 /* list rows */
-W .ui-list-row, W .ui-list > listbox-item { border-radius: 8dp; transition: background-color color 0.14s cubic-out; }
+W .ui-list-row, W .ui-list > listbox-item { border-radius: 8dp; transition: all 0.14s cubic-out; }
 W .ui-list-row:hover, W .ui-list > listbox-item:not([disabled]):not([selected]):hover { background: rgba(255, 255, 255, 28); }
 W .ui-list-row.selected, W .ui-list > listbox-item:not([disabled])[selected] { background: rgba(255, 255, 255, 55); color: rgb(246, 200, 118); }
 W .group-leader { color: rgb(246, 200, 118); }
