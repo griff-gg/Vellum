@@ -1,0 +1,58 @@
+/* Glass HUD, Party and Group (arena group) overlays. Linked into those three pages after their own styles. */
+
+/* ---------------- HUD ---------------- */
+#hud div.hud { width: 209dp; }
+#hud .window-fixed-size {
+    padding: 28dp 12dp 10dp 12dp;
+    background-color: transparent; border-width: 0dp;
+    decorator: tiled-box(gl-hud-tl, gl-hud-t, gl-hud-tr, gl-hud-l, gl-hud-c, gl-hud-r, gl-hud-bl, gl-hud-b, gl-hud-br);
+}
+#hud > .window-title {
+    top: 9dp; left: 6dp; width: 70%; padding-left: 12dp; padding-top: 0dp;
+    line-height: 18dp; font-size: 11dp; font-weight: 800;
+    text-transform: uppercase; letter-spacing: 1.2dp;
+    color: rgba(255, 255, 255, 225); font-effect: shadow(0dp 1dp rgba(0,0,0,120));
+}
+#hud span.level, #hud b.weight { color: rgb(255, 255, 255); }
+#hud div.footer { color: rgba(255, 255, 255, 190); }
+
+/* ---------------- Party + Group: same panel, your opacity setting still drives the fill ---------------- */
+#party-window, #arena-group-window {
+    padding: 30dp 8dp 8dp 8dp;
+    border: 1dp rgba(255, 255, 255, 75); border-radius: 14dp;
+    decorator: vertical-gradient(rgba(255, 255, 255, 34) rgba(255, 255, 255, 4));
+}
+#arena-group-window.collapsed { padding-bottom: 0dp; }
+#party-window > .window-title, #arena-group-window > .window-title {
+    top: 5dp; left: 4dp; height: 24dp; line-height: 24dp; padding-left: 10dp;
+    font-size: 10dp; font-weight: 800; text-transform: uppercase; letter-spacing: 1.4dp;
+    color: rgba(255, 255, 255, 220); font-effect: shadow(0dp 1dp rgba(0,0,0,120));
+}
+#party .ui-hud-toolbar, #arena-group .ui-hud-toolbar { top: 6dp; right: 8dp; gap: 4dp; }
+#party button.party-action, #arena-group .ui-hud-toolbar button { width: 20dp; min-width: 20dp; height: 20dp; padding: 0dp; background-color: transparent; border-width: 0dp; }
+
+#party-entrust { decorator: image(gl-i-entrust); }
+#party-entrust:hover { decorator: image(gl-i-entrust-h); }
+#party-entrust:disabled { decorator: image(gl-i-entrust-d); }
+#party-kick { decorator: image(gl-i-kick); }
+#party-kick:hover { decorator: image(gl-i-kick-h); }
+#party-kick:disabled { decorator: image(gl-i-kick-d); }
+#party-leave, #group-leave { decorator: image(gl-i-leave); }
+#party-leave:hover, #group-leave:hover { decorator: image(gl-i-leave-h); }
+#group-leave:disabled { decorator: image(gl-i-leave-d); }
+#party-options, #group-settings { decorator: image(gl-i-options); }
+#party-options:hover, #group-settings:hover { decorator: image(gl-i-options-h); }
+#group-collapse { decorator: none; box-sizing: border-box; border: 1dp rgba(255, 255, 255, 120); border-radius: 10dp; background-color: rgba(255, 255, 255, 40); transition: background-color 0.14s cubic-out; }
+#group-collapse:hover { border-color: rgba(255, 255, 255, 190); background-color: rgba(255, 255, 255, 80); }
+#group-collapse icon { color: rgb(255, 255, 255); }
+
+.party-level { color: rgb(255, 255, 255); }
+.party-member.selected .member-name { color: rgb(255, 255, 255); font-weight: 820; }
+.party-member.selected, .group-member.selected { background-color: rgba(255, 255, 255, 30); border-radius: 8dp; }
+.ui-roster-member.leader .ui-roster-name { color: rgb(255, 255, 255); font-weight: 820; }
+.ui-roster-member { border-radius: 8dp; }
+.ui-roster-member:hover { background-color: rgba(255, 255, 255, 18); }
+
+#party-tooltip, #arena-group-tooltip {
+    background: rgba(26, 30, 40, 238); border: 1dp rgba(255, 255, 255, 85); border-radius: 12dp;
+}

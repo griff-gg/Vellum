@@ -1,0 +1,41 @@
+/* Glass gauges, monotone: HP (red) dark glass, MP (blue) light glass, everything else mid grey,
+   all on a light frosted groove. Loaded by every window template; "body" outranks the stock gauge.css rules. */
+
+/* large: HUD hp / mp, resource gauges */
+body gauge.horizontal-lg-lg.red, body progress.horizontal-lg-lg.red {
+    decorator: tiled-box(gl-gbg-lg-tl, gl-gbg-lg-t, gl-gbg-lg-tr, gl-gbg-lg-l, gl-gbg-lg-c, gl-gbg-lg-r, gl-gbg-lg-bl, gl-gbg-lg-b, gl-gbg-lg-br);
+    fill-image: gl-f-dark-lg;
+}
+body gauge.horizontal-lg-lg.blue, body progress.horizontal-lg-lg.blue {
+    decorator: tiled-box(gl-gbg-lg-tl, gl-gbg-lg-t, gl-gbg-lg-tr, gl-gbg-lg-l, gl-gbg-lg-c, gl-gbg-lg-r, gl-gbg-lg-bl, gl-gbg-lg-b, gl-gbg-lg-br);
+    fill-image: gl-f-light-lg;
+}
+
+/* experience (wide and thin) */
+body gauge.horizontal-sm-lg.yellow, body progress.horizontal-sm-lg.yellow {
+    decorator: tiled-box(gl-gbg-md-tl, gl-gbg-md-t, gl-gbg-md-tr, gl-gbg-md-l, gl-gbg-md-c, gl-gbg-md-r, gl-gbg-md-bl, gl-gbg-md-b, gl-gbg-md-br);
+    fill-image: gl-f-mid-exp;
+}
+
+/* medium: nameplates, target, PAT fuel, summon */
+body gauge.horizontal-sm-md.red, body progress.horizontal-sm-md.red {
+    decorator: tiled-box(gl-gbg-md-tl, gl-gbg-md-t, gl-gbg-md-tr, gl-gbg-md-l, gl-gbg-md-c, gl-gbg-md-r, gl-gbg-md-bl, gl-gbg-md-b, gl-gbg-md-br);
+    fill-image: gl-f-dark-md;
+}
+body gauge.horizontal-sm-md, body progress.horizontal-sm-md {
+    decorator: tiled-box(gl-gbg-md-tl, gl-gbg-md-t, gl-gbg-md-tr, gl-gbg-md-l, gl-gbg-md-c, gl-gbg-md-r, gl-gbg-md-bl, gl-gbg-md-b, gl-gbg-md-br);
+}
+body gauge.horizontal-sm-md.green, body progress.horizontal-sm-md.green,
+body gauge.horizontal-sm-md.pink, body progress.horizontal-sm-md.pink {
+    fill-image: gl-f-mid-md;
+}
+
+/* small: party and group hp / mp bars */
+body gauge.horizontal-sm-sm.red, body progress.horizontal-sm-sm.red {
+    decorator: tiled-box(gl-gbg-sm-tl, gl-gbg-sm-t, gl-gbg-sm-tr, gl-gbg-sm-l, gl-gbg-sm-c, gl-gbg-sm-r, gl-gbg-sm-bl, gl-gbg-sm-b, gl-gbg-sm-br);
+    fill-image: gl-f-dark-sm;
+}
+body gauge.horizontal-sm-sm.blue, body progress.horizontal-sm-sm.blue {
+    decorator: tiled-box(gl-gbg-xs-tl, gl-gbg-xs-t, gl-gbg-xs-tr, gl-gbg-xs-l, gl-gbg-xs-c, gl-gbg-xs-r, gl-gbg-xs-bl, gl-gbg-xs-b, gl-gbg-xs-br);
+    fill-image: gl-f-light-sm;
+}

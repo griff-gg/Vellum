@@ -126,3 +126,83 @@ def close_icon(hover, radius=13):
     out = img.copy()
     out.alpha_composite(white)
     return out
+
+
+def gauge_fill(w, h, radius, top, bottom, alpha, rim, rim_a, hl_a, res=RES, ss=SS):
+    """A gauge fill: rounded bar (w x h dp) with a vertical colour gradient, thin rim and a bright top line."""
+    k = res * ss
+    W, H = w * k, h * k
+    ins = ss                                   # 1 final px of breathing room
+    rw = ss                                    # rim width, 1 final px
+    mask = _mask((W, H), (ins, ins, W - 1 - ins, H - 1 - ins), max(radius * k - ins, 1))
+    inner = _mask((W, H), (ins + rw, ins + rw, W - 1 - ins - rw, H - 1 - ins - rw), max(radius * k - ins - rw, 1))
+    rim_m = np.clip(mask - inner, 0, 1)
+    t = (np.arange(H, dtype=np.float32) / max(H - 1, 1))[:, None] * np.ones((1, W), np.float32)
+    col = np.zeros((H, W, 3), np.float32)
+    for i in range(3):
+        col[..., i] = (top[i] + (bottom[i] - top[i]) * t) / 255.0
+    y = np.arange(H, dtype=np.float32)[:, None] * np.ones((1, W), np.float32)
+    hl = ((y >= ins + rw) & (y < ins + rw + rw * 2)).astype(np.float32) * inner * hl_a / 255.0
+    out = np.zeros((H, W, 4), np.float32)
+    a = inner * alpha / 255.0
+    out[..., :3] = col * a[..., None]
+    out[..., 3] = a
+    for layer, c in ((rim_m * rim_a / 255.0, rim), (hl, (255, 255, 255))):
+        for i in range(3):
+            out[..., i] = (c[i] / 255.0) * layer + out[..., i] * (1 - layer)
+        out[..., 3] = layer + out[..., 3] * (1 - layer)
+    rgb = np.where(out[..., 3:4] > 0, out[..., :3] / np.maximum(out[..., 3:4], 1e-6), 0)
+    img = Image.fromarray((np.clip(np.dstack([rgb, out[..., 3:4]]), 0, 1) * 255 + 0.5).astype(np.uint8), 'RGBA')
+    return img.resize((W // ss, H // ss), Image.LANCZOS)
+
+
+def _glyph(kind, n):
+    """Mask (L, n x n) of a monochrome icon glyph, drawn white."""
+    g = Image.new('L', (n, n), 0)
+    d = ImageDraw.Draw(g)
+    c, wd = n / 2, max(int(n * 0.075), 2)
+    if kind == 'options':
+        r = n * 0.06
+        for dx in (-0.22, 0, 0.22):
+            d.ellipse((c + dx * n - r, c - r, c + dx * n + r, c + r), fill=255)
+    elif kind == 'leave':
+        d.line([(c - 0.02 * n, c - 0.22 * n), (c - 0.22 * n, c - 0.22 * n), (c - 0.22 * n, c + 0.22 * n),
+                (c - 0.02 * n, c + 0.22 * n)], fill=255, width=wd, joint='curve')
+        d.line((c - 0.1 * n, c, c + 0.24 * n, c), fill=255, width=wd)
+        d.line([(c + 0.11 * n, c - 0.12 * n), (c + 0.24 * n, c), (c + 0.11 * n, c + 0.12 * n)], fill=255, width=wd, joint='curve')
+    elif kind == 'kick':
+        r = n * 0.085
+        d.ellipse((c - 0.07 * n - r, c - 0.14 * n - r, c - 0.07 * n + r, c - 0.14 * n + r), outline=255, width=wd)
+        d.arc((c - 0.25 * n, c - 0.01 * n, c + 0.11 * n, c + 0.35 * n), 180, 360, fill=255, width=wd)
+        d.line((c + 0.12 * n, c + 0.02 * n, c + 0.28 * n, c + 0.02 * n), fill=255, width=wd)
+    elif kind == 'entrust':
+        pts = []
+        for i in range(10):
+            ang = -np.pi / 2 + i * np.pi / 5
+            rr = n * (0.25 if i % 2 == 0 else 0.105)
+            pts.append((c + rr * np.cos(ang), c + 0.02 * n + rr * np.sin(ang)))
+        d.polygon(pts, fill=255)
+    return g
+
+
+def round_icon(kind, state, radius=10):
+    """Round glass toolbar button with a white glyph. state: 'n' normal, 'h' hover, 'd' disabled (2 px per dp)."""
+    tint, rt, rm, rb, sh, ga = {'n': (42, 225, 110, 70, 50, 0.92), 'h': (78, 245, 150, 95, 80, 1.0),
+                                'd': (16, 90, 50, 30, 14, 0.38)}[state]
+    img, _, _ = glass_panel(margin=0, radius=radius, tint=(255, 255, 255, tint), rim_top=rt, rim_mid=rm,
+                            rim_bottom=rb, sheen=sh, shadow=0, shadow_dy=0, shadow_blur=1, edge=0)
+    k = 8
+    g = _glyph(kind, img.width * k).resize(img.size, Image.LANCZOS)
+    white = Image.new('RGBA', img.size, (255, 255, 255, 255))
+    white.putalpha(g.point(lambda v: int(v * ga)))
+    out = img.copy()
+    out.alpha_composite(white)
+    return out
+
+
+def knob(hover, radius=9):
+    """Round glass knob for range sliders."""
+    img, _, _ = glass_panel(margin=0, radius=radius, tint=(255, 255, 255, 215 if hover else 185),
+                            rim_top=255, rim_mid=200 if hover else 170, rim_bottom=150 if hover else 120,
+                            sheen=90, shadow=0, shadow_dy=0, shadow_blur=1, edge=0)
+    return img

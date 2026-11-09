@@ -43,8 +43,38 @@ PIECES = (('gl-win', WINDOW), ('gl-track', TRACK), ('gl-pill', PILL),
           ('gl-sbt', SB_TRACK), ('gl-sbb', SB_THUMB), ('gl-sbbh', SB_THUMB_H), ('gl-sbbp', SB_THUMB_P),
           ('gl-btn', BTN), ('gl-btnh', BTN_H), ('gl-btnp', BTN_P), ('gl-btnd', BTN_D))
 
+# Gauges: light frosted groove (by bar height), range-slider groove, and a compact panel for the HUD overlay.
+def _groove(radius):
+    return dict(margin=0, radius=radius, tint=(255, 255, 255, 38), rim_top=150, rim_mid=95, rim_bottom=70, sheen=0,
+                shadow=0, shadow_dy=0, shadow_blur=1)
+HUDWIN = dict(margin=5, radius=14, tint=(22, 26, 36, 170), rim_top=175, rim_mid=80, rim_bottom=48, sheen=30,
+              shadow=100, shadow_dy=3, shadow_blur=5)
+PIECES += (('gl-gbg-lg', _groove(8)), ('gl-gbg-md', _groove(4)), ('gl-gbg-sm', _groove(2)), ('gl-gbg-xs', _groove(1)),
+           ('gl-slt', dict(SB_TRACK, radius=4)), ('gl-hud', HUDWIN))
+
+# Monotone gauge fills: HP dark, MP light, everything else mid-grey.
+DARK = dict(top=(62, 68, 82), bottom=(18, 20, 28), alpha=245, rim=(255, 255, 255), rim_a=120, hl_a=80)
+LIGHT = dict(top=(255, 255, 255), bottom=(206, 214, 226), alpha=248, rim=(118, 130, 150), rim_a=120, hl_a=235)
+MID = dict(top=(198, 206, 218), bottom=(138, 147, 160), alpha=240, rim=(255, 255, 255), rim_a=120, hl_a=140)
+FILLS = (('gl-f-dark-lg', 185, 26, 7, DARK), ('gl-f-light-lg', 185, 26, 7, LIGHT),
+         ('gl-f-mid-exp', 185, 9, 3, MID),
+         ('gl-f-dark-md', 99, 11, 4, DARK), ('gl-f-mid-md', 99, 11, 4, MID),
+         ('gl-f-dark-sm', 99, 7, 2, DARK), ('gl-f-light-sm', 99, 7, 2, LIGHT))
+
+
+def sprites():
+    """Single (non-sliced) sprites: name -> image."""
+    out = [('gl-close', art.close_icon(False)), ('gl-close-h', art.close_icon(True)),
+           ('gl-knob', art.knob(False)), ('gl-knob-h', art.knob(True))]
+    for name, w, h, r, c in FILLS:
+        out.append((name, art.gauge_fill(w, h, r, c['top'], c['bottom'], c['alpha'], c['rim'], c['rim_a'], c['hl_a'])))
+    for kind in ('options', 'leave', 'kick', 'entrust'):
+        for st in ('n', 'h', 'd'):
+            out.append(('gl-i-%s%s' % (kind, '' if st == 'n' else '-' + st), art.round_icon(kind, st)))
+    return out
+
 # Windows (body ids) that get the shared glass look from tools/glass_window.css. The inventory has its own page styles.
-GLASS_WINDOWS = ('game-arena', 'group-manager')
+GLASS_WINDOWS = ('game-arena', 'group-manager', '#group-settings-panel')
 # Scripts the glass windows run on open: fade/settle in (tools/glass_open.lua).
 OPEN_KEYFRAMES = '''@keyframes gl-open-a { 0% { opacity: 0; transform: translateY(5dp) scale(0.985); } 100% { opacity: 1; transform: translateY(0dp) scale(1); } }
 @keyframes gl-open-b { 0% { opacity: 0; transform: translateY(5dp) scale(0.985); } 100% { opacity: 1; transform: translateY(0dp) scale(1); } }
@@ -59,7 +89,7 @@ def scoped(css, ids):
         sels = []
         for sel in m.group(1).split(','):
             sel = sel.strip()
-            sels += [sel.replace('W', 'body#' + i, 1) for i in ids] if sel.startswith('W') else [sel]
+            sels += [sel.replace('W', i if i.startswith('#') else 'body#' + i, 1) for i in ids] if sel.startswith('W') else [sel]
         out.append(',\n'.join(sels) + ' {' + m.group(2) + '}\n')
     return '\n'.join(out)
 
@@ -68,14 +98,18 @@ def window_css():
     css = open(os.path.join(ROOT, 'tools', 'glass_window.css'), encoding='utf-8').read()
     text = '/* Shared glass window look (written by tools/build.py) */\n' + scoped(css, GLASS_WINDOWS) + '\n' + OPEN_KEYFRAMES
     open(os.path.join(OUT, 'styles', 'glass_window.css'), 'w', encoding='utf-8', newline='').write(text)
-    # every window built on the fixed-size template loads the art + rules; they only match the ids above
-    tpl = os.path.join(OUT, 'templates', 'window-fixed-size.html')
-    t = open(tpl, encoding='utf-8').read()
-    old = '        <link type="text/rcss" href="../styles/window.css" />'
-    assert t.count(old) == 1
-    t = t.replace(old, old + chr(10) + '        <link type="text/rcss" href="../styles/glass_frame.css" />' + chr(10) +
-                  '        <link type="text/rcss" href="../styles/glass_window.css" />')
-    open(tpl, 'w', encoding='utf-8', newline='').write(t)
+    # the art + rules load with the window templates; they only match the ids above (and the gauges/HUD pages)
+    for tname in ('window-fixed-size.html', 'window-box.html'):
+        tpl = os.path.join(OUT, 'templates', tname)
+        t = open(tpl, encoding='utf-8').read()
+        old = '        <link type="text/rcss" href="../styles/window.css" />'
+        assert t.count(old) == 1, tname
+        t = t.replace(old, old + chr(10) + '        <link type="text/rcss" href="../styles/glass_frame.css" />' + chr(10) +
+                      '        <link type="text/rcss" href="../styles/glass_gauge.css" />' + chr(10) +
+                      '        <link type="text/rcss" href="../styles/glass_window.css" />')
+        open(tpl, 'w', encoding='utf-8', newline='').write(t)
+    for name in ('glass_gauge.css', 'glass_hud.css'):
+        shutil.copy2(os.path.join(ROOT, 'tools', name), os.path.join(OUT, 'styles', name))
 
 
 def sheet(name, im):
@@ -86,29 +120,31 @@ def sheet(name, im):
 
 
 def glass_css():
-    """Bake every glass piece into one sheet: name -> 9-slice sprites <name>-tl ... <name>-br."""
-    parts = [(name, art.glass_panel(**spec)) for name, spec in PIECES]
-    icons = [('gl-close', art.close_icon(False)), ('gl-close-h', art.close_icon(True))]   # single sprites
-    w = sum(p[0].width + 2 for _, p in parts) + sum(i.width + 2 for _, i in icons)
-    h = max(max(p[0].height for _, p in parts), max(i.height for _, i in icons))
-    im = Image.new('RGBA', (w, h), (0, 0, 0, 0))
-    rects, x = {}, 0
-    for name, (img, corner, edge) in parts:
-        im.paste(img, (x, 0))
-        rects.update(art.slices(name, x, 0, corner, edge))
+    """Bake every glass piece into one sheet: 9-slice pieces as <name>-tl ... <name>-br, single sprites by name."""
+    items = [(name,) + art.glass_panel(**spec) for name, spec in PIECES]        # (name, img, corner, edge)
+    items += [(name, img, None, None) for name, img in sprites()]
+    maxw, x, y, rowh, placed = 2048, 0, 0, 0, []
+    for name, img, corner, edge in items:
+        if x + img.width > maxw:
+            x, y, rowh = 0, y + rowh + 2, 0
+        placed.append((name, img, corner, edge, x, y))
         x += img.width + 2
-    for name, icon in icons:
-        im.paste(icon, (x, 0))
-        rects[name] = (x, 0, icon.width, icon.height)
-        x += icon.width + 2
+        rowh = max(rowh, img.height)
+    im = Image.new('RGBA', (maxw, y + rowh), (0, 0, 0, 0))
+    rects = {}
+    for name, img, corner, edge, px, py in placed:
+        im.paste(img, (px, py))
+        if corner is None:
+            rects[name] = (px, py, img.width, img.height)
+        else:
+            rects.update(art.slices(name, px, py, corner, edge))
     fn = sheet('glass_frame', im)
     lines = ['/* Glass art (written by tools/build.py). Sprites at 2x. */',
              '@spritesheet glass-frame {', '    src: ../imgs/%s;' % fn, '    resolution: 2x;']
     lines += ['    %s: %dpx %dpx %dpx %dpx;' % ((k,) + v) for k, v in rects.items()]
     lines += ['}', '']
     open(os.path.join(OUT, 'styles', 'glass_frame.css'), 'w', encoding='utf-8', newline='').write(chr(10).join(lines))
-    sw = ''
-    print('art', fn, sw)
+    print('art', fn, im.size)
 
 
 def build():

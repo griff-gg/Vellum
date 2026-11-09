@@ -1,0 +1,89 @@
+<rml>
+    <head>
+        <title>Party</title>
+        <link type="text/template" href="../templates/window-fixed-size.html" />
+        <link type="text/rcss" href="../styles/components.css" />
+        <style>
+            #party-window { position: relative; decorator: none; border-radius: 3dp; width: 154dp; min-width: 150dp; min-height: 0; max-width: 95vw; padding: 2dp; padding-top: 24dp; }
+            #party #window-content { padding: 2dp; }
+            #party-window > .window-title { height: 24dp; line-height: 24dp; padding-left: 4dp; visibility: visible; }
+            #party-window > .window-title-close { display: none; }
+            #party .ui-hud-toolbar { top: -24dp; right: 0; gap: 2dp; visibility: visible; }
+            .party-summary { display: flex; align-items: center; gap: 8dp; margin-bottom: 8dp; }
+            /* Round 24dp action icons from party_controls.png; the art carries its own disabled and hover states. */
+            #party button.party-action { width: 18dp; min-width: 18dp; height: 18dp; padding: 0; margin: 0; }
+            #party button.party-action:disabled { opacity: 1; }
+            #party-entrust { decorator: image(party-entrust-n); }
+            #party-entrust:hover { decorator: image(party-entrust-h); }
+            #party-entrust:disabled { decorator: image(party-entrust-d); }
+            #party-kick { decorator: image(party-kick-n); }
+            #party-kick:hover { decorator: image(party-kick-h); }
+            #party-kick:disabled { decorator: image(party-kick-d); }
+            #party-leave { decorator: image(party-leave-n); }
+            #party-leave:hover { decorator: image(party-leave-h); }
+            #party-options { decorator: image(party-options-n); }
+            #party-options:hover { decorator: image(party-options-h); }
+            .party-level { flex-shrink: 0; color: rgb(255, 247, 191); font-weight: 820; }
+            #party gauge.party-experience { flex: 1; height: 12dp; text-align: center; font-size: 10dp; line-height: 12dp; }
+            #party-members { display: inline-block; min-width: 10em; min-height: 80dp; max-height: 40vh; overflow-y: auto; }
+            .party-member.selected .member-name { color: rgb(255, 75, 75); }
+            .party-member { padding: 0; margin-bottom: 0.3em; }
+            .member-vitals { display: flex; align-items: center; gap: 0.3em; width: 10em; height: 1em; }
+            gauge.member-health { width: 5.5em; height: 0.45em; margin-top: 0; flex-shrink: 0; }
+            gauge.member-health > span { top: 50%; margin-top: -0.5em; font-size: 0.7em; line-height: 1em; white-space: nowrap; }
+            .member-name { flex: 1; height: 1em; line-height: 1em; font-size: 0.8em; }
+            gauge.member-health.unavailable { opacity: 0.5; }
+            /* Reserve one buff row; long buff lines extend past the fixed-width health bars. */
+            .member-statuses { display: flex; flex-wrap: nowrap; gap: 0.1em; margin-top: 0.1em; height: 1.1em; }
+            /* 13dp icons at the default 15dp roster font. */
+            .member-statuses > span, .member-statuses > span > img { width: 0.866667em; height: 0.866667em; }
+            .member-status.blink { opacity: 0.3; }
+            #party-tooltip { visibility: visible; position: absolute; z-index: 100; clip: none; pointer-events: none; padding: 8dp; width: 250dp; max-width: 90vw; max-height: 90vh; background: rgba(0, 0, 0, 230); border: 1dp rgb(150, 150, 150); border-radius: 3dp; }
+            .status-tooltip-name { display: block; font-weight: 820; margin-bottom: 4dp; }
+            .status-tooltip-description { display: block; margin-bottom: 4dp; }
+            .status-tooltip-time { display: block; color: rgb(90, 230, 110); }
+            .status-tooltip-time.warning { color: rgb(255, 170, 60); }
+            .status-tooltip-time.danger { color: rgb(255, 80, 80); }
+            #party { width: auto; min-width: 0; min-height: 0; padding: 0; background-color: transparent; }
+        </style>
+        <link type="text/rcss" href="../styles/glass_hud.css" />
+    </head>
+    <body open-sound="3" close-sound="4" default-background-opacity="55" id="party">
+        <!-- Bind once before the template and its data-for lists are parsed. -->
+        <div id="party-window" class="window-fixed-size" data-model="party" data-style-width="(members_font_size * 10 + 4) + 'dp'" data-style-background-color="'rgba(26, 30, 40, ' + background_opacity + '%)'">
+            <template src="window-fixed-size">
+                <div>
+                    <div class="party-summary" data-style-width="members_font_size * 10 + 'dp'">
+                        <span class="party-level">Level {{level}}</span>
+                        <gauge class="party-experience horizontal-sm-lg yellow" data-attr-gvalue="experience" data-attr-gmax="max_experience"><span>{{experience_percent}}%</span></gauge>
+                    </div>
+                    <div class="ui-hud-toolbar">
+                        <button id="party-entrust" class="ui-hud-action party-action" onmouseover="label-tooltip:357" onmouseout="hide-tooltip" onclick="entrust" data-if="is_leader" data-attrif-disabled="!can_entrust" />
+                        <button id="party-kick" class="ui-hud-action party-action" onmouseover="label-tooltip:359" onmouseout="hide-tooltip" onclick="kick" data-if="is_leader" data-attrif-disabled="!can_kick" />
+                        <button id="party-leave" class="ui-hud-action party-action" onmouseover="label-tooltip:358" onmouseout="hide-tooltip" onclick="leave" />
+                        <button id="party-options" class="ui-hud-action party-action" onmouseover="label-tooltip:26" onmouseout="hide-tooltip" onclick="options" />
+                    </div>
+                    <div id="party-members" data-style-width="(max_status_count > 10 ? max_status_count * 0.966667 : 10) + 'em'" data-style-font-size="members_font_size + 'dp'" data-style-min-height="members_min_height + 'dp'" data-style-max-height="members_max_height + 'dp'">
+                        <div class="party-member ui-roster-member" data-for="member : members" data-attr-id="'member-' + member.tag" data-attr-onclick="'select:' + member.tag" data-class-selected="member.selected" data-class-leader="member.leader">
+                            <div class="member-vitals">
+                                <span class="member-name ui-roster-name">{{member.name}}</span>
+                                <gauge class="member-health ui-vitals horizontal-sm-sm red" data-class-unavailable="!member.available" data-attr-gvalue="member.hp_percent" gmax="100"><span>{{member.hp}}/{{member.max_hp}}</span></gauge>
+                            </div>
+                            <div class="member-statuses ui-status-icons">
+                                <span class="member-status" data-for="status : member.statuses" data-attr-id="'status-' + member.tag + '-' + status.state_id" data-class-blink="status.blink" data-attr-onmouseover="'status-tooltip:' + member.tag + ':' + status.state_id" onmouseout="hide-tooltip"><img data-attr-sprite="'stateicon-' + status.icon" /></span>
+                            </div>
+                        </div>
+                    </div>
+                    <div id="party-tooltip" data-if="tooltip_visible" data-style-left="tooltip_x + 'px'" data-style-top="tooltip_y + 'px'">
+                        <div data-if="tooltip_text != ''">{{tooltip_text}}</div>
+                        <div data-if="tooltip_text == ''">
+                            <div class="status-tooltip-name">{{tooltip_name}}</div>
+                            <div class="status-tooltip-description">{{tooltip_description}}</div>
+                            <div class="status-tooltip-time" data-class-warning="tooltip_time_class == 'warning'" data-class-danger="tooltip_time_class == 'danger'">{{tooltip_remaining}}</div>
+                        </div>
+                    </div>
+                </div>
+            </template>
+        </div>
+    </body>
+</rml>

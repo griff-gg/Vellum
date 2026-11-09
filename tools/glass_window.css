@@ -113,3 +113,16 @@ W scrollbarhorizontal slidertrack { margin-top: 1dp; height: 10dp; image-color: 
 W scrollbarhorizontal sliderbar { margin-top: 2dp; height: 6dp; min-width: 28dp; padding: 0dp; box-sizing: border-box; background-color: transparent; border-radius: 0dp; decorator: tiled-box(gl-sbb-tl, gl-sbb-t, gl-sbb-tr, gl-sbb-l, gl-sbb-c, gl-sbb-r, gl-sbb-bl, gl-sbb-b, gl-sbb-br); }
 W scrollbarhorizontal sliderbar:hover { decorator: tiled-box(gl-sbbh-tl, gl-sbbh-t, gl-sbbh-tr, gl-sbbh-l, gl-sbbh-c, gl-sbbh-r, gl-sbbh-bl, gl-sbbh-b, gl-sbbh-br); }
 W scrollbarhorizontal sliderbar:active, W scrollbarhorizontal sliderbar:hover:active { decorator: tiled-box(gl-sbbp-tl, gl-sbbp-t, gl-sbbp-tr, gl-sbbp-l, gl-sbbp-c, gl-sbbp-r, gl-sbbp-bl, gl-sbbp-b, gl-sbbp-br); }
+
+/* range sliders: thin glass groove, round glass knob that travels inside it */
+W input.range slidertrack {
+    margin-top: 5dp; padding-left: 0dp; height: 8dp; image-color: white;
+    decorator: tiled-box(gl-slt-tl, gl-slt-t, gl-slt-tr, gl-slt-l, gl-slt-c, gl-slt-r, gl-slt-bl, gl-slt-b, gl-slt-br);
+}
+W input.range sliderbar {
+    margin-top: -5dp; margin-left: 0dp; width: 18dp; height: 18dp; padding: 0dp; box-sizing: border-box;
+    image-color: white; decorator: image(gl-knob);
+}
+W input.range:not([disabled]) sliderbar:hover, W input.range:not([disabled]) slidertrack:hover + sliderbar,
+W input.range:not([disabled]) sliderbar:active { image-color: white; decorator: image(gl-knob-h); }
+W .ui-detail-value { color: rgba(255, 255, 255, 205); }
