@@ -80,3 +80,19 @@ for name in OVERLAYS:
         s = swap(s, "'rgba(0, 0, 0, '", "'rgba(26, 30, 40, '", name)
         s = swap(s, 'default-background-opacity="25"', 'default-background-opacity="55"', name)
     save(name, s)
+
+
+# ---- minimap: rounded-square viewport, glass day/night glyphs, simpler gift blink, glass stylesheet
+name = 'minimap.html'
+s = load(name)
+s = swap(s, 'mask-radius="50%"', 'mask-radius="7%"', name)
+s = swap(s, '<img data-if="!is_day" sprite="GEN_DECO09" class="day-night-icon"/>', '<span data-if="!is_day" class="gl-dn gl-night"></span>', name)
+s = swap(s, '<img data-if="is_day" sprite="GEN_DECO10" class="day-night-icon"/>', '<span data-if="is_day" class="gl-dn gl-day"></span>', name)
+s = swap(s, '<span style="color: rgb(131, 147, 202)">', '<span style="color: rgb(255, 255, 255)">', name)
+s = swap(s, """                0% { decorator: image(GEN_BTN106); }
+                50% { decorator: image(GEN_BTN109); }
+                100% { decorator: image(GEN_BTN106); }""", """                0% { opacity: 1; }
+                50% { opacity: 0.35; }
+                100% { opacity: 1; }""", name)
+s = swap(s, '    </head>', '        <link type="text/rcss" href="../styles/glass_minimap.css" />' + NL + '    </head>', name)
+save(name, s)

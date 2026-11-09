@@ -192,6 +192,43 @@ def _glyph(kind, n):
         d.ellipse((c - 0.07 * n - r, c - 0.14 * n - r, c - 0.07 * n + r, c - 0.14 * n + r), outline=255, width=wd)
         d.arc((c - 0.25 * n, c - 0.01 * n, c + 0.11 * n, c + 0.35 * n), 180, 360, fill=255, width=wd)
         d.line((c + 0.12 * n, c + 0.02 * n, c + 0.28 * n, c + 0.02 * n), fill=255, width=wd)
+    elif kind == 'minus':
+        d.line((c - 0.22 * n, c, c + 0.22 * n, c), fill=255, width=wd)
+    elif kind == 'plus':
+        d.line((c - 0.22 * n, c, c + 0.22 * n, c), fill=255, width=wd)
+        d.line((c, c - 0.22 * n, c, c + 0.22 * n), fill=255, width=wd)
+    elif kind == 'globe':
+        r = 0.27 * n
+        d.ellipse((c - r, c - r, c + r, c + r), outline=255, width=wd)
+        d.ellipse((c - 0.11 * n, c - r, c + 0.11 * n, c + r), outline=255, width=max(wd - 1, 2))
+        d.line((c - r, c, c + r, c), fill=255, width=max(wd - 1, 2))
+    elif kind == 'bars':
+        for i, hgt in enumerate((0.20, 0.34, 0.26)):
+            x0 = c + (i - 1) * 0.2 * n
+            d.rounded_rectangle((x0 - 0.06 * n, c + 0.22 * n - hgt * n, x0 + 0.06 * n, c + 0.22 * n), radius=int(n * 0.03), fill=255)
+    elif kind == 'gift':
+        t = max(int(n * 0.055), 2)
+        d.rounded_rectangle((c - 0.22 * n, c - 0.02 * n, c + 0.22 * n, c + 0.27 * n), radius=int(n * 0.03), outline=255, width=t)
+        d.rounded_rectangle((c - 0.27 * n, c - 0.14 * n, c + 0.27 * n, c - 0.02 * n), radius=int(n * 0.03), outline=255, width=t)
+        d.line((c, c - 0.14 * n, c, c + 0.27 * n), fill=255, width=t)
+        d.arc((c - 0.20 * n, c - 0.30 * n, c, c - 0.12 * n), 90, 360, fill=255, width=t)
+        d.arc((c, c - 0.30 * n, c + 0.20 * n, c - 0.12 * n), 180, 450, fill=255, width=t)
+    elif kind == 'bag':
+        t = max(int(n * 0.055), 2)
+        d.polygon([(c - 0.20 * n, c - 0.10 * n), (c + 0.20 * n, c - 0.10 * n), (c + 0.27 * n, c + 0.27 * n), (c - 0.27 * n, c + 0.27 * n)],
+                  outline=255, width=t)
+        d.arc((c - 0.13 * n, c - 0.27 * n, c + 0.13 * n, c + 0.05 * n), 180, 360, fill=255, width=t)
+    elif kind == 'sun':
+        r = 0.11 * n
+        d.ellipse((c - r, c - r, c + r, c + r), fill=255)
+        for i in range(8):
+            ang = i * np.pi / 4
+            d.line((c + 0.19 * n * np.cos(ang), c + 0.19 * n * np.sin(ang),
+                    c + 0.29 * n * np.cos(ang), c + 0.29 * n * np.sin(ang)), fill=255, width=max(wd - 1, 2))
+    elif kind == 'moon':
+        r = 0.26 * n
+        d.ellipse((c - r, c - r, c + r, c + r), fill=255)
+        d.ellipse((c - r * 0.1, c - r * 1.35, c + r * 1.55, c + r * 0.3), fill=0)
     elif kind == 'entrust':
         pts = []
         for i in range(10):
@@ -296,3 +333,9 @@ def grip(hover):
             o = n * (0.30 + 0.2 * i)
             d.line([(n * 0.92, o), (o, n * 0.92)], fill=255, width=w)
     return _overlay(img, mark, (255, 255, 255), 1.0 if hover else 0.55)
+
+
+def plain_glyph(kind, alpha=0.9, size=20):
+    """A bare white glyph (no button), size x size dp at 2 px per dp."""
+    img = Image.new('RGBA', (size * 2, size * 2), (0, 0, 0, 0))
+    return _overlay(img, lambda d, n: d.bitmap((0, 0), _glyph(kind, n), fill=255), (255, 255, 255), alpha)

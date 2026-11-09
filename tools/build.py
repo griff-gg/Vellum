@@ -72,6 +72,10 @@ def sprites():
     for kind in ('options', 'leave', 'kick', 'entrust'):
         for st in ('n', 'h', 'd'):
             out.append(('gl-i-%s%s' % (kind, '' if st == 'n' else '-' + st), art.round_icon(kind, st)))
+    for kind in ('globe', 'bars', 'gift', 'bag', 'minus', 'plus'):       # minimap buttons, 22dp
+        for st in ('n', 'h'):
+            out.append(('gl-m-%s%s' % (kind, '' if st == 'n' else '-h'), art.round_icon(kind, st, radius=11)))
+    out += [('gl-m-sun', art.plain_glyph('sun')), ('gl-m-moon', art.plain_glyph('moon'))]
     for kind in ('cb', 'rd'):
         for st in ('off', 'off-h', 'on', 'on-h', 'p', 'd', 'd-on'):
             out.append(('gl-%s-%s' % (kind, st), art.toggle(kind, st)))
@@ -118,7 +122,7 @@ def window_css():
                       '        <link type="text/rcss" href="../styles/glass_gauge.css" />' + chr(10) +
                       '        <link type="text/rcss" href="../styles/glass_window.css" />')
         open(tpl, 'w', encoding='utf-8', newline='').write(t)
-    for name in ('glass_gauge.css', 'glass_hud.css', 'glass_options.css'):
+    for name in ('glass_gauge.css', 'glass_hud.css', 'glass_options.css', 'glass_minimap.css'):
         shutil.copy2(os.path.join(ROOT, 'tools', name), os.path.join(OUT, 'styles', name))
 
 

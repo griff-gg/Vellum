@@ -1,0 +1,87 @@
+/* Glass minimap: a clean rounded-square map in a glass panel, icon buttons redrawn as monochrome glass circles.
+   Geometry (dp): panel 178 x 226, map viewport 142 x 142 at (18, 42) - the same size as the stock viewport, so the
+   game's player centering still works. Linked into minimap.html after its own styles. */
+
+body#game-minimap { width: 178dp; }
+#minimap-root { width: 178dp; }
+
+#minimap-normal {
+    width: 178dp; height: 226dp;
+    decorator: tiled-box(gl-hud-tl, gl-hud-t, gl-hud-tr, gl-hud-l, gl-hud-c, gl-hud-r, gl-hud-bl, gl-hud-b, gl-hud-br);
+}
+#minimap-minimized {
+    width: 178dp; height: 52dp;
+    decorator: tiled-box(gl-hud-tl, gl-hud-t, gl-hud-tr, gl-hud-l, gl-hud-c, gl-hud-r, gl-hud-bl, gl-hud-b, gl-hud-br);
+}
+
+/* map: square viewport with a thin glass rim (the page's mask-radius is 7% = 10dp, matching the rim) */
+#minimap-viewport { left: 18dp; top: 42dp; width: 142dp; height: 142dp; }
+#minimap-frame {
+    left: 18dp; top: 42dp; width: 142dp; height: 142dp; decorator: none; box-sizing: border-box;
+    border: 1dp rgba(255, 255, 255, 100); border-radius: 10dp;
+}
+
+/* title row: small spaced capitals, like every glass window */
+#zone-name, #minimap-minimized #zone-name-min {
+    left: 18dp; top: 12dp; width: 112dp; height: 24dp; line-height: 24dp; font-size: 10dp; font-weight: 800;
+    text-transform: uppercase; letter-spacing: 1.4dp; text-align: left; font-effect: shadow(0dp 1dp rgba(0, 0, 0, 120));
+    color: rgba(255, 255, 255, 225);
+}
+#minimap-minimized #zone-name-min { top: 9dp; width: 120dp; height: 18dp; line-height: 18dp; }
+#minimap-minimized #time-min {
+    left: 18dp; top: 28dp; width: 120dp; height: 14dp; font-size: 11dp; text-align: left;
+    color: rgba(255, 255, 255, 175); font-effect: shadow(0dp 1dp rgba(0, 0, 0, 120));
+}
+
+/* glass icon buttons */
+#minimap-normal .btn-minimize, #minimap-normal .btn-worldmap, #minimap-normal .btn-gamearena,
+#minimap-normal .btn-giftbox, #minimap-normal .btn-itemmall, #minimap-normal .btn-zoomin, #minimap-normal .btn-zoomout,
+#minimap-minimized .btn-restore {
+    width: 22dp; height: 22dp; padding: 0dp; background-color: transparent; border-width: 0dp;
+    transition: all 0.14s cubic-out;
+}
+#minimap-normal .btn-minimize:hover, #minimap-normal .btn-worldmap:hover, #minimap-normal .btn-gamearena:hover,
+#minimap-normal .btn-giftbox:hover, #minimap-normal .btn-itemmall:hover, #minimap-normal .btn-zoomin:hover,
+#minimap-normal .btn-zoomout:hover, #minimap-minimized .btn-restore:hover { opacity: 1; transform: scale(1.08); }
+#minimap-normal .btn-minimize:active, #minimap-normal .btn-worldmap:active, #minimap-normal .btn-gamearena:active,
+#minimap-normal .btn-giftbox:active, #minimap-normal .btn-itemmall:active, #minimap-normal .btn-zoomin:active,
+#minimap-normal .btn-zoomout:active, #minimap-minimized .btn-restore:active { opacity: 1; transform: scale(0.92); }
+
+#minimap-normal .btn-minimize { right: 16dp; top: 13dp; decorator: image(gl-m-minus); }
+#minimap-normal .btn-minimize:hover, #minimap-normal .btn-minimize:active { decorator: image(gl-m-minus-h); }
+#minimap-minimized .btn-restore { right: 16dp; top: 15dp; decorator: image(gl-m-plus); }
+#minimap-minimized .btn-restore:hover, #minimap-minimized .btn-restore:active { decorator: image(gl-m-plus-h); }
+
+/* the four shortcuts stack down the left edge of the map */
+#minimap-normal .btn-worldmap { left: 24dp; top: 48dp; decorator: image(gl-m-globe); }
+#minimap-normal .btn-worldmap:hover, #minimap-normal .btn-worldmap:active { decorator: image(gl-m-globe-h); }
+#minimap-normal .btn-gamearena { left: 24dp; top: 74dp; decorator: image(gl-m-bars); }
+#minimap-normal .btn-gamearena:hover, #minimap-normal .btn-gamearena:active { decorator: image(gl-m-bars-h); }
+#minimap-normal .btn-giftbox { left: 24dp; top: 100dp; decorator: image(gl-m-gift); }
+#minimap-normal .btn-giftbox:hover, #minimap-normal .btn-giftbox:active { decorator: image(gl-m-gift-h); }
+#minimap-normal .btn-itemmall { left: 24dp; top: 126dp; bottom: auto; decorator: image(gl-m-bag); }
+#minimap-normal .btn-itemmall:hover, #minimap-normal .btn-itemmall:active { decorator: image(gl-m-bag-h); }
+
+/* zoom: bottom-right corner of the map */
+#minimap-normal .btn-zoomin { right: 24dp; bottom: 48dp; decorator: image(gl-m-plus); }
+#minimap-normal .btn-zoomin:hover, #minimap-normal .btn-zoomin:active { decorator: image(gl-m-plus-h); }
+#minimap-normal .btn-zoomout { right: 50dp; bottom: 48dp; decorator: image(gl-m-minus); }
+#minimap-normal .btn-zoomout:hover, #minimap-normal .btn-zoomout:active { decorator: image(gl-m-minus-h); }
+
+/* footer: day/night glyph + time on the left, coordinates on the right */
+.gl-dn { position: absolute; left: 18dp; top: 196dp; width: 20dp; height: 20dp; }
+.gl-day { decorator: image(gl-m-sun); }
+.gl-night { decorator: image(gl-m-moon); }
+#coordinates-text, #time-text {
+    height: 16dp; line-height: 16dp; font-size: 12dp; font-weight: 700; color: rgba(255, 255, 255, 205);
+    font-effect: shadow(0dp 1dp rgba(0, 0, 0, 150));
+}
+#coordinates-text { left: auto; right: 18dp; bottom: 14dp; width: 80dp; text-align: right; }
+#time-area { left: 44dp; bottom: 14dp; width: 70dp; height: 16dp; text-align: left; }
+#time-text { width: 70dp; text-align: left; }
+
+/* tooltips */
+.minimap-tooltip { background-color: rgba(26, 30, 40, 238); border: 1dp rgba(255, 255, 255, 85); border-radius: 10dp; }
+.time-tooltip-label { color: rgba(255, 255, 255, 170); }
+#giftbox-tooltip { left: -170dp; top: 100dp; }
+#giftbox-tooltip-bg { decorator: none; background-color: rgba(26, 30, 40, 238); border: 1dp rgba(255, 255, 255, 85); border-radius: 12dp; box-sizing: border-box; }
