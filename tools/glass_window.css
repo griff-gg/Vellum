@@ -54,6 +54,7 @@ W .ui-tab:hover {
     text-align: center; font-size: 12dp; font-effect: none;
     decorator: none; background-color: transparent; border-width: 0dp; border-radius: 0dp;
     color: rgba(255, 255, 255, 170);
+    transition: color background-color 0.16s cubic-out;
 }
 W .ui-tab:hover { color: rgb(255, 255, 255); }
 W .ui-tab.selected, W .ui-tab.active, W .ui-tab:selected {
@@ -61,11 +62,13 @@ W .ui-tab.selected, W .ui-tab.active, W .ui-tab:selected {
     decorator: tiled-box(gl-pill-tl, gl-pill-t, gl-pill-tr, gl-pill-l, gl-pill-c, gl-pill-r, gl-pill-bl, gl-pill-b, gl-pill-br);
 }
 
-/* glass buttons (look only: each window keeps its own size) */
+/* glass buttons (look only: each window keeps its own size). The glass art stays the same in every state;
+   the fill and text colour fade and the button presses down a little, because artwork can't cross-fade. */
 W button.default {
     decorator: tiled-box(gl-btn-tl, gl-btn-t, gl-btn-tr, gl-btn-l, gl-btn-c, gl-btn-r, gl-btn-bl, gl-btn-b, gl-btn-br);
-    background-color: transparent; border-width: 0dp; border-radius: 12dp;
-    color: rgb(255, 255, 255); font-effect: shadow(0dp 1dp rgba(0,0,0,90));
+    background-color: rgba(255, 255, 255, 0); border-width: 0dp; border-radius: 12dp;
+    color: rgba(255, 255, 255, 235); font-effect: shadow(0dp 1dp rgba(0,0,0,90));
+    transition: background-color color transform 0.16s cubic-out;
 }
 W button.default.selected:not([disabled]) {
     decorator: tiled-box(gl-pill-tl, gl-pill-t, gl-pill-tr, gl-pill-l, gl-pill-c, gl-pill-r, gl-pill-bl, gl-pill-b, gl-pill-br);
@@ -73,17 +76,17 @@ W button.default.selected:not([disabled]) {
 }
 W button.default:not([disabled]):hover,
 W button.default:not([disabled]):focus {
-    decorator: tiled-box(gl-btnh-tl, gl-btnh-t, gl-btnh-tr, gl-btnh-l, gl-btnh-c, gl-btnh-r, gl-btnh-bl, gl-btnh-b, gl-btnh-br);
-    color: rgb(255, 255, 255); border-width: 0dp;
+    background-color: rgba(255, 255, 255, 52); color: rgb(255, 255, 255); border-width: 0dp;
 }
 W button.default:not([disabled]):active {
-    decorator: tiled-box(gl-btnp-tl, gl-btnp-t, gl-btnp-tr, gl-btnp-l, gl-btnp-c, gl-btnp-r, gl-btnp-bl, gl-btnp-b, gl-btnp-br);
-    color: rgba(255, 255, 255, 220); border-width: 0dp;
+    background-color: rgba(0, 0, 0, 55); color: rgba(255, 255, 255, 215); border-width: 0dp;
+    transform: scale(0.97);
+    transition: background-color color transform 0.06s cubic-out;
 }
 W button.default:disabled,
 W button.default[disabled] {
     decorator: tiled-box(gl-btnd-tl, gl-btnd-t, gl-btnd-tr, gl-btnd-l, gl-btnd-c, gl-btnd-r, gl-btnd-bl, gl-btnd-b, gl-btnd-br);
-    background-color: transparent; color: rgba(255, 255, 255, 95); border-width: 0dp;
+    background-color: rgba(255, 255, 255, 0); color: rgba(255, 255, 255, 95); border-width: 0dp;
 }
 
 /* text boxes */
@@ -94,7 +97,7 @@ W input[type="text"] {
 W input[type="text"]:focus { border-color: rgb(246, 200, 118); }
 
 /* list rows */
-W .ui-list-row, W .ui-list > listbox-item { border-radius: 8dp; }
+W .ui-list-row, W .ui-list > listbox-item { border-radius: 8dp; transition: background-color color 0.14s cubic-out; }
 W .ui-list-row:hover, W .ui-list > listbox-item:not([disabled]):not([selected]):hover { background: rgba(255, 255, 255, 28); }
 W .ui-list-row.selected, W .ui-list > listbox-item:not([disabled])[selected] { background: rgba(255, 255, 255, 55); color: rgb(246, 200, 118); }
 W .group-leader { color: rgb(246, 200, 118); }
