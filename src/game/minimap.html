@@ -506,15 +506,18 @@ pcall(function()
     local function fit(m)
         local t, b = by_id(m.text), by_id(m.box)
         if not (t and b) then return end
+        -- the game reports an inline box no wider than its clip box, so the width is estimated from the letters:
+        -- the title is small spaced capitals, about 7.4 dp per letter, narrower for spaces, quotes and thin letters
         local bw, tw = b.client_width, t.offset_width
-        local ratio = 1
-        local width
-        if bw and tw and bw > 1 and tw > 1 then
-            ratio = bw / m.dp
-            width = tw / ratio
-        else
-            width = string.len(t.inner_rml or '') * 6.2
+        local width = 0
+        for ch in string.gmatch(t.inner_rml or '', '.') do
+            if ch == ' ' then width = width + 4.6
+            elseif ch == "'" or ch == '.' or ch == ',' or ch == '-' then width = width + 4.9
+            elseif ch == 'I' or ch == 'i' or ch == 'l' or ch == 'j' or ch == 'J' or ch == '1' then width = width + 4.8
+            elseif ch == 'M' or ch == 'm' or ch == 'W' or ch == 'w' then width = width + 10.2
+            else width = width + 7.4 end
         end
+        if bw and tw and bw > 1 and tw > 1 then width = math.max(width, tw / (bw / m.dp)) end
         local over = width - m.dp + 10
         local key = 0
         if over > 2 then key = math.min(math.max(math.floor(over / 4 + 0.5) * 4, 4), 160) end
