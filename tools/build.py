@@ -52,9 +52,9 @@ PIECES += (('gl-gbg-lg', _groove(8)), ('gl-gbg-md', _groove(4)), ('gl-gbg-sm', _
            ('gl-slt', dict(SB_TRACK, radius=4)), ('gl-hud', HUDWIN))
 
 # Monotone gauge fills: HP dark, MP light, everything else mid-grey.
-DARK = dict(top=(72, 78, 94), bottom=(26, 29, 40), alpha=150, rim=(255, 255, 255), rim_a=120, hl_a=80)
-LIGHT = dict(top=(255, 255, 255), bottom=(222, 230, 242), alpha=135, rim=(118, 130, 150), rim_a=120, hl_a=235)
-MID = dict(top=(206, 214, 226), bottom=(150, 159, 172), alpha=130, rim=(255, 255, 255), rim_a=120, hl_a=140)
+DARK = dict(top=(72, 78, 94), bottom=(26, 29, 40), alpha=125, rim=(255, 255, 255), rim_a=120, hl_a=80)
+LIGHT = dict(top=(255, 255, 255), bottom=(222, 230, 242), alpha=105, rim=(118, 130, 150), rim_a=120, hl_a=235)
+MID = dict(top=(206, 214, 226), bottom=(150, 159, 172), alpha=105, rim=(255, 255, 255), rim_a=120, hl_a=140)
 # (name, w, h, radius, colours, inset dp): the large HUD bars sit inside their groove as slim glass pills
 FILLS = (('gl-f-dark-lg', 185, 26, 7, DARK, 3), ('gl-f-light-lg', 185, 26, 7, LIGHT, 3),
          ('gl-f-mid-exp', 185, 9, 3, MID, 1),

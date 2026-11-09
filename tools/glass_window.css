@@ -31,7 +31,8 @@ W > button.window-title-close:not([disabled]):hover,
 W > button.window-title-close:not([disabled]):focus { decorator: image(gl-close-h); }
 W > button.window-title-close:not([disabled]):active { decorator: image(gl-close); opacity: 0.8; }
 
-/* inner panels */
+/* inner panels (the stock window-pane is an opaque dark box) */
+W .window-pane { decorator: none; background-color: transparent; border-width: 0dp; }
 W .content-box {
     background-color: rgba(255, 255, 255, 16);
     border: 1dp rgba(255, 255, 255, 55);

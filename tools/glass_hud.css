@@ -1,5 +1,11 @@
 /* Glass HUD, Party and Group (arena group) overlays. Linked into those three pages after their own styles. */
 
+/* the stock opaque inner panel (window-in-*) is what showed as a square box behind the bars: remove it */
+#hud #window-content, #party #window-content, #arena-group #window-content,
+#hud .window-pane, #party .window-pane, #arena-group .window-pane {
+    decorator: none; background-color: transparent; border-width: 0dp;
+}
+
 /* ---------------- HUD ---------------- */
 #hud div.hud { width: 211dp; }
 #hud .window-fixed-size {
