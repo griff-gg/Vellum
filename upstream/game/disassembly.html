@@ -1,0 +1,43 @@
+<rml>
+    <head>
+        <title>Disassembly</title>
+        <link type="text/template" href="../templates/window-fixed-size.html" />
+        <link type="text/rcss" href="../styles/spritesheet_itemicon.css" />
+        <link type="text/rcss" href="../styles/spritesheet_socketgem.css" />
+        <link type="text/rcss" href="../styles/item_slot.css" />
+        <link type="text/rcss" href="../styles/components.css" />
+        <style>
+            body { width: 340dp; max-width: 92vw; }
+
+            #disassembly .ui-item-row {
+                min-height: 54dp;
+                padding: 6dp 8dp;
+                margin-bottom: 4dp;
+            }
+
+            #disassembly-begin {
+                min-width: 100dp;
+                height: 24dp;
+                flex-shrink: 0;
+                padding: 1dp 12dp;
+                font-size: 13dp;
+                line-height: 22dp;
+                white-space: nowrap;
+            }
+            .disassembly-heading { display: block; margin: 8dp 0 4dp; }
+            #disassembly-outputs { max-height: 300dp; overflow-y: auto; min-height: 54dp; }
+        </style>
+    </head>
+    <body template="window-fixed-size" id="disassembly">
+        <div data-model="disassembly">
+            <div class="content-box ui-section ui-item-row">
+                <item-slot id="disassembly-target" class="default" />
+                <div class="ui-item-details"><str string-id="788" class="ui-item-caption" /><span class="ui-section-title">{{target_name}}</span></div>
+            </div>
+            <span class="disassembly-heading ui-section-title">{{output_heading}}</span>
+            <div id="disassembly-outputs" />
+            <span id="disassembly-status" class="ui-status ui-operation-status" data-if="status != ''">{{status}}</span>
+            <div class="ui-actions ui-operation-actions"><button id="disassembly-begin" class="default accept" onclick="begin" data-attrif-disabled="busy"><str string-id="893" /></button></div>
+        </div>
+    </body>
+</rml>

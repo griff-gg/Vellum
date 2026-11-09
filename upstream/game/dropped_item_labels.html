@@ -1,0 +1,20 @@
+<rml>
+    <head>
+        <title>Dropped Items</title>
+        <link type="text/rcss" href="../styles/html.css" />
+        <link type="text/rcss" href="../styles/components.css" />
+        <style>
+            body { z-index: -100; }
+            .dropped-item { position: absolute; display: inline-block; box-sizing: border-box; width: auto; max-width: 100vw; max-height: 100vh; overflow: hidden; padding: 2dp 8dp; white-space: nowrap; pointer-events: none; }
+            .pickup-status { margin-left: 4dp; color: rgb(255, 80, 80); pointer-events: none; }
+            .pickup-status.available { color: rgb(90, 230, 110); }
+        </style>
+    </head>
+    <body class="ui-world-layer" id="dropped-item-labels">
+        <!-- The model binds on a child: a body-level model attaches after parsing, too late for data-for templates. -->
+        <div id="dropped-item-labels-root" data-model="dropped-item-labels">
+        <div class="dropped-item" data-for="label : labels" data-if="label.visible" data-style-color="label.color"
+             data-style-left="label.x + 'px'" data-style-top="label.y + 'px'">{{label.name}}<span class="pickup-status" data-if="show_pickup_status" data-class-available="label.can_pick_up">*</span></div>
+        </div>
+    </body>
+</rml>

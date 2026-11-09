@@ -1,0 +1,104 @@
+<rml>
+    <head>
+        <title>Group</title>
+        <link type="text/template" href="../templates/window-fixed-size.html" />
+        <link type="text/rcss" href="../styles/components.css" />
+        <style>
+            #arena-group-window { position: relative; decorator: none; border-radius: 3dp; width: auto; min-width: 150dp; min-height: 0; max-width: 95vw; padding: 2dp; padding-top: 24dp; }
+            #arena-group #window-content { padding: 2dp; }
+            #arena-group-window > .window-title { height: 24dp; line-height: 24dp; padding-left: 4dp; visibility: visible; }
+            #arena-group-window > .window-title-close { display: none; }
+            #arena-group-panel { display: block; }
+            #arena-group-window.collapsed { padding-bottom: 0; }
+            #arena-group-window.collapsed #window-content { height: 0; min-height: 0; padding: 0; }
+            #arena-group .ui-hud-toolbar { top: -24dp; right: 0; flex-direction: row; gap: 2dp; visibility: visible; }
+            #arena-group .ui-hud-toolbar button { width: 20dp; min-width: 20dp; height: 20dp; padding: 0; margin: 0; }
+            #group-settings { decorator: image(party-options-n); }
+            #group-settings:hover { decorator: image(party-options-h); }
+            #group-leave { decorator: image(party-leave-n); }
+            #group-leave:hover { decorator: image(party-leave-h); }
+            #group-leave:disabled { decorator: image(party-leave-d); }
+            #group-collapse { decorator: none; box-sizing: border-box; border: 2dp rgb(165, 38, 45); border-radius: 10dp; background-color: rgb(40, 32, 32); }
+            #group-collapse:hover { border-color: rgb(245, 70, 70); background-color: rgb(70, 40, 40); }
+            #group-collapse icon { display: block; width: 10dp; height: 10dp; font-size: 10dp; line-height: 10dp; margin: 3dp; pointer-events: none; }
+            #arena-group-members { overflow: auto; max-height: 65vh; }
+            .group-columns { display: flex; gap: 0.4em; }
+            .group-column { min-width: 10em; flex-shrink: 0; }
+            .group-member { padding: 0; margin-bottom: 0.3em; }
+            .group-vitals { display: flex; align-items: center; gap: 0.3em; width: 10em; height: 1em; }
+            .group-gauges { width: 5.5em; flex-shrink: 0; }
+            gauge.group-health { width: 100%; height: 0.45em; margin-top: 0; }
+            gauge.group-health > span { top: 50%; margin-top: -0.5em; font-size: 0.7em; line-height: 1em; white-space: nowrap; }
+            .group-name { flex: 1; height: 1em; line-height: 1em; font-size: 0.8em; }
+            gauge.group-mana { width: 100%; height: 0.15em; margin-top: 0; }
+            /* Reserve one buff row; long buff lines extend past the fixed-width health bars. */
+            .group-statuses { display: flex; flex-wrap: nowrap; gap: 0.1em; margin-top: 0.1em; height: 1.1em; }
+            /* 13dp icons at the default 15dp roster font. */
+            .group-statuses > span, .group-statuses > span > img { width: 0.866667em; height: 0.866667em; }
+            #group-settings-panel { position: absolute; top: 18dp; left: 0dp; z-index: 80; width: 240dp; padding: 4dp; padding-top: 25dp; }
+            #group-settings-panel .window-pane { padding: 8dp; }
+            #group-settings-panel .ui-range-setting:first-child { margin-top: 0; }
+            #arena-group-tooltip { visibility: visible; position: absolute; z-index: 100; clip: none; pointer-events: none; padding: 8dp; width: 250dp; max-width: 90vw; max-height: 90vh; background: rgba(0, 0, 0, 230); border: 1dp rgb(150, 150, 150); border-radius: 3dp; }
+            .status-tooltip-name { display: block; font-weight: 820; margin-bottom: 4dp; }
+            .status-tooltip-description { display: block; margin-bottom: 4dp; }
+            .status-tooltip-time { display: block; color: rgb(90, 230, 110); }
+            .status-tooltip-time.warning { color: rgb(255, 170, 60); }
+            .status-tooltip-time.danger { color: rgb(255, 80, 80); }
+            #arena-group { width: auto; min-width: 0; min-height: 0; padding: 0; background-color: transparent; }
+        </style>
+    </head>
+    <body default-background-opacity="25" id="arena-group">
+        <!-- Bind once before the template and its data-for lists are parsed. -->
+        <div id="arena-group-window" class="window-fixed-size" data-model="arena-group" data-class-collapsed="collapsed" data-style-background-color="'rgba(0, 0, 0, ' + background_opacity + '%)'">
+            <template src="window-fixed-size">
+                <div id="arena-group-panel">
+                    <div class="ui-hud-toolbar">
+                        <button id="group-collapse" class="ui-hud-action" onclick="collapse"><icon class="arrow-up" data-if="!collapsed" /><icon class="arrow-down" data-if="collapsed" /></button>
+                        <button id="group-settings" class="ui-hud-action" onclick="settings"></button>
+                        <button id="group-leave" class="ui-hud-action" onclick="leave" data-attrif-disabled="!can_manage" />
+                    </div>
+                    <div id="group-settings-panel" class="window-fixed-size" data-if="show_settings" onclick="ignore">
+                        <span class="window-title">Group Options</span>
+                        <button id="group-settings-close" class="window-title-close" onclick="settings" />
+                        <div class="window-pane">
+                            <div class="ui-range-setting">
+                                <label><span>Opacity</span><span class="ui-detail-value">{{background_opacity}}%</span></label>
+                                <input id="group-opacity" type="range" min="0" max="100" step="5" data-value="background_opacity" onchange="apply-settings" />
+                            </div>
+                            <div class="ui-range-setting">
+                                <label><span>Scale</span><span class="ui-detail-value">{{scale_percent}}%</span></label>
+                                <input id="group-scale" type="range" min="55" max="160" step="5" data-value="scale_percent" onchange="apply-settings" />
+                            </div>
+                        </div>
+                    </div>
+                    <div id="arena-group-members" data-if="!collapsed" data-style-font-size="members_font_size + 'dp'" data-style-max-height="members_max_height + 'dp'">
+                        <div class="group-columns">
+                            <div class="group-column" data-for="column : columns">
+                                <div class="group-member ui-roster-member" data-for="member : column.members" data-style-min-width="(member.statuses.size > 10 ? member.statuses.size * 0.966667 : 10) + 'em'" data-attr-id="'group-member-' + member.tag" data-attr-onclick="'select:' + member.tag" data-class-leader="member.leader">
+                                    <div class="group-vitals">
+                                        <span class="group-name ui-roster-name">{{member.name}}</span>
+                                        <div class="group-gauges">
+                                            <gauge class="group-health ui-vitals horizontal-sm-sm red" data-attr-gvalue="member.hp_percent" gmax="100"><span>{{member.hp}}/{{member.max_hp}}</span></gauge>
+                                            <gauge class="group-mana ui-vitals horizontal-sm-sm blue" data-attr-gvalue="member.mp_percent" gmax="100" />
+                                        </div>
+                                    </div>
+                                    <div class="group-statuses ui-status-icons">
+                                        <span class="group-status" data-for="status : member.statuses" data-attr-id="'group-status-' + member.tag + '-' + status.key" data-attr-onmouseover="'status-tooltip:' + member.tag + ':' + status.key" onmouseout="hide-tooltip"><img data-attr-sprite="'stateicon-' + status.icon" /></span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div id="arena-group-tooltip" data-if="tooltip_visible" data-style-left="tooltip_x + 'px'" data-style-top="tooltip_y + 'px'">
+                        <div data-if="tooltip_text != ''">{{tooltip_text}}</div>
+                        <div data-if="tooltip_text == ''">
+                            <div class="status-tooltip-name">{{tooltip_name}}</div>
+                            <div class="status-tooltip-description">{{tooltip_description}}</div>
+                            <div class="status-tooltip-time" data-class-warning="tooltip_time_class == 'warning'" data-class-danger="tooltip_time_class == 'danger'">{{tooltip_remaining}}</div>
+                        </div>
+                    </div>
+                </div>
+            </template>
+        </div>
+    </body>
+</rml>

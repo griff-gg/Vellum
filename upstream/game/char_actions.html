@@ -1,0 +1,82 @@
+<rml>
+    <head>
+        <link type="text/template" href="../templates/window-fixed-size.html" />
+
+        <style>
+            body
+            {
+                width: 148dp;
+                font-size: 13dp;
+                font-effect: outline(1dp black);
+            }
+
+            #window-title-text {
+                height: 24dp;
+                padding-right: 28dp;
+                white-space: nowrap;
+                overflow: hidden;
+                text-overflow: ellipsis;
+            }
+
+            #window-content {
+                display: flex;
+                flex-direction: column;
+                gap: 2dp;
+                height: auto;
+                padding: 4dp 3dp;
+            }
+
+            button.default {
+                width: 100%;
+                min-width: 0;
+                height: 24dp;
+                flex-shrink: 0;
+                padding: 0dp 3dp;
+                line-height: 22dp;
+            }
+        </style>
+    </head>
+
+    <body id="game-character-actions" data-model="character-actions" class="window-fixed-size">
+        <handle class="window-title" move_target="#document" id="window-title-text">{{name}}</handle>
+        <button class="window-title-close" onclick="close"></button>
+
+        <div id="window-content">
+            <button class="default" onclick="friend">
+                <str string-id="883">Add Friend</str>
+            </button>
+
+            <button class="default" onclick="party">
+                <str string-id="27">Party</str>
+            </button>
+
+            <button class="default" onclick="group" data-if="group == true">
+                <str string-id="253">Group</str>
+            </button>
+
+            <button class="default" data-if="group == false" disabled>
+                <str string-id="253">Group</str>
+            </button>
+
+            <button class="default" onclick="trade">
+                <str string-id="1429">Trade</str>
+            </button>
+
+            <button class="default" onclick="duel">
+                <str string-id="1432">Duel</str>
+            </button>
+
+            <button class="default" onclick="whisper">
+                <str string-id="342">Whisper</str>
+            </button>
+
+            <button class="default" onclick="ride" data-if="ride == true">
+                <str string-id="1430">Ride Invite</str>
+            </button>
+
+            <button class="default" data-if="ride == false" disabled>
+                <str string-id="1430">Ride Invite</str>
+            </button>
+        </div>
+    </body>
+</rml>

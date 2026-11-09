@@ -1,0 +1,48 @@
+<rml>
+    <head>
+        <title>System Menu</title>
+
+        <link type="text/template" href="../templates/window-fixed-size.html" />
+
+        <style>
+            body {
+                width: 148dp;
+                font-size: 13dp;
+                font-effect: outline(1dp black);
+            }
+
+            #window-title-text {
+                height: 24dp;
+                padding-right: 28dp;
+                white-space: nowrap;
+                overflow: hidden;
+                text-overflow: ellipsis;
+            }
+
+            #window-content {
+                display: flex;
+                flex-direction: column;
+                gap: 2dp;
+                height: auto;
+                padding: 4dp 3dp;
+            }
+
+            button.default {
+                width: 100%;
+                min-width: 0;
+                height: 24dp;
+                flex-shrink: 0;
+                padding: 0dp 3dp;
+                line-height: 22dp;
+                white-space: nowrap;
+            }
+        </style>
+    </head>
+
+    <body open-sound="3" close-sound="4" template="window-fixed-size">
+        <button class="default" onclick="open-options">Options</button>
+        <button class="default" onclick="open-support">Support</button>
+        <button class="default" onclick="character-select">Character Select</button>
+        <button class="default" onclick="logout">Logout</button>
+    </body>
+</rml>

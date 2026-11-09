@@ -1,0 +1,87 @@
+<rml>
+    <head>
+        <title>Number Input</title>
+
+        <link type="text/template" href="../templates/window-small.html" />
+
+        <style>
+            body
+            {
+                width: 180dp;
+                text-align: center;
+            }
+
+            #number-input
+            {
+                display: block;
+                width: 162dp;
+                height: 32dp;
+                padding: 5dp;
+                line-height: 20dp;
+                margin: auto;
+                font-size: 16dp;
+                font-weight: 800;
+                color: #fff;
+            }
+
+            .input-container
+            {
+                width: 100%;
+                height: 38dp;
+            }
+
+            .button-container
+            {
+                width: 162dp;
+                margin: auto;
+                display: flex;
+                flex-direction: row;
+                align-items: center;
+                gap: 3dp;
+            }
+
+            button.default
+            {
+                flex: 1;
+                min-width: 22dp;
+                height: 28dp;
+                margin-top: 1dp;
+                margin-bottom: 2dp;
+                padding: 2dp 7dp;
+                line-height: 22dp;
+                font-size: 14dp;
+                font-weight: 800;
+            }
+        </style>
+    </head>
+
+    <body open-sound="3" close-sound="4" id="game-number-input" data-model="number-input" template="window-small" onkeyup="input">
+        <div class="input-container">
+            <label id="number-input" class="textarea">{{number}}</label>
+        </div>
+        <div class="button-container">
+            <button class="default" id="1" onclick="1">1</button>
+            <button class="default" id="2" onclick="2">2</button>
+            <button class="default" id="3" onclick="3">3</button>
+        </div>
+        <div class="button-container">
+            <button class="default" id="4" onclick="4">4</button>
+            <button class="default" id="5" onclick="5">5</button>
+            <button class="default" id="6" onclick="6">6</button>
+        </div>
+        <div class="button-container">
+            <button class="default" id="7" onclick="7">7</button>
+            <button class="default" id="8" onclick="8">8</button>
+            <button class="default" id="9" onclick="9">9</button>
+        </div>
+        <div class="button-container">
+            <button class="default" id="0" onclick="0">0</button>
+            <button class="default del" id="del" onclick="del">DEL</button>
+            <button class="default max" id="max" onclick="max">MAX</button>
+        </div>
+        <div class="button-container">
+            <button class="default ok" id="ok" onclick="ok">OK</button>
+            <button class="default cancel" id="cancel" onclick="cancel">CANCEL</button>
+        </div>
+    </body>
+</rml>

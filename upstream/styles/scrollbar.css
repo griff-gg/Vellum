@@ -1,0 +1,80 @@
+/* -------------------------------------------------------------------------- *
+* Vertical Scrollbar
+* -------------------------------------------------------------------------- */
+scrollbarvertical
+{
+    width: 18dp;
+}
+
+/* Decorate the slider track. */
+scrollbarvertical slidertrack
+{
+    margin-left: 5dp;
+    decorator: tiled-vertical(pal-scrollbar-l, pal-scrollbar-c, pal-scrollbar-b);
+    image-color: white;
+    width: 10dp;
+}
+
+scrollbarvertical sliderbar
+{
+    margin-left: -2dp;
+    width: 24dp;
+    min-height: 28dp;
+
+    decorator: tiled-vertical(rw-scrollbar-button-t-n, rw-scrollbar-button-c-n, rw-scrollbar-button-b-n) content-box;
+    box-sizing: border-box;
+    padding: 1dp;
+}
+
+/* Darken the decorator on active. */
+scrollbarvertical slidertrack:active
+{
+    image-color: #fff;
+}
+
+/* -------------------------------------------------------------------------- *
+* Horziontal Scrollbar
+* -------------------------------------------------------------------------- */
+scrollbarhorizontal
+{
+    height: 18dp;
+    margin-bottom: 0dp;
+}
+
+scrollbarhorizontal slidertrack
+{
+    background-color: transparent;
+    height: 10dp;
+    margin-top: 5dp;
+    image-color: white;
+    decorator: tiled-horizontal(matched-track-l, matched-track-c, matched-track-r);
+}
+
+scrollbarhorizontal sliderbar
+{
+    height: 24dp;
+    min-width: 28dp;
+    background-color: transparent;
+    border-radius: 0dp;
+    box-sizing: border-box;
+    margin-top: -2dp;
+    padding: 1dp;
+    decorator: tiled-horizontal(matched-thumb-l-n, matched-thumb-c-n, matched-thumb-r-n) content-box;
+}
+
+scrollbarhorizontal sliderbar:active
+{
+    background-color: transparent;
+    decorator: tiled-horizontal(matched-thumb-l-p, matched-thumb-c-p, matched-thumb-r-p) content-box;
+}
+
+scrollbarhorizontal sliderbar:hover
+{
+    background-color: transparent;
+    decorator: tiled-horizontal(matched-thumb-l-h, matched-thumb-c-h, matched-thumb-r-h) content-box;
+}
+
+scrollbarvertical sliderbar:hover { decorator: tiled-vertical(rw-scrollbar-button-t-h, rw-scrollbar-button-c-h, rw-scrollbar-button-b-h) content-box; }
+scrollbarvertical sliderbar:active { decorator: tiled-vertical(rw-scrollbar-button-t-p, rw-scrollbar-button-c-p, rw-scrollbar-button-b-p) content-box; }
+
+scrollbarhorizontal sliderbar:hover:active { decorator: tiled-horizontal(matched-thumb-l-p, matched-thumb-c-p, matched-thumb-r-p) content-box; }

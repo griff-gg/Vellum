@@ -1,0 +1,235 @@
+/*
+ * Text box
+ */
+input[type="text"], input[type="password"], input[type="email"], label.textarea
+{
+    box-sizing: border-box;
+    height: 28dp;
+    padding: 3dp 5dp;
+    font-size: 14dp;
+    decorator: none;
+    font-effect: none;
+    background-color: rgb(15,15,13);
+    color: rgb(201,195,178);
+    border: 1dp rgb(201,195,178);
+    border-radius: 2dp;
+}
+
+/* Editable text stays white; display-only labels retain their own palette. */
+input[type="text"], input[type="password"], input[type="email"] { color: #fff; }
+
+input[type="text"]:focus, input[type="password"]:focus, input[type="email"]:focus
+{
+    cursor: text;
+    border-color: rgb(190,64,53);
+}
+
+input[type="text"]:disabled, input[type="password"]:disabled, input[type="email"]:disabled
+{
+    color: rgb(143,137,119);
+    background-color: rgb(20,20,18);
+    border-color: rgb(54,52,45);
+}
+
+/*
+ * Text box
+ */
+textarea
+{
+    box-sizing: border-box;
+    height: 28dp;
+    padding: 3dp 5dp;
+    font-size: 14dp;
+    decorator: none;
+    font-effect: none;
+    background-color: rgb(15,15,13);
+    color: #fff;
+    border: 1dp rgb(201,195,178);
+    border-radius: 2dp;
+}
+
+textarea:focus
+{
+    cursor: text;
+    border-color: rgb(190,64,53);
+}
+
+textarea:disabled
+{
+    color: rgb(143,137,119);
+    background-color: rgb(20,20,18);
+    border-color: rgb(54,52,45);
+}
+
+/*
+ * Radio button and checkbox
+ */
+input[type="radio"], input[type="checkbox"]
+{
+    width: 20dp;
+    height: 20dp;
+    margin-right: 1dp;
+    vertical-align: middle;
+    cursor: hand;
+}
+input[type="checkbox"] { decorator: image(toggle-input-off); }
+input[type="checkbox"]:not([disabled]):hover, input[type="checkbox"]:not([disabled]):focus { decorator: image(toggle-input-off-h); }
+input[type="checkbox"]:checked { decorator: image(toggle-input-on); }
+input[type="checkbox"]:checked:not([disabled]):hover, input[type="checkbox"]:checked:not([disabled]):focus { decorator: image(toggle-input-on-h); }
+input[type="checkbox"]:not([disabled]):active { decorator: image(toggle-input-off-p); }
+input[type="checkbox"]:checked:not([disabled]):active { decorator: image(toggle-input-on-p); }
+/* Paint disabled checkboxes empty without changing their bound value. */
+input[type="checkbox"]:disabled, input[type="checkbox"]:disabled:checked { cursor: normal; decorator: image(toggle-input-disabled); }
+input[type="radio"] { decorator: image(radio-off); }
+input[type="radio"]:not([disabled]):hover, input[type="radio"]:not([disabled]):focus { decorator: image(radio-hover); }
+input[type="radio"]:checked, input[type="radio"]:checked:not([disabled]):hover, input[type="radio"]:checked:not([disabled]):focus { decorator: image(radio-on); }
+input[type="radio"]:not([disabled]):active, input[type="radio"]:checked:not([disabled]):active { decorator: image(radio-pressed); }
+input[type="radio"]:disabled { cursor: normal; decorator: image(radio-disabled); }
+input[type="radio"]:disabled:checked { decorator: image(radio-disabled-on); }
+
+
+/*
+ *   Slide Bar
+ */
+input.range sliderbar
+{
+    image-color: white;
+
+    margin-top: -3dp;
+    margin-left: -5dp;
+
+    width: 30dp;
+    height: 24dp;
+
+    decorator: image(red-scale-n) content-box;
+    cursor: drag;
+    box-sizing: border-box;
+    padding: 2dp;
+}
+
+input.range:not([disabled]) sliderbar:hover, input.range:not([disabled]) slidertrack:hover + sliderbar, input.range:not([disabled]):focus sliderbar
+{
+    image-color: #fff;
+    decorator: image(red-scale-h) content-box;
+}
+
+input.range slidertrack
+{
+    margin-top: 3dp;
+    padding-left: 5dp;
+
+    height: 10dp;
+    image-color: white;
+    decorator: tiled-horizontal(pal-slidebar-l, pal-slidebar-c, pal-slidebar-r);
+}
+
+
+/*
+ * Drop down select box
+ */
+select
+{
+    decorator: none;
+    font-size: 14dp;
+    color: white;
+
+    text-align: left;
+
+    padding: 0dp 7dp;
+    vertical-align: middle;
+    min-width: 76dp;
+
+    height: 26dp;
+    line-height: 24dp;
+    cursor: hand;
+    background-color: rgb(15,15,13);
+    border: 1dp rgb(201,195,178);
+    border-radius: 2dp;
+    box-sizing: border-box;
+}
+
+select option
+{
+    vertical-align: middle;
+    font-size: 14dp;
+    line-height: 26dp;
+    border-top: 1dp #777;
+    padding-left: 4dp;
+    border-top-color: rgb(54,52,45);
+    color: white;
+}
+
+select option:not([disabled]):hover, select option:not([disabled]):checked, select option:not([disabled])[selected]
+{
+    background: rgb(63,17,8);
+    color: white;
+    decorator: vertical-gradient(rgb(128,62,44) rgb(63,17,8));
+}
+
+select selectarrow
+{
+    width: 24dp;
+    height: 22dp;
+    margin-right: -5dp;
+
+    decorator: image(sq-down-n) content-box;
+    cursor: hand;
+    box-sizing: border-box;
+    padding: 1dp 2dp;
+}
+
+select:not([disabled]) selectarrow:hover, select:not([disabled]):focus selectarrow
+{
+    decorator: image(sq-down-h) content-box;
+}
+
+select:not([disabled]) selectarrow:active,
+select:not([disabled]) selectarrow:checked
+{
+    decorator: image(sq-down-p) content-box;
+}
+
+select:disabled selectarrow
+{
+    decorator: image(sq-down-d) content-box;
+    cursor: normal;
+}
+
+select selectvalue:hover
+{
+    color: white;
+}
+
+select selectbox option[selected]
+{
+    color: white;
+}
+
+select selectbox
+{
+    margin-left: 1dp;
+    margin-top: 1dp;
+    background: rgb(22,22,19);
+    padding-bottom: 1dp;
+
+    border-bottom: 1dp rgb(201,195,178);
+    border-left: 1dp rgb(201,195,178);
+    border-right: 1dp rgb(201,195,178);
+    border: 1dp rgb(201,195,178);
+}
+
+select selectbox option[disabled],
+select selectbox option[disabled]:hover
+{
+    cursor: normal;
+    color: rgb(125,122,111);
+    background: rgb(22,22,19);
+    decorator: none;
+}
+
+input.range:not([disabled]) sliderbar:active { decorator: image(red-scale-p) content-box; }
+input.range:disabled sliderbar { decorator: image(pal-slidebar-button-d) content-box; }
+
+select:not([disabled]):hover, select:not([disabled]):focus { border-color: rgb(190,64,53); }
+select:disabled { color: rgb(143,137,119); border-color: rgb(54,52,45); }
+select:disabled selectvalue, select:disabled selectvalue:hover { color: rgb(143,137,119); }

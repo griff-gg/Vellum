@@ -1,0 +1,83 @@
+
+            /* ===== Glass (test) ===== */
+            body#inventory-window {
+                width: 263dp;
+                padding: 38dp 8dp 8dp 8dp;
+                background-color: rgba(26, 30, 40, 115);
+                decorator: linear-gradient(180deg, rgba(255,255,255,46), rgba(255,255,255,10) 35%, rgba(255,255,255,0));
+                border: 1dp rgba(255, 255, 255, 95);
+                border-radius: 18dp;
+                backdrop-filter: blur(16dp) saturate(180%);
+                box-shadow: rgba(0,0,0,100) 0dp 10dp 30dp 0dp, rgba(255,255,255,80) 0dp 1dp 0dp 0dp inset, rgba(255,255,255,26) 0dp 0dp 14dp 0dp inset;
+                color: rgb(245, 247, 250);
+            }
+            body#inventory-window #window-content { decorator: none; background-color: transparent; border-width: 0dp; padding: 0dp 4dp; }
+            body#inventory-window > .window-title {
+                top: 9dp; left: 0dp; width: 92dp; padding-left: 16dp;
+                line-height: 22dp; font-size: 15dp; font-weight: 800;
+                color: rgb(255, 255, 255); font-effect: shadow(0dp 1dp rgba(0,0,0,120));
+            }
+            body#inventory-window > button.window-title-close,
+            body#inventory-window > button.window-title-close:hover,
+            body#inventory-window > button.window-title-close:active {
+                top: 10dp; right: 10dp; width: 20dp; height: 20dp; min-width: 20dp; padding: 0dp;
+                box-sizing: border-box;
+                decorator: none; background-color: rgba(255,255,255,40);
+                border: 1dp rgba(255,255,255,90); border-radius: 10dp;
+                text-align: center; line-height: 17dp; font-size: 14dp; font-weight: 700;
+                color: rgba(255,255,255,220); font-effect: none;
+            }
+            body#inventory-window > button.window-title-close:hover { background-color: rgb(255, 95, 87); border-color: rgb(255, 140, 130); color: white; }
+            body#inventory-window > button.window-title-close span { pointer-events: none; }
+
+            /* segmented controls (top mode tabs + bag tabs) */
+            body#inventory-window .inventory-mode-tabs,
+            body#inventory-window #inventory-bag-tabs {
+                box-sizing: border-box; padding: 2dp; gap: 2dp;
+                background-color: rgba(255,255,255,26);
+                border: 1dp rgba(255,255,255,55);
+                box-shadow: rgba(0,0,0,50) 0dp 1dp 2dp 0dp inset;
+            }
+            body#inventory-window .inventory-mode-tabs { top: 9dp; right: 38dp; width: 146dp; height: 22dp; border-radius: 11dp; }
+            body#inventory-window #inventory-bag-tabs { height: 26dp; margin: 2dp 0dp 8dp 0dp; border-radius: 13dp; }
+            body#inventory-window .inventory-tab,
+            body#inventory-window .inventory-tab:hover {
+                flex: 1; min-width: 0; padding: 0dp 4dp; text-align: center;
+                decorator: none; background-color: transparent;
+                border-width: 0dp; font-effect: none;
+                color: rgba(255,255,255,170);
+            }
+            body#inventory-window .inventory-mode-tabs > .inventory-tab { height: 16dp; line-height: 16dp; font-size: 11dp; border-radius: 8dp; }
+            body#inventory-window #inventory-bag-tabs > .inventory-tab { height: 20dp; line-height: 20dp; font-size: 12dp; border-radius: 10dp; }
+            body#inventory-window .inventory-tab:hover { color: white; background-color: rgba(255,255,255,22); }
+            body#inventory-window .inventory-tab.selected {
+                color: rgb(255,255,255); font-weight: 800;
+                background-color: rgba(255,255,255,72);
+                decorator: none; border-width: 0dp;
+                box-shadow: rgba(0,0,0,70) 0dp 1dp 3dp 0dp, rgba(255,255,255,90) 0dp 1dp 0dp 0dp inset;
+            }
+            body#inventory-window .inventory-bag-label { color: white; text-align: center; line-height: 20dp; height: 20dp; }
+
+            /* slots */
+            body#inventory-window item-slot[empty="1"] { decorator: none; }
+            body#inventory-window .bag-row > .bag-cell {
+                box-sizing: border-box;
+                background-color: rgba(255,255,255,20);
+                border: 1dp rgba(255,255,255,48);
+                border-radius: 8dp;
+            }
+            body#inventory-window .equipment-cell > img { opacity: 0.75; }
+
+            /* footer */
+            body#inventory-window .inventory-footer { border-top: 1dp rgba(255,255,255,45); margin-top: 8dp; padding-top: 6dp; }
+            body#inventory-window #inventory-weight { color: rgb(100, 210, 255); }
+            body#inventory-window #inventory-zulie { color: rgb(255, 255, 255); }
+
+            /* TEST STRIP: each chip shows one effect; a plain chip means that effect does not draw */
+            #glass-probe { display: flex; gap: 4dp; margin-top: 10dp; padding-bottom: 4dp; }
+            #glass-probe > div { flex: 1; height: 18dp; line-height: 18dp; font-size: 9dp; font-weight: 800; text-align: center; color: white; border-radius: 6dp; background-color: rgba(255,255,255,30); font-effect: none; }
+            #glass-probe .gp-grad { decorator: linear-gradient(90deg, #ff3b30, #007aff); }
+            #glass-probe .gp-shadow { box-shadow: #00e5ff 0dp 0dp 8dp 2dp; }
+            #glass-probe .gp-inset { box-shadow: #ffcc00 0dp 0dp 0dp 3dp inset; }
+            #glass-probe .gp-drop { filter: drop-shadow(#ff00ff 3dp 3dp 0dp); }
+            #glass-probe .gp-back { background-color: transparent; border: 1dp white; backdrop-filter: invert(100%); }

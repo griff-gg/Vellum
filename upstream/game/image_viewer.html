@@ -1,0 +1,18 @@
+<rml>
+    <head>
+        <title>Image Viewer</title>
+
+        <link type="text/template" href="../templates/window-fixed-size.html" />
+
+        <style>
+        </style>
+    </head>
+
+    <body id="game-image-viewer">
+        <handle move_target="#document" data-model="image-viewer">
+            <img id="image" data-attr-src="src" />
+        </handle>
+
+        <button style="position: absolute; top: -4dp; right: 0dp;" class="window-title-close" onclick="close"></button>
+    </body>
+</rml>

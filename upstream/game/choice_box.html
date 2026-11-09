@@ -1,0 +1,161 @@
+<rml>
+
+    <head>
+        <link type="text/template" href="../templates/window-fixed-size.html" />
+        <link type="text/rcss" href="../styles/spritesheet_itemicon.css" />
+        <link type="text/rcss" href="../styles/spritesheet_socketgem.css" />
+        <link type="text/rcss" href="../styles/item_slot.css" />
+
+        <style>
+            body {
+                width: 304dp;
+                font-size: 13dp;
+            }
+
+            #window-title-text {
+                height: 24dp;
+                padding: 0 28dp;
+                text-align: center;
+                white-space: nowrap;
+            }
+
+            #window-content {
+                height: auto;
+                padding: 4dp 3dp;
+            }
+
+            #main-container {
+                display: flex;
+                flex-direction: column;
+                align-items: center;
+                gap: 4dp;
+            }
+
+            #item-box-preview {
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                width: 100%;
+                gap: 6dp;
+            }
+
+            #item-box-preview>div {
+                display: flex;
+                justify-content: center;
+            }
+
+            #box-icon-container {
+                width: 44dp;
+                height: 44dp;
+                text-align: center;
+                align-items: center;
+                background-color: rgba(50, 50, 50, 134);
+                border-radius: 5dp;
+            }
+
+            #choice-label, #choice-message {
+                text-align: center;
+                font-size: 13dp;
+                font-weight: bold;
+                white-space: nowrap;
+            }
+
+            #choice-message {
+                color: yellow;
+            }
+
+            #choice-container {
+                width: 100%;
+                box-sizing: border-box;
+            }
+
+            #choice-list {
+                display: flex;
+                flex-wrap: wrap;
+                justify-content: center;
+                gap: 4dp;
+            }
+
+            .choice-item {
+                width: 94dp;
+                padding: 4dp;
+                box-sizing: border-box;
+                flex-shrink: 0;
+
+                display: flex;
+                flex-direction: column;
+                align-items: center;
+                gap: 2dp;
+                text-align: center;
+                background-color: rgba(50, 50, 50, 134);
+            }
+
+            .choice-item>item-slot {
+                flex-shrink: 0;
+            }
+
+            .button-container {
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                gap: 2dp;
+            }
+
+            .button-container>button {
+                margin: 0;
+                height: 24dp;
+                flex-shrink: 0;
+                padding: 2dp 2dp;
+            }
+
+            .button-container>.textarea {
+                display: inline-block;
+                width: 32dp;
+                height: 24dp;
+                padding: 0dp 1dp;
+                line-height: 22dp;
+                font-size: 13dp;
+                text-align: center;
+                white-space: nowrap;
+                flex-shrink: 0;
+            }
+
+            #confirm {
+                width: 88dp;
+                min-width: 0;
+                height: 24dp;
+                padding: 1dp 10dp;
+                line-height: 22dp;
+                font-size: 13dp;
+                font-weight: bold;
+                color: yellow;
+                white-space: nowrap;
+            }
+        </style>
+    </head>
+
+    <body id="game-choice-box" template="window-fixed-size">
+        <div id="main-container" data-model="item-box">
+            <div id="item-box-preview">
+                <div id="box-icon-container">
+                    <item-slot item-actions id="box-icon" data-attr-item="item_box.ref_key" data-attr-item-quantity="item_box.quantity"></item-slot>
+                </div>
+                <label id="choice-label">{{choice_quantity}} / {{item_box.quantity}}</label>
+            </div>
+            <label id="choice-message"><str string-id="1427">Choose your item(s)</str></label>
+            <panel id="choice-container" class="content-box">
+                <listbox id="choice-list">
+                    <listbox-item class="choice-item" data-for="choice : choice_list">
+                        <item-slot item-actions data-attr-id="'choice-icon-' + choice.index" data-attr-item="choice.ref_key" item-quantity="0"/>
+                        <div class="button-container">
+                            <button data-attr-id="'choice-decrease-' + choice.index" class="left-sm" data-event-click="dec_choice(choice.index)" /><label class="textarea">{{choice.choice_quantity}}</label><button data-attr-id="'choice-increase-' + choice.index" class="right-sm" data-event-click="inc_choice(choice.index)" />
+                        </div>
+                    </listbox-item>
+                </listbox>
+            </panel>
+            <button class="default" id="confirm" onclick="confirm">
+                <str string-id="858">Confirm</str>
+            </button>
+        </div>
+    </body>
+</rml>
