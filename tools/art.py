@@ -50,6 +50,12 @@ def glass_panel(margin, radius, tint, rim_top, rim_mid, rim_bottom, sheen, shado
     dy = shadow_dy * k
     ImageDraw.Draw(sh).rounded_rectangle((m, m + dy, n - 1 - m, n - 1 - m + dy), radius=radius * k, fill=255)
     sh = np.asarray(sh.filter(ImageFilter.GaussianBlur(shadow_blur * k)), dtype=np.float32) / 255.0
+    # fade the shadow to nothing before the image edge, so a wide blur is never cut off in a straight line
+    if margin > 0:
+        yy, xx = np.mgrid[0:n, 0:n].astype(np.float32)
+        to_edge = np.minimum(np.minimum(xx, n - 1 - xx), np.minimum(yy, n - 1 - yy))
+        t = np.clip(to_edge / (m * 0.8), 0, 1)
+        sh = sh * (t * t * (3 - 2 * t))
     sh_a = sh * (1 - glass) * shadow / 255.0
 
     # rim brightness by height: bright top corners, even sides, dim bottom (light from above)

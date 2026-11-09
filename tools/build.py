@@ -19,7 +19,7 @@ NAME = 'Glass (test)'
 MARGIN = 12
 WINDOW = dict(margin=MARGIN, radius=18, tint=(24, 28, 38, 175),
               rim_top=190, rim_mid=80, rim_bottom=45, sheen=34,
-              shadow=120, shadow_dy=4, shadow_blur=7)
+              shadow=120, shadow_dy=4, shadow_blur=5)
 # Segmented bar: darker recessed glass with the same light-from-above rim.
 TRACK = dict(margin=0, radius=11, tint=(0, 0, 0, 60), rim_top=170, rim_mid=75, rim_bottom=40, sheen=22,
              shadow=0, shadow_dy=0, shadow_blur=1)
@@ -47,14 +47,14 @@ PIECES = (('gl-win', WINDOW), ('gl-track', TRACK), ('gl-pill', PILL),
 def _groove(radius):
     return dict(margin=0, radius=radius, tint=(255, 255, 255, 38), rim_top=150, rim_mid=95, rim_bottom=70, sheen=0,
                 shadow=0, shadow_dy=0, shadow_blur=1)
-HUDWIN = dict(WINDOW, margin=6)   # exactly the window glass, just less shadow room
+HUDWIN = dict(WINDOW, margin=6, shadow_dy=2, shadow_blur=2.5)   # the window glass with a tighter shadow that fits 6dp
 PIECES += (('gl-gbg-lg', _groove(8)), ('gl-gbg-md', _groove(4)), ('gl-gbg-sm', _groove(2)), ('gl-gbg-xs', _groove(1)),
            ('gl-slt', dict(SB_TRACK, radius=4)), ('gl-hud', HUDWIN))
 
 # Monotone gauge fills: HP dark, MP light, everything else mid-grey.
-DARK = dict(top=(72, 78, 94), bottom=(26, 29, 40), alpha=228, rim=(255, 255, 255), rim_a=120, hl_a=80)
-LIGHT = dict(top=(255, 255, 255), bottom=(222, 230, 242), alpha=214, rim=(118, 130, 150), rim_a=120, hl_a=235)
-MID = dict(top=(206, 214, 226), bottom=(150, 159, 172), alpha=215, rim=(255, 255, 255), rim_a=120, hl_a=140)
+DARK = dict(top=(72, 78, 94), bottom=(26, 29, 40), alpha=150, rim=(255, 255, 255), rim_a=120, hl_a=80)
+LIGHT = dict(top=(255, 255, 255), bottom=(222, 230, 242), alpha=135, rim=(118, 130, 150), rim_a=120, hl_a=235)
+MID = dict(top=(206, 214, 226), bottom=(150, 159, 172), alpha=130, rim=(255, 255, 255), rim_a=120, hl_a=140)
 # (name, w, h, radius, colours, inset dp): the large HUD bars sit inside their groove as slim glass pills
 FILLS = (('gl-f-dark-lg', 185, 26, 7, DARK, 3), ('gl-f-light-lg', 185, 26, 7, LIGHT, 3),
          ('gl-f-mid-exp', 185, 9, 3, MID, 1),
