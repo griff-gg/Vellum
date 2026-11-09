@@ -72,6 +72,11 @@ W .ui-tab-strip > .gl-slider {
 W .ui-tab-strip > .gl-slider.at1 { left: 34.2%; }
 W .ui-tab-strip > .gl-slider.at2 { left: 67.5%; }
 
+/* tab bar in the title row (like the inventory's Avatar / Costume / PAT) */
+W > .ui-tab-strip.gl-header-tabs { position: absolute; top: 21dp; right: 54dp; width: 210dp; height: 22dp; margin: 0dp; }
+W > .gl-header-tabs > .ui-tab { height: 16dp; line-height: 16dp; font-size: 11dp; }
+W > .gl-header-tabs > .gl-slider { height: 16dp; }
+
 /* glass buttons (look only: each window keeps its own size). The glass art stays the same in every state;
    the fill and text colour fade and the button presses down a little, because artwork can't cross-fade. */
 W button.default {

@@ -41,7 +41,19 @@ for name in PAGES:
     s = load(name)
     extra = ''
     if name == 'game_arena.html':   # sliding pill under the All / Dungeons / PvP tabs
-        s = swap(s, '<div class="ui-tab-strip">', '<div class="ui-tab-strip"><div class="gl-slider" id="gl-arena-slider"></div>', name)
+        # like the inventory: explicit header (title, close, tabs) and a content div, instead of the template's body
+        a = s.index('<div class="ui-tab-strip">')
+        b = s.index('</div>', a) + len('</div>')
+        strip = s[a:b]
+        s = s[:a] + s[b:]
+        strip = strip.replace('<div class="ui-tab-strip">',
+                              '<div class="ui-tab-strip gl-header-tabs"><div class="gl-slider" id="gl-arena-slider"></div>')
+        body_open = '<body open-sound="3" close-sound="4" template="window-fixed-size" id="game-arena">'
+        s = swap(s, body_open, '<body open-sound="3" close-sound="4" class="window-fixed-size" id="game-arena">' + NL +
+                 '<handle class="window-title" move_target="#document" id="window-title-text"></handle>' + NL +
+                 '<button class="window-title-close" onclick="close"></button>' + NL + strip + NL +
+                 '<div id="window-content">', name)
+        s = swap(s, '</body>', '</div>' + NL + '</body>', name)
         extra = '<script>' + NL + arena_tabs + '</script>' + NL
     s = swap(s, '</head>', '<style>' + KEYFRAMES + '</style>' + NL + '<script>' + NL + lua + '</script>' + NL + extra + '</head>', name)
     save(name, s)
