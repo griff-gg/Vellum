@@ -513,7 +513,7 @@ pcall(function()
         for ch in string.gmatch(t.inner_rml or '', '.') do
             if ch == ' ' then width = width + 4.6
             elseif ch == "'" or ch == '.' or ch == ',' or ch == '-' then width = width + 4.9
-            elseif ch == 'I' or ch == 'i' or ch == 'l' or ch == 'j' or ch == 'J' or ch == '1' then width = width + 4.8
+            elseif ch == 'I' or ch == 'i' or ch == 'j' or ch == 'J' or ch == '1' then width = width + 4.8
             elseif ch == 'M' or ch == 'm' or ch == 'W' or ch == 'w' then width = width + 10.2
             else width = width + 7.4 end
         end
