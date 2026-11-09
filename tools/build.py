@@ -48,7 +48,7 @@ def _groove(radius):   # recessed frosted groove: dark inner edge on top, bright
     return dict(margin=0, radius=radius, tint=(255, 255, 255, 30), rim_top=120, rim_mid=110, rim_bottom=190, sheen=0,
                 shadow=0, shadow_dy=0, shadow_blur=1, inner_top=110)
 HUDWIN = dict(WINDOW, margin=6, shadow_dy=2, shadow_blur=2.5)   # the window glass with a tighter shadow that fits 6dp
-PIECES += (('gl-gbg-lg', _groove(8)), ('gl-gbg-md', _groove(4)), ('gl-gbg-sm', _groove(2)), ('gl-gbg-xs', _groove(1)),
+PIECES += (('gl-gbg-lg', _groove(6)), ('gl-gbg-md', _groove(4)), ('gl-gbg-sm', _groove(2)), ('gl-gbg-xs', _groove(1)),
            ('gl-slt', dict(SB_TRACK, radius=4)), ('gl-hud', HUDWIN))
 
 # Monotone gauge fills: HP dark, MP light, everything else mid-grey.
@@ -56,8 +56,8 @@ DARK = dict(top=(86, 92, 110), bottom=(26, 29, 40), alpha=135, rim=(255, 255, 25
 LIGHT = dict(top=(255, 255, 255), bottom=(206, 216, 232), alpha=120, rim=(255, 255, 255), rim_a=70, hl_a=255, rim_top_a=255, sheen=90)
 MID = dict(top=(214, 222, 234), bottom=(150, 159, 172), alpha=120, rim=(255, 255, 255), rim_a=60, hl_a=180, rim_top_a=235, sheen=80)
 # (name, w, h, radius, colours, inset dp): the large HUD bars sit inside their groove as slim glass pills
-FILLS = (('gl-f-dark-lg', 185, 26, 7, DARK, 3), ('gl-f-light-lg', 185, 26, 7, LIGHT, 3),
-         ('gl-f-mid-exp', 185, 9, 3, MID, 1),
+FILLS = (('gl-f-dark-lg', 185, 18, 5, DARK, 2), ('gl-f-light-lg', 185, 18, 5, LIGHT, 2),
+         ('gl-f-mid-exp', 185, 7, 3, MID, 1),
          ('gl-f-dark-md', 99, 11, 4, DARK, 1), ('gl-f-mid-md', 99, 11, 4, MID, 1),
          ('gl-f-dark-sm', 99, 7, 2, DARK, 0.5), ('gl-f-light-sm', 99, 7, 2, LIGHT, 0.5))
 

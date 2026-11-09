@@ -21,6 +21,7 @@
 }
 #hud span.level, #hud b.weight { color: rgb(255, 255, 255); }
 #hud div.footer { color: rgba(255, 255, 255, 190); }
+#party gauge.party-experience { height: 8dp; }
 
 /* ---------------- Party + Group: same panel, your opacity setting still drives the fill ---------------- */
 #party-window, #arena-group-window {

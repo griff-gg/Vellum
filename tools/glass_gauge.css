@@ -1,7 +1,8 @@
 /* Glass gauges, monotone: HP (red) dark glass, MP (blue) light glass, everything else mid grey,
    all on a light frosted groove. Loaded by every window template; "body" outranks the stock gauge.css rules. */
 
-/* large: HUD hp / mp, resource gauges */
+/* large: HUD hp / mp, resource gauges (slim: 18dp) */
+body gauge.horizontal-lg-lg, body progress.horizontal-lg-lg { height: 18dp; }
 body gauge.horizontal-lg-lg.red, body progress.horizontal-lg-lg.red {
     decorator: tiled-box(gl-gbg-lg-tl, gl-gbg-lg-t, gl-gbg-lg-tr, gl-gbg-lg-l, gl-gbg-lg-c, gl-gbg-lg-r, gl-gbg-lg-bl, gl-gbg-lg-b, gl-gbg-lg-br);
     fill-image: gl-f-dark-lg;
@@ -13,7 +14,8 @@ body gauge.horizontal-lg-lg.blue, body progress.horizontal-lg-lg.blue {
 
 /* experience (wide and thin) */
 body gauge.horizontal-sm-lg.yellow, body progress.horizontal-sm-lg.yellow {
-    decorator: tiled-box(gl-gbg-md-tl, gl-gbg-md-t, gl-gbg-md-tr, gl-gbg-md-l, gl-gbg-md-c, gl-gbg-md-r, gl-gbg-md-bl, gl-gbg-md-b, gl-gbg-md-br);
+    height: 7dp;
+    decorator: tiled-box(gl-gbg-sm-tl, gl-gbg-sm-t, gl-gbg-sm-tr, gl-gbg-sm-l, gl-gbg-sm-c, gl-gbg-sm-r, gl-gbg-sm-bl, gl-gbg-sm-b, gl-gbg-sm-br);
     fill-image: gl-f-mid-exp;
 }
 
