@@ -8,6 +8,7 @@
         <link type="text/rcss" href="../styles/item_slot.css" />
         <link type="text/rcss" href="../styles/spritesheet_inventory.css" />
         <link type="text/rcss" href="../styles/components.css" />
+        <link type="text/rcss" href="../styles/glass_frame.css" />
         <style>
             body { width: 267dp; max-width: 95vw; }
             #inventory-window #window-content { padding: 6dp; max-height: none; overflow: visible; }
@@ -39,26 +40,26 @@
             .vehicle-stat span { color: rgb(255, 247, 191); }
             #inventory-operation { color: rgb(255, 247, 191); font-size: 12dp; margin-bottom: 8dp; }
 
-            /* ===== Glass (test) — safe base: no shadows, filters or blur (they break the game's renderer) ===== */
+            /* ===== Glass. The game draws no CSS box-shadow (broken: white box + copy at screen 0,0), filter, backdrop-filter or linear-gradient. ===== */
+            /* the frame image carries the tint, rim, sheen and shadow; 12dp of it around the glass is shadow room */
             body#inventory-window {
                 width: 263dp;
-                padding: 38dp 8dp 8dp 8dp;
-                background-color: rgba(26, 30, 40, 150);
-                decorator: vertical-gradient(rgba(255,255,255,38) rgba(255,255,255,0));
-                border: 1dp rgba(255, 255, 255, 95);
-                border-radius: 18dp;
+                padding: 50dp 20dp 20dp 20dp;
+                background-color: transparent;
+                border-width: 0dp;
+                decorator: tiled-box(gl-win-tl, gl-win-t, gl-win-tr, gl-win-l, gl-win-c, gl-win-r, gl-win-bl, gl-win-b, gl-win-br);
                 color: rgb(245, 247, 250);
             }
             body#inventory-window #window-content { decorator: none; background-color: transparent; border-width: 0dp; padding: 0dp 4dp; }
             body#inventory-window > .window-title {
-                top: 9dp; left: 0dp; width: 92dp; padding-left: 16dp;
+                top: 21dp; left: 12dp; width: 92dp; padding-left: 16dp;
                 line-height: 22dp; font-size: 15dp; font-weight: 800;
                 color: rgb(255, 255, 255); font-effect: shadow(0dp 1dp rgba(0,0,0,120));
             }
             body#inventory-window > button.window-title-close,
             body#inventory-window > button.window-title-close:hover,
             body#inventory-window > button.window-title-close:active {
-                top: 10dp; right: 10dp; width: 20dp; height: 20dp; min-width: 20dp; padding: 0dp;
+                top: 22dp; right: 22dp; width: 20dp; height: 20dp; min-width: 20dp; padding: 0dp;
                 box-sizing: border-box;
                 decorator: none; background-color: rgba(255,255,255,40);
                 border: 1dp rgba(255,255,255,90); border-radius: 10dp;
@@ -75,7 +76,7 @@
                 background-color: rgba(0,0,0,50);
                 border: 1dp rgba(255,255,255,55);
             }
-            body#inventory-window .inventory-mode-tabs { top: 9dp; right: 38dp; width: 146dp; height: 22dp; border-radius: 11dp; }
+            body#inventory-window .inventory-mode-tabs { top: 21dp; right: 50dp; width: 146dp; height: 22dp; border-radius: 11dp; }
             body#inventory-window #inventory-bag-tabs { height: 26dp; margin: 2dp 0dp 8dp 0dp; border-radius: 13dp; }
             body#inventory-window .inventory-tab,
             body#inventory-window .inventory-tab:hover {
@@ -110,51 +111,7 @@
             body#inventory-window #inventory-weight { color: rgb(100, 210, 255); }
             body#inventory-window #inventory-zulie { color: rgb(255, 255, 255); }
 
-            /* TEST: click a chip to switch that one effect on for the demo bar; click again to switch it off */
-            #glass-probe { display: flex; gap: 4dp; margin-top: 10dp; }
-            #glass-probe > div { flex: 1; height: 18dp; line-height: 18dp; font-size: 9dp; font-weight: 800; text-align: center; color: rgba(255,255,255,200); border-radius: 6dp; background-color: rgba(255,255,255,30); border: 1dp rgba(255,255,255,60); font-effect: none; cursor: hand; }
-            #glass-probe > div:hover { background-color: rgba(255,255,255,60); }
-            #glass-probe > div.on { background-color: rgb(10, 132, 255); color: white; }
-            #gp-demo { margin: 10dp 20dp 6dp 20dp; height: 26dp; line-height: 26dp; text-align: center; font-size: 11dp; font-weight: 800; border-radius: 8dp; background-color: rgba(255,255,255,30); border: 1dp rgba(255,255,255,60); font-effect: none; }
-            #gp-demo.t-grad { decorator: linear-gradient(90deg, #ff3b30, #007aff); }
-            #gp-demo.t-glow { box-shadow: #00e5ff 0dp 0dp 8dp 2dp; }
-            #gp-demo.t-hard { box-shadow: #00e5ff 4dp 4dp 0dp 0dp; }
-            #gp-demo.t-inset { box-shadow: #ffcc00 0dp 0dp 0dp 3dp inset; }
-            #gp-demo.t-drop { filter: drop-shadow(#ff00ff 3dp 3dp 0dp); }
-            #gp-demo.t-blur { background-color: transparent; backdrop-filter: blur(8dp); }
         </style>
-        <script>
-pcall(function()
-    local doc = document
-    local tests = { 'grad', 'glow', 'hard', 'inset', 'drop', 'blur' }
-    local active = nil
-    local function pick(name)
-        local demo = doc:GetElementById('gp-demo')
-        if not demo then return end
-        for _, t in ipairs(tests) do
-            demo:SetClass('t-' .. t, false)
-            local b = doc:GetElementById('gp-' .. t)
-            if b then b:SetClass('on', false) end
-        end
-        if active == name then
-            active = nil
-            demo.inner_rml = 'all off'
-            return
-        end
-        active = name
-        demo:SetClass('t-' .. name, true)
-        local b = doc:GetElementById('gp-' .. name)
-        if b then b:SetClass('on', true) end
-        demo.inner_rml = string.upper(name) .. ' on'
-    end
-    doc:AddEventListener('click', function(ev)
-        pcall(function()
-            local id = ev.target_element.id
-            if string.sub(id, 1, 3) == 'gp-' and id ~= 'gp-demo' then pick(string.sub(id, 4)) end
-        end)
-    end)
-end)
-        </script>
     </head>
     <!-- Keep header controls outside the content frame instead of overflowing it. -->
     <body open-sound="3" close-sound="4" class="window-fixed-size" id="inventory-window" data-model="inventory-window">
@@ -379,8 +336,6 @@ end)
                 <div id="inventory-weight" class="ui-currency" data-class-overweight="overweight"><img sprite="inventory-weight" /><span>{{weight}}</span></div>
                 <div id="inventory-zulie" class="ui-currency"><button id="inventory-money" class="zulie" onclick="money" data-attrif-disabled="!enabled" /><span>{{money}}</span></div>
             </div>
-            <div id="glass-probe"><div id="gp-grad">GRAD</div><div id="gp-glow">GLOW</div><div id="gp-hard">HARD</div><div id="gp-inset">INSET</div><div id="gp-drop">DROP</div><div id="gp-blur">BLUR</div></div>
-            <div id="gp-demo">click a test above</div>
         </div>
     </body>
 </rml>
