@@ -1,0 +1,173 @@
+<rml>
+    <head>
+        <title>Mail</title>
+
+        <link type="text/template" href="../templates/window-resizeable.html" />
+
+        <style>
+            #game-mail
+            {
+                width: 500dp;
+                height: 300dp;
+                min-width: 410dp;
+                min-height: 200dp;
+            }
+
+            .from {
+                color: #aaa;
+            }
+
+            .timestamp {
+                color: #aaa;
+            }
+
+            .unread > .from {
+                color: yellow;
+            }
+
+            .full {
+                color: red;
+            }
+
+            tabset {
+                width: 100%;
+                height: 100%;
+                display: flex;
+                flex-direction: column;
+            }
+
+            #tabs > tabs > .ui-tab {
+                flex: none;
+            }
+
+            tabset > panels {
+                flex: 1;
+            }
+
+            .content-box {
+                margin: 4dp;
+            }
+
+            #mail-actions {
+                display: flex;
+                justify-content: flex-end;
+                gap: 4dp;
+                font-size: 13dp;
+            }
+
+            #mail-actions > button {
+                min-width: 64dp;
+                height: 24dp;
+                padding: 0dp 7dp;
+                line-height: 22dp;
+                white-space: nowrap;
+            }
+        </style>
+    <style>
+@keyframes gl-open-a { 0% { opacity: 0; transform: translateY(5dp) scale(0.985); } 100% { opacity: 1; transform: translateY(0dp) scale(1); } }
+@keyframes gl-open-b { 0% { opacity: 0; transform: translateY(5dp) scale(0.985); } 100% { opacity: 1; transform: translateY(0dp) scale(1); } }
+</style>
+<script>
+-- Glass: each time the window opens it fades and settles in, then a streak of light crosses the glass.
+-- Two identical keyframe sets (-a / -b): switching to the other one restarts the animation.
+pcall(function()
+    local doc = document
+    local flip = false
+    local function opened()
+        flip = not flip
+        doc:SetClass('gl-shown-a', flip)
+        doc:SetClass('gl-shown-b', not flip)
+        doc.style.animation = '0.15s cubic-out 1 ' .. (flip and 'gl-open-a' or 'gl-open-b')
+    end
+    doc:AddEventListener('show', function() pcall(opened) end)
+    opened()
+end)
+</script>
+<script>
+-- Glass tabs in the title row: the pill (div#gl-tab-slider) slides to the clicked tab.
+-- Each tab carries gl-tab="0..7"; the tabset still switches the panels, we only move the pill.
+pcall(function()
+    local doc = document
+    doc:AddEventListener('click', function(ev)
+        pcall(function()
+            local t = ev.target_element
+            while t and t ~= doc do
+                local idx = tonumber(t:GetAttribute('gl-tab'))
+                if idx ~= nil then
+                    local pill = doc:GetElementById('gl-tab-slider')
+                    if pill then
+                        for i = 1, 7 do pill:SetClass('at' .. i, idx == i) end
+                    end
+                    return
+                end
+                t = t.parent_node
+            end
+        end)
+    end)
+end)
+</script>
+</head>
+
+    <body open-sound="3" close-sound="4" id="game-mail" template="window-resizeable">
+        <div class="gl-slider" id="gl-tab-slider"></div>
+<tabset id="tabs" class="ui-tabset">
+            <tab gl-tab="0" class="ui-tab">Inbox</tab>
+            <panel>
+                <div style="width: 100%; height: 100%; display: flex; flex-direction: row;" data-model="mail-inbox">
+                    <div style="width: 160dp; display: flex; flex-direction:column;" class="content-box">
+                        <div style="display: flex; margin: 4dp; align-items: center; column-gap: 4dp;">
+                            <span style="width: 50dp">Inbox</span>
+                            <span style="flex: 1"><label class="text" data-class-full="inbox.size == inbox_max_size">{{inbox.size}} / {{inbox_max_size}}</label></span>
+                        </div>
+                        <div style="flex: 1; width: 100%; overflow: hidden auto">
+                            <listbox id="inbox" data-event-change="read_mail_index = inbox.size > 0 ? ev.value : 0">
+                                <listbox-item data-for="mail, mail_index : inbox" data-attr-value="mail_index" data-class-unread="mail.status == 0">
+                                    <span class="from">{{mail.from}}</span><br/>
+                                    <span class="timestamp">{{format_mail_timestamp(mail.timestamp)}}</span>
+                                </listbox-item>
+                            </listbox>
+                        </div>
+                    </div>
+
+                    <div style="flex: 1; display: flex; flex-direction: column; padding: 5dp" class="content-box">
+                        <table data-if="read_mail_index < inbox.size">
+                            <tr>
+                                <td style="width: 50dp; vertical-align: middle;">From</td>
+                                <td><label class="text">{{read_mail_index < inbox.size ? inbox[read_mail_index].from : ''}}</label></td>
+                            </tr>
+                            <tr style="padding-top: 2dp">
+                                <td style="vertical-align: middle;">Sent</td>
+                                <td><label class="text">{{read_mail_index < inbox.size ? format_mail_timestamp(inbox[read_mail_index].timestamp) : ''}}</label></td>
+                            </tr>
+                        </table>
+                        <div style="flex: 1; overflow: hidden auto; margin: 4dp 2dp; word-break: break-word;" id="view-mail-message" data-rml="read_mail_index < inbox.size ? format_mail_message(inbox[read_mail_index].message) : ''"></div>
+                        <div data-if="read_mail_index < inbox.size">
+                            <div id="mail-actions">
+                                <button class="default" data-event-click="start_send_mail(inbox[read_mail_index].from)">Reply</button>
+                                <button class="default" data-event-click="delete_mail(inbox[read_mail_index].id)" data-attrif-disabled="read_mail_index < inbox.size ? inbox[read_mail_index].deleting : 0">Delete</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </panel>
+
+            <tab gl-tab="1" class="ui-tab">Send</tab>
+            <panel data-model="mail-ui">
+                <div style="width: 100%; height: 100%; display: flex; flex-direction: column; padding: 4dp; box-sizing: border-box;">
+                    <div style="display: flex; width: 100%; align-items: center">
+                        <span style="padding-right: 10dp">To</span>
+                        <span style="flex: 1;">
+                            <input id="send-to" type="text" maxlength="20" style="width: 100%" onchange="change_to" data-attrif-disabled="sending" />
+                        </span>
+                    </div>
+                    <div style="flex: 1;">
+                        <textarea id="send-message" style="width: 100%; height: 100%" retains-focus onchange="change_message" data-attrif-disabled="sending"></textarea>
+                    </div>
+                    <div style="text-align: center; padding-top: 4dp">
+                        <button id="send-button" class="default" onclick="send_mail" data-attrif-disabled="sending || !valid_message">Send</button>
+                    </div>
+                </div>
+            </panel>
+        </tabset>
+    </body>
+</rml>

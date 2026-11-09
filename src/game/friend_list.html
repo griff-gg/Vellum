@@ -1,0 +1,160 @@
+<rml>
+    <head>
+        <title>Community</title>
+
+        <link type="text/template" href="../templates/window-resizeable.html" />
+
+        <style>
+            #game-friend-list
+            {
+                width: 300dp;
+                height: 380dp;
+                min-width: 280dp;
+                min-height: 200dp;
+            }
+
+            listbox {
+                padding-right: 15dp;
+            }
+
+            listbox-item {
+                padding: 4dp;
+            }
+
+            button.default {
+                width: 100dp;
+                min-width: 0dp;
+                height: 24dp;
+                padding: 1dp 5dp;
+                line-height: 20dp;
+                font-size: 13dp;
+                white-space: nowrap;
+                flex-shrink: 0;
+            }
+
+            tabset {
+                width: 100%;
+                height: 100%;
+                display: flex;
+                flex-direction: column;
+            }
+
+            .community-actions {
+                display: flex;
+                justify-content: space-between;
+                gap: 4dp;
+                margin-top: 4dp;
+            }
+
+            .friend-actions-column {
+                display: flex;
+                flex-direction: column;
+                gap: 4dp;
+            }
+
+            tabset > panels {
+                flex: 1;
+            }
+        </style>
+    <style>
+@keyframes gl-open-a { 0% { opacity: 0; transform: translateY(5dp) scale(0.985); } 100% { opacity: 1; transform: translateY(0dp) scale(1); } }
+@keyframes gl-open-b { 0% { opacity: 0; transform: translateY(5dp) scale(0.985); } 100% { opacity: 1; transform: translateY(0dp) scale(1); } }
+</style>
+<script>
+-- Glass: each time the window opens it fades and settles in, then a streak of light crosses the glass.
+-- Two identical keyframe sets (-a / -b): switching to the other one restarts the animation.
+pcall(function()
+    local doc = document
+    local flip = false
+    local function opened()
+        flip = not flip
+        doc:SetClass('gl-shown-a', flip)
+        doc:SetClass('gl-shown-b', not flip)
+        doc.style.animation = '0.15s cubic-out 1 ' .. (flip and 'gl-open-a' or 'gl-open-b')
+    end
+    doc:AddEventListener('show', function() pcall(opened) end)
+    opened()
+end)
+</script>
+<script>
+-- Glass tabs in the title row: the pill (div#gl-tab-slider) slides to the clicked tab.
+-- Each tab carries gl-tab="0..7"; the tabset still switches the panels, we only move the pill.
+pcall(function()
+    local doc = document
+    doc:AddEventListener('click', function(ev)
+        pcall(function()
+            local t = ev.target_element
+            while t and t ~= doc do
+                local idx = tonumber(t:GetAttribute('gl-tab'))
+                if idx ~= nil then
+                    local pill = doc:GetElementById('gl-tab-slider')
+                    if pill then
+                        for i = 1, 7 do pill:SetClass('at' .. i, idx == i) end
+                    end
+                    return
+                end
+                t = t.parent_node
+            end
+        end)
+    end)
+end)
+</script>
+</head>
+
+    <body open-sound="3" close-sound="4" id="game-friend-list" template="window-resizeable">
+        <div class="gl-slider" id="gl-tab-slider"></div>
+<tabset class="ui-tabset" id="community-tabs">
+            <tab gl-tab="0" class="ui-tab" id="friends-tab">Friends</tab>
+            <panel>
+                <div data-model="friend-list" style="width: 100%; height: 100%; display: flex; flex-direction: column;">
+                    <div style="flex: 1" class="content-box">
+                        <div style="width: 100%; height: 100%; overflow: hidden auto;">
+                            <listbox id="friend-list">
+                                <listbox-item
+                                    data-for="friend : friends"
+                                    data-attr-value="friend.name"
+                                    ondblclick="mail_or_message_friend"
+                                    style="display: flex; flex-direction: row; column-gap: 4dp; width: 100%; height: 20dp">
+                                    <img data-attr-sprite="(friend.status == 8 || friend.status == 10 || friend.status == 80 || friend.status == 81) ? 'clan-member-offline' : 'clan-member-online'" />
+                                    <span style="flex: 1">{{friend.name}}</span>
+                                    <span><str data-attr-friend-status="friend.status" /></span>
+                                </listbox-item>
+                            </listbox>
+                        </div>
+                    </div>
+                    <div class="community-actions">
+                        <div class="friend-actions-column">
+                            <button class="default" onclick="add_friend">Add Friend</button>
+                            <button class="default" onclick="delete_friend">Delete Friend</button>
+                        </div>
+                        <div class="friend-actions-column">
+                            <button class="default" onclick="mail_or_message_friend">Message</button>
+                        </div>
+                    </div>
+            </div>
+            </panel>
+            <tab gl-tab="1" class="ui-tab" id="ignore-tab">Ignore</tab>
+            <panel>
+                <div data-model="ignore-list" style="width: 100%; height: 100%; display: flex; flex-direction: column;">
+                    <div style="flex: 1" class="content-box">
+                        <div style="width: 100%; height: 100%; overflow: hidden auto;">
+                            <listbox id="ignore-list">
+                                <listbox-item
+                                    data-for="ignore : ignore_list"
+                                    data-attr-value="ignore.name"
+                                    style="display: flex; flex-direction: row; column-gap: 4dp; width: 100%; height: 20dp"
+                                >
+                                    <span>{{ignore.name}}</span>
+                                </listbox-item>
+                            </listbox>
+                        </div>
+                    </div>
+                    <div class="community-actions">
+                        <button class="default" onclick="add_ignore">Add Ignore</button>
+                        <button class="default" onclick="delete_ignore">Delete Ignore</button>
+                    </div>
+                </div>
+            </panel>
+        </tabset>
+    </body>
+</rml>

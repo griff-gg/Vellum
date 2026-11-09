@@ -91,7 +91,9 @@ GLASS_WINDOWS = ('game-arena', 'group-manager', '#group-settings-panel', 'game-o
                  'npc-dialog', 'npc-transaction', 'game-number-input', 'game-party-finder', 'party-options',
                  'game-personal-store-price', 'player-trade', 'game-private-chat', 'game-quest-list', 'refine',
                  'game-reinforcement', 'respawn', 'game-style-change', 'tutorial', 'game-world-map',
-                 'ui_gamearena_scoreboard', 'personal-vending', 'item-mall', 'common-message-box', 'game-system-menu')
+                 'ui_gamearena_scoreboard', 'personal-vending', 'item-mall', 'common-message-box', 'game-system-menu',
+                 'game-clan', 'game-friend-list', 'game-mail', 'game-personal-store', 'game-personal-store-management',
+                 'storage', 'game-avatar-store', 'npc-shop', 'skills')
 # Scripts the glass windows run on open: fade/settle in (tools/glass_open.lua).
 OPEN_KEYFRAMES = '''@keyframes gl-open-a { 0% { opacity: 0; transform: translateY(5dp) scale(0.985); } 100% { opacity: 1; transform: translateY(0dp) scale(1); } }
 @keyframes gl-open-b { 0% { opacity: 0; transform: translateY(5dp) scale(0.985); } 100% { opacity: 1; transform: translateY(0dp) scale(1); } }
@@ -111,10 +113,58 @@ def scoped(css, ids):
     return '\n'.join(out)
 
 
+# Tabs moved into the title row. TABSET_HEADERS: body id -> number of tabs (each tab TAB_W dp wide, sliding pill).
+# STRIP_HEADERS: body id -> (strip selector, bar width dp, tab count for the sliding pill or 0 for a static pill).
+TAB_W = 76
+TABSET_HEADERS = {'game-clan': 2, 'game-friend-list': 2, 'game-mail': 2, 'game-personal-store': 2}
+STRIP_HEADERS = {'storage': ('#storage-tabs', 230, 4), 'npc-shop': ('#shop-tabs', 240, 0), 'skills': ('#skills-tabs', 200, 0)}
+IN_CONTENT_SLIDERS = {'game-avatar-store': 2}   # sliding pill in a strip that stays below the title
+
+
+def pill_decorator():
+    return 'tiled-box(gl-pill-tl, gl-pill-t, gl-pill-tr, gl-pill-l, gl-pill-c, gl-pill-r, gl-pill-bl, gl-pill-b, gl-pill-br)'
+
+
+def tabs_css():
+    out = ['/* Tabs in the title row (written by tools/build.py) */']
+    track = 'tiled-box(gl-track-tl, gl-track-t, gl-track-tr, gl-track-l, gl-track-c, gl-track-r, gl-track-bl, gl-track-b, gl-track-br)'
+    tab = ('flex: none; height: 16dp; line-height: 16dp; margin: 0dp; padding: 0dp 2dp; box-sizing: border-box; text-align: center; '
+           'font-size: 11dp; font-weight: 700; font-effect: none; decorator: none; background-color: transparent; border-width: 0dp; '
+           'border-radius: 8dp; color: rgba(255, 255, 255, 170); position: relative; '
+           'transition: background-color 0.16s cubic-out, color 0.16s cubic-out;')
+    for i, n in TABSET_HEADERS.items():
+        w = n * TAB_W
+        out.append('body#%s #window-content { position: static; overflow: visible; max-height: none; }' % i)
+        out.append('body#%s tabset > tabs { position: absolute; top: 21dp; right: 54dp; width: %ddp; height: 22dp; box-sizing: border-box; '
+                   'padding: 3dp 0dp; gap: 0dp; margin: 0dp; flex-direction: row; border-width: 0dp; decorator: %s; }' % (i, w, track))
+        out.append('body#%s tabset > tabs > .ui-tab, body#%s tabset > tabs > .ui-tab:hover { %s width: %ddp; }' % (i, i, tab, TAB_W))
+        out.append('body#%s tabset > tabs > .ui-tab:hover { color: rgb(255, 255, 255); }' % i)
+        out.append('body#%s tabset > tabs > .ui-tab:selected, body#%s tabset > tabs > .ui-tab.selected { decorator: none; '
+                   'background-color: transparent; border-width: 0dp; color: rgb(255, 255, 255); }' % (i, i))
+        out.append('body#%s .gl-slider { position: absolute; top: 24dp; width: %ddp; height: 16dp; right: %ddp; pointer-events: none; '
+                   'decorator: %s; transition: right 0.28s cubic-out; }' % (i, TAB_W - 4, 54 + (n - 1) * TAB_W + 2, pill_decorator()))
+        for k in range(1, n):
+            out.append('body#%s .gl-slider.at%d { right: %ddp; }' % (i, k, 54 + (n - 1 - k) * TAB_W + 2))
+    for i, (sel, w, n) in STRIP_HEADERS.items():
+        out.append('body#%s #window-content { position: static; overflow: visible; max-height: none; }' % i)
+        out.append('body#%s %s { position: absolute; top: 21dp; right: 54dp; width: %ddp; height: 22dp; margin: 0dp; }' % (i, sel, w))
+        out.append('body#%s %s > .ui-tab, body#%s %s > .ui-tab:hover { height: 16dp; line-height: 16dp; font-size: 11dp; }' % (i, sel, i, sel))
+        if n:
+            out.append('body#%s %s > .gl-slider { height: 16dp; width: %.1f%%; left: 0.5%%; }' % (i, sel, 100.0 / n - 1))
+            for k in range(1, n):
+                out.append('body#%s %s > .gl-slider.at%d { left: %.1f%%; }' % (i, sel, k, k * 100.0 / n + 0.5))
+    for i, n in IN_CONTENT_SLIDERS.items():
+        out.append('body#%s .ui-tab-strip.gl-slide > .gl-slider { width: %.1f%%; left: 0.5%%; }' % (i, 100.0 / n - 1))
+        for k in range(1, n):
+            out.append('body#%s .ui-tab-strip.gl-slide > .gl-slider.at%d { left: %.1f%%; }' % (i, k, k * 100.0 / n + 0.5))
+    return chr(10).join(out) + chr(10)
+
+
 def window_css():
     css = open(os.path.join(ROOT, 'tools', 'glass_window.css'), encoding='utf-8').read()
     text = '/* Shared glass window look (written by tools/build.py) */\n' + scoped(css, GLASS_WINDOWS) + '\n' + OPEN_KEYFRAMES
     open(os.path.join(OUT, 'styles', 'glass_window.css'), 'w', encoding='utf-8', newline='').write(text)
+    open(os.path.join(OUT, 'styles', 'glass_tabs.css'), 'w', encoding='utf-8', newline='').write(tabs_css())
     # the art + rules load with the window templates; they only match the ids above (and the gauges/HUD pages)
     for tname in sorted(os.listdir(os.path.join(OUT, 'templates'))):
         if not tname.endswith('.html'):
@@ -126,6 +176,7 @@ def window_css():
             continue
         t = t.replace(old, old + chr(10) + '        <link type="text/rcss" href="../styles/glass_frame.css" />' + chr(10) +
                       '        <link type="text/rcss" href="../styles/glass_gauge.css" />' + chr(10) +
+                      '        <link type="text/rcss" href="../styles/glass_tabs.css" />' + chr(10) +
                       '        <link type="text/rcss" href="../styles/glass_window.css" />')
         open(tpl, 'w', encoding='utf-8', newline='').write(t)
     for name in ('glass_gauge.css', 'glass_hud.css', 'glass_options.css', 'glass_minimap.css'):
@@ -169,7 +220,7 @@ def glass_css():
 
 def build():
     import runpy
-    for script in ('patch_inventory.py', 'patch_windows.py', 'patch_zone.py', 'patch_generic.py'):   # regenerate src/game pages from upstream
+    for script in ('patch_inventory.py', 'patch_windows.py', 'patch_zone.py', 'patch_generic.py', 'patch_tabs.py'):   # regenerate src/game pages from upstream
         runpy.run_path(os.path.join(ROOT, 'tools', script))
     shutil.rmtree(OUT, ignore_errors=True)
     shutil.copytree(UP, OUT)

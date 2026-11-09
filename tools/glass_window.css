@@ -188,3 +188,11 @@ W .window-resize-handle:hover { decorator: image(gl-grip-h); }
 /* special frames */
 W.window-small { padding: 24dp 20dp 20dp 20dp; }
 body#respawn.waiting { decorator: none; }
+
+/* a strip with its own sliding pill does not also draw the static one; header bars sit in the title row */
+W .ui-tab-strip.gl-slide > .ui-tab.active, W .ui-tab-strip.gl-slide > .ui-tab.selected, W .ui-tab-strip.gl-slide > .ui-tab:selected { decorator: none; }
+W .gl-header-bar { position: absolute; top: 21dp; right: 54dp; margin: 0dp; height: 22dp; }
+W tabset > tabs {
+    box-sizing: border-box; height: 30dp; padding: 3dp 0dp; gap: 0dp; margin-bottom: 8dp; border-width: 0dp;
+    decorator: tiled-box(gl-track-tl, gl-track-t, gl-track-tr, gl-track-l, gl-track-c, gl-track-r, gl-track-bl, gl-track-b, gl-track-br);
+}
