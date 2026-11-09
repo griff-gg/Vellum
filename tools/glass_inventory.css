@@ -1,72 +1,97 @@
 
-            /* ===== Glass. The game draws no CSS box-shadow (broken: white box + copy at screen 0,0), filter, backdrop-filter or linear-gradient. ===== */
-            /* the frame image carries the tint, rim, sheen and shadow; 12dp of it around the glass is shadow room */
+            /* ===== Glass. The game draws no CSS box-shadow (broken: white box + copy at screen 0,0), filter,
+               backdrop-filter or linear-gradient: depth comes from the baked frame and slot art (gl-*). ===== */
+            /* the frame image carries tint, rim, sheen and shadow; 12dp of it around the glass is shadow room */
             body#inventory-window {
                 width: 263dp;
-                padding: 50dp 20dp 20dp 20dp;
+                padding: 52dp 20dp 20dp 20dp;
                 background-color: transparent;
                 border-width: 0dp;
                 decorator: tiled-box(gl-win-tl, gl-win-t, gl-win-tr, gl-win-l, gl-win-c, gl-win-r, gl-win-bl, gl-win-b, gl-win-br);
-                color: rgb(245, 247, 250);
+                color: rgb(255, 255, 255);
+                font-effect: shadow(0dp 1dp rgba(0,0,0,90));
             }
             body#inventory-window #window-content { decorator: none; background-color: transparent; border-width: 0dp; padding: 0dp 4dp; }
             body#inventory-window > .window-title {
-                top: 21dp; left: 12dp; width: 92dp; padding-left: 16dp;
-                line-height: 22dp; font-size: 15dp; font-weight: 800;
-                color: rgb(255, 255, 255); font-effect: shadow(0dp 1dp rgba(0,0,0,120));
+                top: 22dp; left: 12dp; width: 96dp; padding-left: 16dp;
+                line-height: 24dp; font-size: 15dp; font-weight: 800;
+                color: rgb(255, 255, 255); font-effect: shadow(0dp 1dp rgba(0,0,0,110));
             }
+
+            /* round glass close button */
             body#inventory-window > button.window-title-close,
             body#inventory-window > button.window-title-close:hover,
             body#inventory-window > button.window-title-close:active {
-                top: 22dp; right: 22dp; width: 20dp; height: 20dp; min-width: 20dp; padding: 0dp;
+                top: 21dp; right: 22dp; width: 26dp; height: 26dp; min-width: 26dp; padding: 0dp;
                 box-sizing: border-box;
-                decorator: none; background-color: rgba(255,255,255,40);
-                border: 1dp rgba(255,255,255,90); border-radius: 10dp;
-                text-align: center; line-height: 17dp; font-size: 14dp; font-weight: 700;
-                color: rgba(255,255,255,220); font-effect: none;
+                decorator: none; background-color: rgba(255,255,255,55);
+                border: 1dp rgba(255,255,255,150); border-radius: 13dp;
+                text-align: center; line-height: 22dp; font-size: 18dp; font-weight: 700;
+                color: rgb(255,255,255); font-effect: shadow(0dp 1dp rgba(0,0,0,90));
             }
-            body#inventory-window > button.window-title-close:hover { background-color: rgb(255, 95, 87); border-color: rgb(255, 140, 130); color: white; }
+            body#inventory-window > button.window-title-close:hover { background-color: rgba(255,255,255,95); }
+            body#inventory-window > button.window-title-close:active { background-color: rgba(255,255,255,35); }
             body#inventory-window > button.window-title-close span { pointer-events: none; }
 
-            /* segmented controls (top mode tabs + bag tabs) */
-            body#inventory-window .inventory-mode-tabs,
-            body#inventory-window #inventory-bag-tabs {
-                box-sizing: border-box; padding: 2dp; gap: 2dp;
-                background-color: rgba(0,0,0,50);
-                border: 1dp rgba(255,255,255,55);
+            /* top tabs: plain text, the selected one gold with a gold underline */
+            body#inventory-window .inventory-mode-tabs {
+                top: 21dp; right: 54dp; width: 160dp; height: 26dp; gap: 4dp;
+                background-color: transparent; border-width: 0dp;
             }
-            body#inventory-window .inventory-mode-tabs { top: 21dp; right: 50dp; width: 146dp; height: 22dp; border-radius: 11dp; }
-            body#inventory-window #inventory-bag-tabs { height: 26dp; margin: 2dp 0dp 8dp 0dp; border-radius: 13dp; }
-            body#inventory-window .inventory-tab,
-            body#inventory-window .inventory-tab:hover {
-                flex: 1; min-width: 0; padding: 0dp 4dp; text-align: center;
+            body#inventory-window .inventory-mode-tabs > .inventory-tab,
+            body#inventory-window .inventory-mode-tabs > .inventory-tab:hover {
+                flex: 1; min-width: 0; height: 26dp; line-height: 22dp; padding: 0dp 2dp;
+                text-align: center; font-size: 13dp; font-weight: 700;
                 decorator: none; background-color: transparent;
-                border-width: 0dp; font-effect: none;
-                color: rgba(255,255,255,170);
+                border-width: 0dp; border-bottom: 2dp transparent; border-radius: 0dp;
+                color: rgba(255,255,255,165);
             }
-            body#inventory-window .inventory-mode-tabs > .inventory-tab { height: 16dp; line-height: 16dp; font-size: 11dp; border-radius: 8dp; }
-            body#inventory-window #inventory-bag-tabs > .inventory-tab { height: 20dp; line-height: 20dp; font-size: 12dp; border-radius: 10dp; }
-            body#inventory-window .inventory-tab:hover { color: white; background-color: rgba(255,255,255,22); }
-            body#inventory-window .inventory-tab.selected {
-                color: rgb(255,255,255); font-weight: 800;
-                background-color: rgba(255,255,255,72);
-                decorator: vertical-gradient(rgba(255,255,255,40) rgba(255,255,255,0));
-                border-width: 0dp;
+            body#inventory-window .inventory-mode-tabs > .inventory-tab:hover { color: rgb(255,255,255); }
+            body#inventory-window .inventory-mode-tabs > .inventory-tab.selected {
+                color: rgb(246, 200, 118); border-bottom-color: rgb(246, 200, 118);
+                decorator: none; background-color: transparent;
             }
-            body#inventory-window .inventory-bag-label { color: white; text-align: center; line-height: 20dp; height: 20dp; }
 
-            /* slots */
-            body#inventory-window item-slot[empty="1"] { decorator: none; }
-            body#inventory-window .bag-row > .bag-cell {
-                box-sizing: border-box;
-                background-color: rgba(255,255,255,20);
-                border: 1dp rgba(255,255,255,48);
-                border-radius: 8dp;
+            /* bag tabs: outlined segmented bar, selected segment is a brighter glass pill */
+            body#inventory-window #inventory-bag-tabs {
+                box-sizing: border-box; height: 30dp; padding: 2dp; gap: 0dp; margin: 6dp 0dp 8dp 0dp;
+                background-color: rgba(255,255,255,22);
+                border: 1dp rgba(255,255,255,120); border-radius: 15dp;
             }
-            body#inventory-window .equipment-cell > img { opacity: 0.75; }
+            body#inventory-window #inventory-bag-tabs > .inventory-tab,
+            body#inventory-window #inventory-bag-tabs > .inventory-tab:hover {
+                flex: 1; min-width: 0; height: 24dp; line-height: 22dp; padding: 0dp 4dp;
+                text-align: center; font-size: 13dp; font-weight: 700;
+                decorator: none; background-color: transparent;
+                border: 1dp transparent; border-radius: 12dp;
+                color: rgba(255,255,255,200);
+            }
+            body#inventory-window #inventory-bag-tabs > .inventory-tab + .inventory-tab { border-left-color: rgba(255,255,255,70); border-radius: 0dp 12dp 12dp 0dp; }
+            body#inventory-window #inventory-bag-tabs > .inventory-tab:hover { color: rgb(255,255,255); }
+            body#inventory-window #inventory-bag-tabs > .inventory-tab.selected,
+            body#inventory-window #inventory-bag-tabs > .inventory-tab + .inventory-tab.selected {
+                color: rgb(255,255,255); font-weight: 800;
+                background-color: rgba(255,255,255,60);
+                border: 1dp rgba(255,255,255,190); border-radius: 12dp;
+            }
+            body#inventory-window .inventory-bag-label { color: white; text-align: center; line-height: 24dp; height: 24dp; }
+
+            /* glass slots (baked art); equipment slots show a faint name instead of the stock slot pictures */
+            body#inventory-window item-slot,
+            body#inventory-window item-slot[empty="1"] {
+                decorator: tiled-box(gl-slot-tl, gl-slot-t, gl-slot-tr, gl-slot-l, gl-slot-c, gl-slot-r, gl-slot-bl, gl-slot-b, gl-slot-br);
+            }
+            body#inventory-window .bag-row > .bag-cell { background-color: transparent; border-width: 0dp; }
+            body#inventory-window .equipment-cell > img { visibility: hidden; }
+            body#inventory-window .gl-label {
+                position: absolute; top: 2dp; left: 0dp; width: 40dp; height: 40dp;
+                line-height: 40dp; text-align: center; font-size: 9dp; font-weight: 700;
+                color: rgba(255,255,255,140); pointer-events: none; font-effect: none;
+            }
+            body#inventory-window .gl-label.long { font-size: 8dp; }
+            body#inventory-window .equipment-cell.filled > .gl-label { visibility: hidden; }
 
             /* footer */
-            body#inventory-window .inventory-footer { border-top: 1dp rgba(255,255,255,45); margin-top: 8dp; padding-top: 6dp; }
-            body#inventory-window #inventory-weight { color: rgb(100, 210, 255); }
+            body#inventory-window .inventory-footer { border-top: 1dp rgba(255,255,255,70); margin-top: 8dp; padding-top: 6dp; }
+            body#inventory-window #inventory-weight { color: rgb(120, 220, 255); }
             body#inventory-window #inventory-zulie { color: rgb(255, 255, 255); }
-

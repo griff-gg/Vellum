@@ -17,9 +17,13 @@ NAME = 'Glass (test)'
 
 # Window glass. MARGIN (dp) is the shadow room around the glass: windows add it to their padding.
 MARGIN = 12
-WINDOW = dict(margin=MARGIN, radius=18, tint=(24, 28, 38, 175),
-              rim_top=190, rim_mid=80, rim_bottom=45, sheen=34,
-              shadow=120, shadow_dy=4, shadow_blur=7)
+WINDOW = dict(margin=MARGIN, radius=20, tint=(150, 160, 175, 120),
+              rim_top=230, rim_mid=150, rim_bottom=110, sheen=40,
+              shadow=110, shadow_dy=4, shadow_blur=7)
+# Item slots: light glass, bright top rim, no shadow.
+SLOT = dict(margin=0, radius=8, tint=(255, 255, 255, 38),
+            rim_top=210, rim_mid=120, rim_bottom=90, sheen=46,
+            shadow=0, shadow_dy=0, shadow_blur=1)
 
 
 def sheet(name, im):
@@ -31,9 +35,12 @@ def sheet(name, im):
 
 def glass_css():
     win, corner, edge = art.glass_panel(**WINDOW)
+    slot, s_corner, s_edge = art.glass_panel(**SLOT)
     rects = art.slices('gl-win', 0, 0, corner, edge)
-    im = Image.new('RGBA', win.size, (0, 0, 0, 0))
+    rects.update(art.slices('gl-slot', win.width + 2, 0, s_corner, s_edge))
+    im = Image.new('RGBA', (win.width + 2 + slot.width, max(win.height, slot.height)), (0, 0, 0, 0))
     im.paste(win, (0, 0))
+    im.paste(slot, (win.width + 2, 0))
     fn = sheet('glass_frame', im)
     lines = ['/* Glass art (written by tools/build.py). Sprites at 2x. */',
              '@spritesheet glass-frame {', '    src: ../imgs/%s;' % fn, '    resolution: 2x;']
