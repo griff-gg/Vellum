@@ -223,3 +223,76 @@ def knob(hover, radius=9):
                             rim_top=255, rim_mid=200 if hover else 170, rim_bottom=150 if hover else 120,
                             sheen=90, shadow=0, shadow_dy=0, shadow_blur=1, edge=0)
     return img
+
+
+def _overlay(img, draw_fn, rgb, alpha, k=8):
+    """Draw a white-mask glyph with draw_fn(ImageDraw, n) on a supersampled mask and composite it in `rgb` onto img."""
+    n = img.width * k
+    g = Image.new('L', (n, n), 0)
+    draw_fn(ImageDraw.Draw(g), n)
+    g = g.resize(img.size, Image.LANCZOS)
+    col = Image.new('RGBA', img.size, tuple(rgb) + (255,))
+    col.putalpha(g.point(lambda v: int(v * alpha)))
+    out = img.copy()
+    out.alpha_composite(col)
+    return out
+
+
+def toggle(kind, state):
+    """20dp checkbox ('cb') or radio ('rd'). state: off, off-h, on, on-h, p (pressed), d (disabled), d-on."""
+    radius = 6 if kind == 'cb' else 10
+    on = state in ('on', 'on-h', 'd-on')
+    base = dict(margin=0, radius=radius, shadow=0, shadow_dy=0, shadow_blur=1, edge=8 if kind == 'cb' else 0,
+                sheen=0, inner_top=0)
+    if on:
+        hov = state == 'on-h'
+        spec = dict(base, tint=(255, 255, 255, 215 if hov else 190), rim_top=255, rim_mid=210 if hov else 180,
+                    rim_bottom=160 if hov else 130, sheen=90)
+        if state == 'd-on':
+            spec.update(tint=(255, 255, 255, 40), rim_top=110, rim_mid=70, rim_bottom=50, sheen=20)
+    elif state == 'p':
+        spec = dict(base, tint=(0, 0, 0, 80), rim_top=110, rim_mid=95, rim_bottom=150)
+    elif state == 'd':
+        spec = dict(base, tint=(255, 255, 255, 12), rim_top=80, rim_mid=55, rim_bottom=45)
+    else:
+        hov = state == 'off-h'
+        spec = dict(base, tint=(255, 255, 255, 58 if hov else 26), rim_top=210 if hov else 150,
+                    rim_mid=160 if hov else 110, rim_bottom=200 if hov else 170, inner_top=100)
+    img, _, _ = glass_panel(**spec)
+    if kind == 'rd' and img.size != (40, 40):
+        img = img.resize((40, 40), Image.LANCZOS)
+    if on:
+        ink = (34, 38, 50)
+        a = 0.35 if state == 'd-on' else 0.95
+        if kind == 'cb':
+            def mark(d, n):
+                d.line([(n * 0.27, n * 0.52), (n * 0.43, n * 0.68), (n * 0.74, n * 0.33)], fill=255,
+                       width=int(n * 0.1), joint='curve')
+        else:
+            def mark(d, n):
+                r = n * 0.17
+                d.ellipse((n / 2 - r, n / 2 - r, n / 2 + r, n / 2 + r), fill=255)
+        img = _overlay(img, mark, ink, a)
+    return img
+
+
+def chevron(state):
+    """Dropdown arrow (24 x 22 dp, transparent): a thin white chevron."""
+    img = Image.new('RGBA', (48, 44), (0, 0, 0, 0))
+    a = {'n': 0.85, 'h': 1.0, 'd': 0.3}[state]
+
+    def mark(d, n):
+        d.line([(n * 0.34, n * 0.42), (n * 0.5, n * 0.58), (n * 0.66, n * 0.42)], fill=255, width=int(n * 0.07), joint='curve')
+    return _overlay(img, mark, (255, 255, 255), a)
+
+
+def grip(hover):
+    """Resize handle (14 x 14 dp): three short diagonal lines in the corner."""
+    img = Image.new('RGBA', (28, 28), (0, 0, 0, 0))
+
+    def mark(d, n):
+        w = max(int(n * 0.07), 2)
+        for i in range(3):
+            o = n * (0.30 + 0.2 * i)
+            d.line([(n * 0.92, o), (o, n * 0.92)], fill=255, width=w)
+    return _overlay(img, mark, (255, 255, 255), 1.0 if hover else 0.55)

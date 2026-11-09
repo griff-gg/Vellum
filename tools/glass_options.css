@@ -1,0 +1,58 @@
+/* Glass options window (#game-options). Linked into the page after its own styles. */
+
+/* the tab list leaves the left column and becomes a pill bar in the title row; its container must not clip it */
+body#game-options #window-content { position: static; overflow: visible; max-height: none; }
+body#game-options tabset { gap: 0dp; }
+body#game-options tabset > tabs {
+    position: absolute; top: 21dp; right: 54dp; width: 490dp; height: 22dp; box-sizing: border-box;
+    padding: 3dp 0dp; gap: 0dp; flex-direction: row; border-width: 0dp;
+    decorator: tiled-box(gl-track-tl, gl-track-t, gl-track-tr, gl-track-l, gl-track-c, gl-track-r, gl-track-bl, gl-track-b, gl-track-br);
+}
+body#game-options tabset > tabs > .ui-tab,
+body#game-options tabset > tabs > .ui-tab:hover {
+    flex: none; width: 70dp; height: 16dp; line-height: 16dp; margin: 0dp; padding: 0dp 2dp; box-sizing: border-box;
+    text-align: center; font-size: 11dp; font-weight: 700; font-effect: none;
+    decorator: none; background-color: transparent; border-width: 0dp; border-radius: 8dp;
+    color: rgba(255, 255, 255, 170); position: relative; transition: all 0.16s cubic-out;
+}
+body#game-options tabset > tabs > .ui-tab:hover { color: rgb(255, 255, 255); }
+body#game-options tabset > tabs > .ui-tab:selected,
+body#game-options tabset > tabs > .ui-tab.selected {
+    decorator: none; background-color: transparent; border-width: 0dp; color: rgb(255, 255, 255);
+}
+
+/* the sliding pill: right-anchored, one step of 70dp per tab */
+body#game-options .gl-opt-slider {
+    position: absolute; top: 24dp; width: 66dp; height: 16dp; right: 476dp; pointer-events: none;
+    decorator: tiled-box(gl-pill-tl, gl-pill-t, gl-pill-tr, gl-pill-l, gl-pill-c, gl-pill-r, gl-pill-bl, gl-pill-b, gl-pill-br);
+    transition: right 0.28s cubic-out;
+}
+body#game-options .gl-opt-slider.at1 { right: 406dp; }
+body#game-options .gl-opt-slider.at2 { right: 336dp; }
+body#game-options .gl-opt-slider.at3 { right: 266dp; }
+body#game-options .gl-opt-slider.at4 { right: 196dp; }
+body#game-options .gl-opt-slider.at5 { right: 126dp; }
+body#game-options .gl-opt-slider.at6 { right: 56dp; }
+
+/* panels + section boxes */
+body#game-options tabset > panels { flex: 1; }
+body#game-options .settings-group, body#game-options .options-panel details {
+    background: rgba(255, 255, 255, 12); border: 1dp rgba(255, 255, 255, 45); border-radius: 12dp;
+}
+body#game-options .settings-group { padding: 10dp 12dp; }
+body#game-options .settings-group > h3 { color: rgba(255, 255, 255, 235); font-effect: none; text-transform: uppercase; letter-spacing: 1.2dp; font-size: 0.85em; }
+body#game-options .options-panel details > summary > summary-text { color: rgba(255, 255, 255, 235); font-effect: none; }
+body#game-options .keybind-table thead td { color: rgba(255, 255, 255, 170); font-effect: none; }
+body#game-options #chat-tab-choices { font-effect: none; }
+
+/* the chat-tab chips inside the Chat panel are small standalone tabs, not part of the strip */
+body#game-options #chat-tab-choices > .ui-tab,
+body#game-options #chat-tab-choices > .ui-tab:hover {
+    width: auto; height: 22dp; line-height: 22dp; margin: 2dp 4dp 2dp 0dp; padding: 0dp 12dp; border-radius: 11dp; font-size: 12dp;
+    background-color: rgba(255, 255, 255, 18); color: rgba(255, 255, 255, 200);
+}
+body#game-options #chat-tab-choices > .ui-tab.selected,
+body#game-options #chat-tab-choices > .ui-tab:selected {
+    color: rgb(255, 255, 255);
+    decorator: tiled-box(gl-pill-tl, gl-pill-t, gl-pill-tr, gl-pill-l, gl-pill-c, gl-pill-r, gl-pill-bl, gl-pill-b, gl-pill-br);
+}

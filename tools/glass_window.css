@@ -142,3 +142,43 @@ W input.range sliderbar {
 W input.range:not([disabled]) sliderbar:hover, W input.range:not([disabled]) slidertrack:hover + sliderbar,
 W input.range:not([disabled]) sliderbar:active { image-color: white; decorator: image(gl-knob-h); }
 W .ui-detail-value { color: rgba(255, 255, 255, 205); }
+
+/* checkboxes + radio buttons (baked glass, 20dp) */
+W input[type="checkbox"] { decorator: image(gl-cb-off); }
+W input[type="checkbox"]:not([disabled]):hover, W input[type="checkbox"]:not([disabled]):focus { decorator: image(gl-cb-off-h); }
+W input[type="checkbox"]:checked { decorator: image(gl-cb-on); }
+W input[type="checkbox"]:checked:not([disabled]):hover, W input[type="checkbox"]:checked:not([disabled]):focus { decorator: image(gl-cb-on-h); }
+W input[type="checkbox"]:not([disabled]):active, W input[type="checkbox"]:checked:not([disabled]):active { decorator: image(gl-cb-p); }
+W input[type="checkbox"]:disabled { decorator: image(gl-cb-d); }
+W input[type="checkbox"]:disabled:checked { decorator: image(gl-cb-d); }
+W input[type="radio"] { decorator: image(gl-rd-off); }
+W input[type="radio"]:not([disabled]):hover, W input[type="radio"]:not([disabled]):focus { decorator: image(gl-rd-off-h); }
+W input[type="radio"]:checked, W input[type="radio"]:checked:not([disabled]):hover, W input[type="radio"]:checked:not([disabled]):focus { decorator: image(gl-rd-on); }
+W input[type="radio"]:not([disabled]):active, W input[type="radio"]:checked:not([disabled]):active { decorator: image(gl-rd-p); }
+W input[type="radio"]:disabled { decorator: image(gl-rd-d); }
+W input[type="radio"]:disabled:checked { decorator: image(gl-rd-d-on); }
+
+/* dropdowns */
+W select {
+    decorator: none; background-color: rgba(0, 0, 0, 70); color: rgb(255, 255, 255);
+    border: 1dp rgba(255, 255, 255, 80); border-radius: 10dp; transition: all 0.14s cubic-out;
+}
+W select:not([disabled]):hover, W select:not([disabled]):focus { background-color: rgba(255, 255, 255, 30); border-color: rgba(255, 255, 255, 150); }
+W select:disabled { color: rgba(255, 255, 255, 95); background-color: rgba(255, 255, 255, 8); border-color: rgba(255, 255, 255, 40); }
+W select selectarrow { decorator: image(gl-chev); }
+W select:not([disabled]) selectarrow:hover, W select:not([disabled]):focus selectarrow { decorator: image(gl-chev-h); }
+W select:not([disabled]) selectarrow:active, W select:not([disabled]) selectarrow:checked { decorator: image(gl-chev-h); }
+W select:disabled selectarrow { decorator: image(gl-chev-d); }
+W select selectbox {
+    margin-top: 3dp; margin-left: 0dp; padding: 3dp 0dp;
+    background: rgba(26, 30, 40, 245); border: 1dp rgba(255, 255, 255, 90); border-radius: 10dp;
+}
+W select option { border-top-width: 0dp; padding-left: 8dp; color: rgb(255, 255, 255); }
+W select option:not([disabled]):hover, W select option:not([disabled]):checked, W select option:not([disabled])[selected] {
+    decorator: none; background: rgba(255, 255, 255, 45); color: rgb(255, 255, 255);
+}
+W select selectbox option[disabled], W select selectbox option[disabled]:hover { color: rgba(255, 255, 255, 95); background: rgba(0, 0, 0, 0); }
+
+/* resize grip (resizable windows) */
+W .window-resize-handle { right: 14dp; bottom: 14dp; width: 14dp; height: 14dp; decorator: image(gl-grip); }
+W .window-resize-handle:hover { decorator: image(gl-grip-h); }

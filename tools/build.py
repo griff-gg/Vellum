@@ -72,10 +72,16 @@ def sprites():
     for kind in ('options', 'leave', 'kick', 'entrust'):
         for st in ('n', 'h', 'd'):
             out.append(('gl-i-%s%s' % (kind, '' if st == 'n' else '-' + st), art.round_icon(kind, st)))
+    for kind in ('cb', 'rd'):
+        for st in ('off', 'off-h', 'on', 'on-h', 'p', 'd', 'd-on'):
+            out.append(('gl-%s-%s' % (kind, st), art.toggle(kind, st)))
+    for st in ('n', 'h', 'd'):
+        out.append(('gl-chev' + ('' if st == 'n' else '-' + st), art.chevron(st)))
+    out += [('gl-grip', art.grip(False)), ('gl-grip-h', art.grip(True))]
     return out
 
 # Windows (body ids) that get the shared glass look from tools/glass_window.css. The inventory has its own page styles.
-GLASS_WINDOWS = ('game-arena', 'group-manager', '#group-settings-panel')
+GLASS_WINDOWS = ('game-arena', 'group-manager', '#group-settings-panel', 'game-options')
 # Scripts the glass windows run on open: fade/settle in (tools/glass_open.lua).
 OPEN_KEYFRAMES = '''@keyframes gl-open-a { 0% { opacity: 0; transform: translateY(5dp) scale(0.985); } 100% { opacity: 1; transform: translateY(0dp) scale(1); } }
 @keyframes gl-open-b { 0% { opacity: 0; transform: translateY(5dp) scale(0.985); } 100% { opacity: 1; transform: translateY(0dp) scale(1); } }
@@ -100,16 +106,19 @@ def window_css():
     text = '/* Shared glass window look (written by tools/build.py) */\n' + scoped(css, GLASS_WINDOWS) + '\n' + OPEN_KEYFRAMES
     open(os.path.join(OUT, 'styles', 'glass_window.css'), 'w', encoding='utf-8', newline='').write(text)
     # the art + rules load with the window templates; they only match the ids above (and the gauges/HUD pages)
-    for tname in ('window-fixed-size.html', 'window-box.html'):
+    for tname in sorted(os.listdir(os.path.join(OUT, 'templates'))):
+        if not tname.endswith('.html'):
+            continue
         tpl = os.path.join(OUT, 'templates', tname)
         t = open(tpl, encoding='utf-8').read()
         old = '        <link type="text/rcss" href="../styles/window.css" />'
-        assert t.count(old) == 1, tname
+        if t.count(old) != 1:
+            continue
         t = t.replace(old, old + chr(10) + '        <link type="text/rcss" href="../styles/glass_frame.css" />' + chr(10) +
                       '        <link type="text/rcss" href="../styles/glass_gauge.css" />' + chr(10) +
                       '        <link type="text/rcss" href="../styles/glass_window.css" />')
         open(tpl, 'w', encoding='utf-8', newline='').write(t)
-    for name in ('glass_gauge.css', 'glass_hud.css'):
+    for name in ('glass_gauge.css', 'glass_hud.css', 'glass_options.css'):
         shutil.copy2(os.path.join(ROOT, 'tools', name), os.path.join(OUT, 'styles', name))
 
 

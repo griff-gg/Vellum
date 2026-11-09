@@ -7,7 +7,7 @@ OVERLAYS   HUD, party and group overlays (tools/glass_hud.css): + that styleshee
 import os
 
 ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
-PAGES = ('game_arena.html', 'group_manager.html')
+PAGES = ('game_arena.html', 'group_manager.html', 'options_bgfx.html')
 OVERLAYS = ('hud.html', 'party.html', 'arena_group.html')
 NL = chr(10)
 lua = open(os.path.join(ROOT, 'tools', 'glass_open.lua'), encoding='utf-8').read()
@@ -55,6 +55,20 @@ for name in PAGES:
                  '<div id="window-content">', name)
         s = swap(s, '</body>', '</div>' + NL + '</body>', name)
         extra = '<script>' + NL + arena_tabs + '</script>' + NL
+    if name == 'options_bgfx.html':   # tabs become a sliding pill bar in the title row
+        opt_tabs = open(os.path.join(ROOT, 'tools', 'glass_tabs_options.lua'), encoding='utf-8').read()
+        assert '<' not in opt_tabs and '&' not in opt_tabs
+        extra = '<script>' + NL + opt_tabs + '</script>' + NL + '<link type="text/rcss" href="../styles/glass_options.css" />' + NL
+        for i, old in enumerate(('<tab class="ui-tab"><str string-id="478">Video</str></tab>',
+                                 '<tab class="ui-tab"><str string-id="479">Audio</str></tab>',
+                                 '<tab class="ui-tab"><str string-id="480">Interface</str></tab>',
+                                 '<tab class="ui-tab"><str string-id="1366">Game</str></tab>',
+                                 '<tab class="ui-tab">Key Bindings</tab>',
+                                 '<tab class="ui-tab">Gamepad</tab>',
+                                 '<tab id="chat-options-tab" class="ui-tab">Chat</tab>')):
+            s = swap(s, old, old.replace('<tab ', '<tab gl-tab="%d" ' % i, 1), name)
+        s = swap(s, '<tabset id="options-tabs">', '<div class="gl-slider gl-opt-slider" id="gl-opt-slider"></div>' + NL +
+                 '<tabset id="options-tabs">', name)
     s = swap(s, '</head>', '<style>' + KEYFRAMES + '</style>' + NL + '<script>' + NL + lua + '</script>' + NL + extra + '</head>', name)
     save(name, s)
 
