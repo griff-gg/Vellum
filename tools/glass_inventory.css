@@ -46,7 +46,7 @@
                 border-width: 0dp; font-effect: none;
                 color: rgba(255,255,255,170);
                 position: relative;
-                transition: all 0.2s cubic-out;
+                transition: background-color 0.2s cubic-out, color 0.2s cubic-out, border-color 0.2s cubic-out, transform 0.2s cubic-out, opacity 0.2s cubic-out;
             }
             body#inventory-window .inventory-mode-tabs > .inventory-tab { height: 16dp; line-height: 16dp; font-size: 11dp; border-radius: 8dp; }
             body#inventory-window #inventory-bag-tabs > .inventory-tab { height: 20dp; line-height: 20dp; font-size: 12dp; border-radius: 10dp; }

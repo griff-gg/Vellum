@@ -38,7 +38,7 @@ body#game-minimap { width: 178dp; }
 #minimap-normal .btn-giftbox, #minimap-normal .btn-itemmall, #minimap-normal .btn-zoomin, #minimap-normal .btn-zoomout,
 #minimap-minimized .btn-restore {
     width: 22dp; height: 22dp; padding: 0dp; background-color: transparent; border-width: 0dp;
-    transition: all 0.14s cubic-out;
+    transition: background-color 0.14s cubic-out, color 0.14s cubic-out, border-color 0.14s cubic-out, transform 0.14s cubic-out, opacity 0.14s cubic-out;
 }
 #minimap-normal .btn-minimize:hover, #minimap-normal .btn-worldmap:hover, #minimap-normal .btn-gamearena:hover,
 #minimap-normal .btn-giftbox:hover, #minimap-normal .btn-itemmall:hover, #minimap-normal .btn-zoomin:hover,
