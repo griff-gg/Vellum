@@ -1,14 +1,12 @@
 
-            /* ===== Glass (test) ===== */
+            /* ===== Glass (test) — safe base: no shadows, filters or blur (they break the game's renderer) ===== */
             body#inventory-window {
                 width: 263dp;
                 padding: 38dp 8dp 8dp 8dp;
-                background-color: rgba(26, 30, 40, 115);
-                decorator: linear-gradient(180deg, rgba(255,255,255,46), rgba(255,255,255,10) 35%, rgba(255,255,255,0));
+                background-color: rgba(26, 30, 40, 150);
+                decorator: vertical-gradient(rgba(255,255,255,38) rgba(255,255,255,0));
                 border: 1dp rgba(255, 255, 255, 95);
                 border-radius: 18dp;
-                backdrop-filter: blur(16dp) saturate(180%);
-                box-shadow: rgba(0,0,0,100) 0dp 10dp 30dp 0dp, rgba(255,255,255,80) 0dp 1dp 0dp 0dp inset, rgba(255,255,255,26) 0dp 0dp 14dp 0dp inset;
                 color: rgb(245, 247, 250);
             }
             body#inventory-window #window-content { decorator: none; background-color: transparent; border-width: 0dp; padding: 0dp 4dp; }
@@ -34,9 +32,8 @@
             body#inventory-window .inventory-mode-tabs,
             body#inventory-window #inventory-bag-tabs {
                 box-sizing: border-box; padding: 2dp; gap: 2dp;
-                background-color: rgba(255,255,255,26);
+                background-color: rgba(0,0,0,50);
                 border: 1dp rgba(255,255,255,55);
-                box-shadow: rgba(0,0,0,50) 0dp 1dp 2dp 0dp inset;
             }
             body#inventory-window .inventory-mode-tabs { top: 9dp; right: 38dp; width: 146dp; height: 22dp; border-radius: 11dp; }
             body#inventory-window #inventory-bag-tabs { height: 26dp; margin: 2dp 0dp 8dp 0dp; border-radius: 13dp; }
@@ -53,8 +50,8 @@
             body#inventory-window .inventory-tab.selected {
                 color: rgb(255,255,255); font-weight: 800;
                 background-color: rgba(255,255,255,72);
-                decorator: none; border-width: 0dp;
-                box-shadow: rgba(0,0,0,70) 0dp 1dp 3dp 0dp, rgba(255,255,255,90) 0dp 1dp 0dp 0dp inset;
+                decorator: vertical-gradient(rgba(255,255,255,40) rgba(255,255,255,0));
+                border-width: 0dp;
             }
             body#inventory-window .inventory-bag-label { color: white; text-align: center; line-height: 20dp; height: 20dp; }
 
@@ -73,11 +70,15 @@
             body#inventory-window #inventory-weight { color: rgb(100, 210, 255); }
             body#inventory-window #inventory-zulie { color: rgb(255, 255, 255); }
 
-            /* TEST STRIP: each chip shows one effect; a plain chip means that effect does not draw */
-            #glass-probe { display: flex; gap: 4dp; margin-top: 10dp; padding-bottom: 4dp; }
-            #glass-probe > div { flex: 1; height: 18dp; line-height: 18dp; font-size: 9dp; font-weight: 800; text-align: center; color: white; border-radius: 6dp; background-color: rgba(255,255,255,30); font-effect: none; }
-            #glass-probe .gp-grad { decorator: linear-gradient(90deg, #ff3b30, #007aff); }
-            #glass-probe .gp-shadow { box-shadow: #00e5ff 0dp 0dp 8dp 2dp; }
-            #glass-probe .gp-inset { box-shadow: #ffcc00 0dp 0dp 0dp 3dp inset; }
-            #glass-probe .gp-drop { filter: drop-shadow(#ff00ff 3dp 3dp 0dp); }
-            #glass-probe .gp-back { background-color: transparent; border: 1dp white; backdrop-filter: invert(100%); }
+            /* TEST: click a chip to switch that one effect on for the demo bar; click again to switch it off */
+            #glass-probe { display: flex; gap: 4dp; margin-top: 10dp; }
+            #glass-probe > div { flex: 1; height: 18dp; line-height: 18dp; font-size: 9dp; font-weight: 800; text-align: center; color: rgba(255,255,255,200); border-radius: 6dp; background-color: rgba(255,255,255,30); border: 1dp rgba(255,255,255,60); font-effect: none; cursor: hand; }
+            #glass-probe > div:hover { background-color: rgba(255,255,255,60); }
+            #glass-probe > div.on { background-color: rgb(10, 132, 255); color: white; }
+            #gp-demo { margin: 10dp 20dp 6dp 20dp; height: 26dp; line-height: 26dp; text-align: center; font-size: 11dp; font-weight: 800; border-radius: 8dp; background-color: rgba(255,255,255,30); border: 1dp rgba(255,255,255,60); font-effect: none; }
+            #gp-demo.t-grad { decorator: linear-gradient(90deg, #ff3b30, #007aff); }
+            #gp-demo.t-glow { box-shadow: #00e5ff 0dp 0dp 8dp 2dp; }
+            #gp-demo.t-hard { box-shadow: #00e5ff 4dp 4dp 0dp 0dp; }
+            #gp-demo.t-inset { box-shadow: #ffcc00 0dp 0dp 0dp 3dp inset; }
+            #gp-demo.t-drop { filter: drop-shadow(#ff00ff 3dp 3dp 0dp); }
+            #gp-demo.t-blur { background-color: transparent; backdrop-filter: blur(8dp); }
