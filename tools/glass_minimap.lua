@@ -16,8 +16,8 @@ pcall(function()
 
     -- marquee: text wider than its box scrolls back and forth (a class named mq plus the distance in dp picks the distance).
     -- Uses the measured width when the game reports one, otherwise an estimate from the letter count.
-    local MQ = { { text = 'zone-name-text', box = 'zone-name', dp = 116 },
-                 { text = 'zone-name-min-text', box = 'zone-name-min', dp = 118 } }
+    local MQ = { { text = 'zone-name-text', box = 'zone-name', dp = 104 },
+                 { text = 'zone-name-min-text', box = 'zone-name-min', dp = 104 } }
     local last = {}
     local function fit(m)
         local t, b = by_id(m.text), by_id(m.box)
@@ -31,7 +31,7 @@ pcall(function()
         else
             width = string.len(t.inner_rml or '') * 6.2
         end
-        local over = width - m.dp + 4
+        local over = width - m.dp + 10
         local key = 0
         if over > 2 then key = math.min(math.max(math.floor(over / 4 + 0.5) * 4, 4), 160) end
         if key ~= last[m.text] then

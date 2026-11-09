@@ -23,11 +23,11 @@ body#game-minimap { width: 178dp; }
 
 /* title row: small spaced capitals, like every glass window */
 #zone-name, #minimap-minimized #zone-name-min {
-    left: 18dp; top: 12dp; width: 116dp; height: 24dp; line-height: 24dp; font-size: 10dp; font-weight: 800;
+    left: 18dp; top: 12dp; width: 104dp; height: 24dp; line-height: 24dp; font-size: 10dp; font-weight: 800;
     text-transform: uppercase; letter-spacing: 1.4dp; text-align: left; font-effect: shadow(0dp 1dp rgba(0, 0, 0, 120));
     color: rgba(255, 255, 255, 225);
 }
-#minimap-minimized #zone-name-min { top: 9dp; width: 118dp; height: 18dp; line-height: 18dp; }
+#minimap-minimized #zone-name-min { top: 9dp; width: 104dp; height: 18dp; line-height: 18dp; }
 #minimap-minimized #time-min {
     left: 18dp; top: 28dp; width: 120dp; height: 14dp; font-size: 11dp; text-align: left;
     color: rgba(255, 255, 255, 175); font-effect: shadow(0dp 1dp rgba(0, 0, 0, 120));
