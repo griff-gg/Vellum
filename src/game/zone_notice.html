@@ -1,0 +1,94 @@
+<rml>
+    <head>
+        <title>Zone notice</title>
+        <link type="text/rcss" href="../styles/html.css" />
+        <link type="text/rcss" href="../styles/components.css" />
+        <style>
+            body {
+                left: 5%; top: 150dp; width: 90%; z-index: -50;
+                pointer-events: none;
+                text-align: center;
+                font-effect: outline(1dp black);
+                color: white;
+            }
+            #zone-name { font-size: 18dp; line-height: 24dp; margin-bottom: 8dp; }
+
+            /* glass pill, centred at the top: the body keeps the game's 90% wide, centred text box */
+            body#game-zone-notice { top: 8dp; font-effect: none; }
+            #gl-island {
+                display: inline-block; max-width: 420dp; padding: 12dp 28dp 12dp 28dp; transform-origin: 50% 0% 0;
+                decorator: tiled-box(gl-hud-tl, gl-hud-t, gl-hud-tr, gl-hud-l, gl-hud-c, gl-hud-r, gl-hud-bl, gl-hud-b, gl-hud-br);
+            }
+            #game-zone-notice #zone-name {
+                font-size: 13dp; line-height: 18dp; margin-bottom: 0dp; font-weight: 800; color: rgb(255, 255, 255);
+                text-transform: uppercase; letter-spacing: 1.8dp; font-effect: shadow(0dp 1dp rgba(0, 0, 0, 130));
+            }
+            #game-zone-notice #zone-description {
+                font-size: 11dp; line-height: 15dp; margin-top: 2dp; color: rgba(255, 255, 255, 190);
+                font-effect: shadow(0dp 1dp rgba(0, 0, 0, 120));
+            }
+            #gl-zn-tick { position: absolute; left: 0dp; top: 0dp; width: 1dp; height: 1dp; opacity: 0; pointer-events: none; }
+            #gl-zn-tick.tk-a { animation: 0.3s linear 1 gl-zt-a; }
+            #gl-zn-tick.tk-b { animation: 0.3s linear 1 gl-zt-b; }
+            @keyframes gl-zt-a { from { opacity: 0; } to { opacity: 0.02; } }
+            @keyframes gl-zt-b { from { opacity: 0; } to { opacity: 0.02; } }
+            @keyframes gl-drop-a { from { transform: translateY(-80dp) scale(0.55, 0.55); } to { transform: translateY(0dp) scale(1, 1); } }
+            @keyframes gl-drop-b { from { transform: translateY(-80dp) scale(0.55, 0.55); } to { transform: translateY(0dp) scale(1, 1); } }
+        </style>
+        <link type="text/rcss" href="../styles/glass_frame.css" />
+        <script>
+-- Glass zone notice: the pill drops in from the top edge with a bounce every time a new zone name arrives.
+-- Keyframes come in identical -a / -b pairs: switching to the other one restarts the animation.
+pcall(function()
+    local doc = document
+    local function by_id(i) return doc:GetElementById(i) end
+    local flip = false
+    local last = nil
+
+    local function play()
+        local e = by_id('gl-island')
+        if not e then return end
+        flip = not flip
+        e.style.animation = '0.6s back-out 1 gl-drop' .. (flip and '-a' or '-b')
+    end
+    local function check()
+        local z = by_id('zone-name')
+        local txt = z and z.inner_rml or ''
+        if txt ~= last then
+            last = txt
+            play()
+        end
+    end
+
+    -- every time the game shows the notice, play it again
+    doc:AddEventListener('show', function()
+        last = nil
+        pcall(check)
+    end)
+
+    -- a hidden element's short animation wakes us up a few times a second, in case the name changes while it is open
+    local tick = by_id('gl-zn-tick')
+    local tf = false
+    local function step()
+        pcall(check)
+        if tick then
+            tf = not tf
+            tick:SetClass('tk-a', tf)
+            tick:SetClass('tk-b', not tf)
+        end
+    end
+    if tick then tick:AddEventListener('animationend', function() pcall(step) end) end
+    pcall(step)
+end)
+        </script>
+    </head>
+    <body id="game-zone-notice">
+        <div data-model="zone-notice">
+            <div id="gl-island">
+                <div id="gl-zn-tick"></div>
+                <div id="zone-name" class="ui-section-title">{{ name }}</div>
+                <div id="zone-description" class="ui-banner-text" data-if="description != ''">{{ description }}</div>
+            </div>
+        </div>
+    </body>
+</rml>

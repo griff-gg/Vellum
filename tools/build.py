@@ -163,7 +163,7 @@ def glass_css():
 
 def build():
     import runpy
-    for script in ('patch_inventory.py', 'patch_windows.py'):   # regenerate src/game pages from upstream
+    for script in ('patch_inventory.py', 'patch_windows.py', 'patch_zone.py'):   # regenerate src/game pages from upstream
         runpy.run_path(os.path.join(ROOT, 'tools', script))
     shutil.rmtree(OUT, ignore_errors=True)
     shutil.copytree(UP, OUT)
