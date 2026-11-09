@@ -1,0 +1,79 @@
+<rml>
+    <head>
+        <title>Refine</title>
+        <link type="text/template" href="../templates/window-fixed-size.html" />
+        <link type="text/rcss" href="../styles/spritesheet_itemicon.css" />
+        <link type="text/rcss" href="../styles/spritesheet_socketgem.css" />
+        <link type="text/rcss" href="../styles/item_slot.css" />
+        <link type="text/rcss" href="../styles/components.css" />
+        <style>
+            body { width: 340dp; max-width: 92vw; }
+
+            #refine .ui-item-row {
+                min-height: 54dp;
+                padding: 6dp 8dp;
+                margin-bottom: 4dp;
+            }
+
+            #refine-begin {
+                min-width: 100dp;
+                height: 24dp;
+                flex-shrink: 0;
+                padding: 1dp 12dp;
+                font-size: 13dp;
+                line-height: 22dp;
+                white-space: nowrap;
+            }
+        </style>
+    <style>
+@keyframes gl-open-a { 0% { opacity: 0; transform: translateY(5dp) scale(0.985); } 100% { opacity: 1; transform: translateY(0dp) scale(1); } }
+@keyframes gl-open-b { 0% { opacity: 0; transform: translateY(5dp) scale(0.985); } 100% { opacity: 1; transform: translateY(0dp) scale(1); } }
+</style>
+<script>
+-- Glass: each time the window opens it fades and settles in, then a streak of light crosses the glass.
+-- Two identical keyframe sets (-a / -b): switching to the other one restarts the animation.
+pcall(function()
+    local doc = document
+    local flip = false
+    local function opened()
+        flip = not flip
+        doc:SetClass('gl-shown-a', flip)
+        doc:SetClass('gl-shown-b', not flip)
+        doc.style.animation = '0.15s cubic-out 1 ' .. (flip and 'gl-open-a' or 'gl-open-b')
+    end
+    doc:AddEventListener('show', function() pcall(opened) end)
+    opened()
+end)
+</script>
+</head>
+    <body template="window-fixed-size" id="refine">
+        <div data-model="refine">
+            <div class="content-box ui-section ui-item-row">
+                <item-slot id="refine-target" class="default" />
+                <div class="ui-item-details"><str string-id="788" class="ui-item-caption" /><span class="ui-section-title">{{target_name}}</span></div>
+            </div>
+            <div class="content-box ui-section ui-item-row">
+                <item-slot id="refine-material-0" class="default" />
+                <div class="ui-item-details"><str string-id="798" class="ui-item-caption" /><span class="ui-section-title">{{material0}}</span></div><span class="ui-item-amount">{{count[0]}}</span>
+            </div>
+            <div class="content-box ui-section ui-item-row">
+                <item-slot id="refine-material-1" class="default" />
+                <div class="ui-item-details"><str string-id="465" class="ui-section-title" /></div><span class="ui-item-amount">{{count[1]}}</span>
+            </div>
+            <div class="content-box ui-section ui-item-row">
+                <item-slot id="refine-material-2" class="default" />
+                <div class="ui-item-details"><str string-id="466" class="ui-section-title" /></div><span class="ui-item-amount">{{count[2]}}</span>
+            </div>
+            <div class="content-box ui-section ui-item-row">
+                <item-slot id="refine-material-3" class="default" />
+                <div class="ui-item-details"><str string-id="467" class="ui-section-title" /></div><span class="ui-item-amount">{{count[3]}}</span>
+            </div>
+            <div class="ui-footer">
+                <div class="ui-detail-row"><str string-id="318" /><span class="ui-detail-value" id="refine-chance">{{chance}}</span></div>
+                <div class="ui-detail-row"><span>{{cost_label}}</span><div class="ui-currency" data-class-mana="uses_mp"><img id="refine-currency" sprite="button-zulie-n" data-if="!uses_mp" /><span id="refine-cost">{{cost}}</span></div></div>
+            </div>
+            <span id="refine-status" class="ui-status ui-operation-status" data-if="status != ''">{{status}}</span>
+            <div class="ui-actions ui-operation-actions"><button id="refine-begin" class="default accept" onclick="begin" data-attrif-disabled="busy"><str string-id="895" /></button></div>
+        </div>
+    </body>
+</rml>

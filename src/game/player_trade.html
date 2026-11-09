@@ -1,0 +1,101 @@
+<rml>
+    <head>
+        <title>Trade</title>
+        <link type="text/template" href="../templates/window-fixed-size.html" />
+        <link type="text/rcss" href="../styles/spritesheet_itemicon.css" />
+        <link type="text/rcss" href="../styles/spritesheet_socketgem.css" />
+        <link type="text/rcss" href="../styles/item_slot.css" />
+        <link type="text/rcss" href="../styles/components.css" />
+        <style>
+            body { width: 468dp; max-width: 94vw; }
+            #player-trade #window-content { padding: 6dp; }
+            .trade-offers { display: flex; flex-wrap: wrap; justify-content: center; gap: 6dp; margin-bottom: 6dp; }
+            .trade-offer { display: flex; flex-direction: column; width: 224dp; flex: 0 0 224dp; }
+            .trade-offer.ui-section.content-box { padding: 5dp; }
+            .trade-offer .ui-section-title { margin-bottom: 4dp; font-size: 13dp; }
+            /* Explicit five-slot rows prevent fractional scales from wrapping a column. */
+            .trade-grid { width: 212dp; flex-direction: column; flex-wrap: nowrap; gap: 3dp; margin-top: auto; }
+            .trade-row { display: flex; flex-wrap: nowrap; gap: 3dp; }
+            .trade-offer .ui-footer { margin-top: 4dp; padding-top: 4dp; }
+            .trade-offer .ui-currency > span { white-space: nowrap; word-break: normal; }
+            .trade-status { margin-top: 3dp; }
+            .trade-status.ready { color: #84e06b; }
+            #trade-status { margin-bottom: 4dp; }
+            .ui-actions { gap: 6dp; }
+            .ui-actions > button.default { min-width: 100dp; height: 24dp; padding: 1dp 5dp; line-height: 20dp; font-size: 13dp; }
+        </style>
+    <style>
+@keyframes gl-open-a { 0% { opacity: 0; transform: translateY(5dp) scale(0.985); } 100% { opacity: 1; transform: translateY(0dp) scale(1); } }
+@keyframes gl-open-b { 0% { opacity: 0; transform: translateY(5dp) scale(0.985); } 100% { opacity: 1; transform: translateY(0dp) scale(1); } }
+</style>
+<script>
+-- Glass: each time the window opens it fades and settles in, then a streak of light crosses the glass.
+-- Two identical keyframe sets (-a / -b): switching to the other one restarts the animation.
+pcall(function()
+    local doc = document
+    local flip = false
+    local function opened()
+        flip = not flip
+        doc:SetClass('gl-shown-a', flip)
+        doc:SetClass('gl-shown-b', not flip)
+        doc.style.animation = '0.15s cubic-out 1 ' .. (flip and 'gl-open-a' or 'gl-open-b')
+    end
+    doc:AddEventListener('show', function() pcall(opened) end)
+    opened()
+end)
+</script>
+</head>
+    <body open-sound="5" close-sound="4" template="window-fixed-size" id="player-trade">
+        <div data-model="player-trade">
+        <div class="trade-offers">
+            <div class="trade-offer ui-section content-box">
+                <div id="my-name" class="ui-section-title">{{ my_name }}</div>
+                <div class="trade-grid ui-slot-grid" id="my-slots">
+                    <div class="trade-row">
+                        <item-slot id="trade-slot-0" data-attr-dimmed="dimmed" />
+                        <item-slot id="trade-slot-1" data-attr-dimmed="dimmed" />
+                        <item-slot id="trade-slot-2" data-attr-dimmed="dimmed" />
+                        <item-slot id="trade-slot-3" data-attr-dimmed="dimmed" />
+                        <item-slot id="trade-slot-4" data-attr-dimmed="dimmed" />
+                    </div>
+                    <div class="trade-row">
+                        <item-slot id="trade-slot-5" data-attr-dimmed="dimmed" />
+                        <item-slot id="trade-slot-6" data-attr-dimmed="dimmed" />
+                        <item-slot id="trade-slot-7" data-attr-dimmed="dimmed" />
+                        <item-slot id="trade-slot-8" data-attr-dimmed="dimmed" />
+                        <item-slot id="trade-slot-9" data-attr-dimmed="dimmed" />
+                    </div>
+                </div>
+                <div class="ui-currency ui-footer"><button id="my-money-icon" class="zulie" onclick="money" data-attrif-disabled="!money_enabled" /><span id="my-money">{{ my_money }}</span></div>
+                <div id="my-status" class="trade-status ui-status" data-class-ready="my_ready">{{ my_status }}</div>
+            </div>
+            <div class="trade-offer ui-section content-box">
+                <div id="other-name" class="ui-section-title">{{ other_name }}</div>
+                <div class="trade-grid ui-slot-grid" id="other-slots">
+                    <div class="trade-row">
+                        <item-slot id="trade-slot-10" data-attr-dimmed="dimmed" />
+                        <item-slot id="trade-slot-11" data-attr-dimmed="dimmed" />
+                        <item-slot id="trade-slot-12" data-attr-dimmed="dimmed" />
+                        <item-slot id="trade-slot-13" data-attr-dimmed="dimmed" />
+                        <item-slot id="trade-slot-14" data-attr-dimmed="dimmed" />
+                    </div>
+                    <div class="trade-row">
+                        <item-slot id="trade-slot-15" data-attr-dimmed="dimmed" />
+                        <item-slot id="trade-slot-16" data-attr-dimmed="dimmed" />
+                        <item-slot id="trade-slot-17" data-attr-dimmed="dimmed" />
+                        <item-slot id="trade-slot-18" data-attr-dimmed="dimmed" />
+                        <item-slot id="trade-slot-19" data-attr-dimmed="dimmed" />
+                    </div>
+                </div>
+                <div class="ui-currency ui-footer"><img sprite="button-zulie-n" /><span id="other-money">{{ other_money }}</span></div>
+                <div id="other-status" class="trade-status ui-status" data-class-ready="other_ready">{{ other_status }}</div>
+            </div>
+        </div>
+        <div id="trade-status" class="ui-status" data-if="trade_status != ''">{{ trade_status }}</div>
+        <div class="ui-actions">
+            <button id="ready" class="default" onclick="ready" data-attrif-disabled="!ready_enabled">{{ ready_label }}</button>
+            <button id="confirm" class="default" onclick="confirm" data-attrif-disabled="!confirm_enabled">{{ confirm_label }}</button>
+        </div>
+        </div>
+    </body>
+</rml>

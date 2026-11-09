@@ -51,7 +51,7 @@ W .ui-tab-strip {
 }
 W .ui-tab,
 W .ui-tab:hover {
-    flex: none; width: 33.333%; min-width: 0; height: 24dp; line-height: 24dp; padding: 0dp 2dp; box-sizing: border-box;
+    flex: 1 1 0%; width: auto; min-width: 0; height: 24dp; line-height: 24dp; padding: 0dp 2dp; box-sizing: border-box;
     text-align: center; font-size: 12dp; font-effect: none;
     decorator: none; background-color: transparent; border-width: 0dp; border-radius: 0dp;
     color: rgba(255, 255, 255, 170);
@@ -59,7 +59,8 @@ W .ui-tab:hover {
 }
 W .ui-tab:hover { color: rgb(255, 255, 255); }
 W .ui-tab.selected, W .ui-tab.active, W .ui-tab:selected {
-    color: rgb(255, 255, 255); background-color: transparent; border-width: 0dp; decorator: none;
+    color: rgb(255, 255, 255); background-color: transparent; border-width: 0dp;
+    decorator: tiled-box(gl-pill-tl, gl-pill-t, gl-pill-tr, gl-pill-l, gl-pill-c, gl-pill-r, gl-pill-bl, gl-pill-b, gl-pill-br);
 }
 /* the glass pill is its own element that slides under the selected tab (a script moves it: at1 / at2) */
 W .ui-tab-strip { position: relative; }
@@ -74,7 +75,8 @@ W .ui-tab-strip > .gl-slider.at2 { left: 67.5%; }
 
 /* tab bar in the title row (like the inventory's Avatar / Costume / PAT) */
 W > .ui-tab-strip.gl-header-tabs { position: absolute; top: 21dp; right: 54dp; width: 210dp; height: 22dp; margin: 0dp; }
-W > .gl-header-tabs > .ui-tab { height: 16dp; line-height: 16dp; font-size: 11dp; }
+W > .gl-header-tabs > .ui-tab { flex: none; width: 33.333%; height: 16dp; line-height: 16dp; font-size: 11dp; }
+W > .gl-header-tabs > .ui-tab.selected, W > .gl-header-tabs > .ui-tab:selected { decorator: none; }
 W > .gl-header-tabs > .gl-slider { height: 16dp; }
 
 /* glass buttons (look only: each window keeps its own size). The glass art stays the same in every state;
@@ -182,3 +184,8 @@ W select selectbox option[disabled], W select selectbox option[disabled]:hover {
 /* resize grip (resizable windows) */
 W .window-resize-handle { right: 14dp; bottom: 14dp; width: 14dp; height: 14dp; decorator: image(gl-grip); }
 W .window-resize-handle:hover { decorator: image(gl-grip-h); }
+
+/* special frames */
+W.window-small { padding: 24dp 20dp 20dp 20dp; }
+body#game-system-menu { padding: 20dp; }
+body#respawn.waiting { decorator: none; }

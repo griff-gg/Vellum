@@ -1,0 +1,177 @@
+<rml>
+    <head>
+        <title>Style Change</title>
+
+        <link type="text/template" href="../templates/window-resizeable.html" />
+        <link type="text/rcss" href="../styles/spritesheet_itemicon.css" />
+        <link type="text/rcss" href="../styles/spritesheet_socketgem.css" />
+        <link type="text/rcss" href="../styles/item_slot.css" />
+
+        <style>
+            #game-style-change {
+                width: 640dp;
+                height: 480dp;
+                min-width: 500dp;
+                min-height: 450dp;
+            }
+
+            #style-panel {
+                height: 100%;
+                display: flex;
+                flex-direction: column;
+                align-items: center;
+            }
+
+            character-preview {
+                display: inline-block;
+                height: 100%;
+                flex: 1;
+            }
+
+            h3 {
+                margin: 2dp;
+            }
+
+            .style-selector {
+                display: flex;
+                align-items: center;
+            }
+
+            .button-container > .textarea {
+                display: inline-block;
+                width: 140dp;
+                text-align: center;
+            }
+
+            #style-coupons {
+                display: flex;
+                flex-wrap: nowrap;
+                flex-shrink: 0;
+                margin-bottom: 4dp;
+            }
+
+            #style-coupons > item-slot {
+                flex-shrink: 0;
+            }
+
+            #style-actions {
+                display: flex;
+                flex-direction: column;
+                align-items: stretch;
+                /* Match the value, both arrows, and their two inner margins. */
+                width: 198dp;
+                gap: 2dp;
+                text-align: center;
+            }
+
+            #style-actions button.default {
+                width: 100%;
+                min-width: 0;
+                height: 24dp;
+                flex-shrink: 0;
+                padding: 0dp 19dp;
+                font-size: 13dp;
+                line-height: 22dp;
+                white-space: nowrap;
+            }
+
+            .no-need-coupon, .missing-coupon { position: absolute; left: 0; top: 0; z-index: 1; pointer-events: none; }
+
+            .no-need-coupon {
+                display: inline-block;
+                width: 100%;
+                height: 100%;
+                background: rgba(20, 20, 20, 180);
+            }
+
+            .missing-coupon {
+                display: inline-block;
+                width: 100%;
+                height: 100%;
+                background: rgba(255, 0, 0, 180);
+            }
+        </style>
+    <style>
+@keyframes gl-open-a { 0% { opacity: 0; transform: translateY(5dp) scale(0.985); } 100% { opacity: 1; transform: translateY(0dp) scale(1); } }
+@keyframes gl-open-b { 0% { opacity: 0; transform: translateY(5dp) scale(0.985); } 100% { opacity: 1; transform: translateY(0dp) scale(1); } }
+</style>
+<script>
+-- Glass: each time the window opens it fades and settles in, then a streak of light crosses the glass.
+-- Two identical keyframe sets (-a / -b): switching to the other one restarts the animation.
+pcall(function()
+    local doc = document
+    local flip = false
+    local function opened()
+        flip = not flip
+        doc:SetClass('gl-shown-a', flip)
+        doc:SetClass('gl-shown-b', not flip)
+        doc.style.animation = '0.15s cubic-out 1 ' .. (flip and 'gl-open-a' or 'gl-open-b')
+    end
+    doc:AddEventListener('show', function() pcall(opened) end)
+    opened()
+end)
+</script>
+</head>
+
+    <body id="game-style-change" template="window-resizeable">
+        <div style="display: flex; flex-direction: row; column-gap: 4dp;" data-model="style-change">
+            <div class="window-pane" id="style-panel">
+                <h3>Gender</h3>
+                <div class="button-container style-selector">
+                    <button class="left-sm" id="gender-prev" onclick="gender-prev" /><label class="textarea">{{gender_label}}</label><button class="right-sm" id="gender-next" onclick="gender-next" />
+                </div>
+
+                <h3>Face</h3>
+                <div class="button-container style-selector">
+                    <button class="left-sm" id="face-prev" onclick="face-prev" /><label class="textarea">{{face_label}}</label><button class="right-sm" id="face-next" onclick="face-next" />
+                </div>
+
+                <h3>Hair</h3>
+                <div class="button-container style-selector">
+                    <button class="left-sm" id="hair-prev" onclick="hair-prev" /><label class="textarea">{{hair_label}}</label><button class="right-sm" id="hair-next" onclick="hair-next" />
+                </div>
+
+                <h3>Hair Color</h3>
+                <div class="button-container style-selector">
+                    <button class="left-sm" id="hair-color-prev" onclick="hair-color-prev" /><label class="textarea">{{hair_color_label}}</label><button class="right-sm" id="hair-color-next" onclick="hair-color-next" />
+                </div>
+
+                <div style="flex: 1" />
+
+                <h3>Coupons</h3>
+                <div id="style-coupons">
+                    <item-slot item-actions id="coupon-slot-gender">
+                        <div class="no-need-coupon" data-if="gender_coupons_required == 0" />
+                        <div class="missing-coupon" data-if="gender_coupons_required > gender_coupons_available" />
+                    </item-slot>
+                    <item-slot item-actions id="coupon-slot-face">
+                        <div class="no-need-coupon" data-if="face_coupons_required == 0" />
+                        <div class="missing-coupon" data-if="face_coupons_required > face_coupons_available" />
+                    </item-slot>
+                    <item-slot item-actions id="coupon-slot-hair">
+                        <div class="no-need-coupon" data-if="hair_coupons_required == 0" />
+                        <div class="missing-coupon" data-if="hair_coupons_required > hair_coupons_available" />
+                    </item-slot>
+                    <item-slot item-actions id="coupon-slot-hair-color">
+                        <div class="no-need-coupon" data-if="hair_color_coupons_required == 0" />
+                        <div class="missing-coupon" data-if="hair_color_coupons_required > hair_color_coupons_available" />
+                    </item-slot>
+                </div>
+
+                <div id="style-actions">
+                    <button class="default" data-attrif-disabled="(gender_coupons_required > gender_coupons_available || face_coupons_required > face_coupons_available || hair_coupons_required > hair_coupons_available || hair_color_coupons_required > hair_color_coupons_available) || (gender_coupons_required == 0 && face_coupons_required == 0 && hair_coupons_required == 0 && hair_color_coupons_required == 0)" id="use-coupons" onclick="use-coupons">Use coupons</button>
+                    <button class="default" id="reset" onclick="reset">Reset</button>
+                    <button class="default" id="close" onclick="close">Cancel</button>
+                </div>
+            </div>
+
+            <character-preview
+                yaw="20" pitch="-15" distance="1.1" offset-z="1.5"
+                data-attr-gender="gender_value"
+                data-attr-face="face_value"
+                data-attr-hair-style="hair_value"
+                data-attr-hair-color="hair_color_value"
+                />
+        </div>
+    </body>
+</rml>

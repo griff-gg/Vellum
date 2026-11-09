@@ -1,0 +1,76 @@
+<rml>
+    <head>
+        <title>Confirm Purchase</title>
+        <link type="text/template" href="../templates/window-fixed-size.html" />
+        <link type="text/rcss" href="../styles/components.css" />
+        <style>
+            body { width: 410dp; max-width: 94vw; font-size: 13dp; }
+            body #window-content { padding: 4dp 3dp; }
+            .ui-section.content-box { padding: 4dp; }
+            .cart-heading, .cart-row { display: flex; align-items: center; gap: 6dp; padding: 4dp 0; }
+            .cart-heading { padding: 2dp 0; font-size: 13dp; font-weight: 820; color: rgb(255, 247, 191); border-bottom: 1dp rgba(134, 134, 134, 100); }
+            .cart-quantity { width: 42dp; flex: 0 0 42dp; text-align: center; }
+            .cart-item { flex: 1; min-width: 0; word-break: break-word; }
+            .cart-cost { width: 124dp; flex: 0 0 124dp; text-align: right; white-space: nowrap; }
+            .cart-row .cart-cost { font-size: 13dp; color: yellow; }
+            .cart-remove { width: 24dp; flex: 0 0 24dp; }
+            button.cart-remove:disabled, button.cart-remove[disabled] { decorator: image(rw-close-d) content-box; cursor: normal; }
+            #cart-rows { max-height: 42vh; overflow-y: auto; }
+            .cart-row { border-bottom: 1dp rgba(134, 134, 134, 100); }
+            .cart-row:last-child { border-bottom: 0; }
+            .pack-size { font-size: 12dp; color: #bbbbbb; }
+            .cart-recipient { margin-bottom: 4dp; }
+            .cart-heading img { width: 21dp; height: 21dp; vertical-align: middle; }
+            .cart-total-label { color: white; }
+            .ui-footer { margin-top: 4dp; padding-top: 4dp; }
+            #total { white-space: nowrap; }
+            #cart-state { margin-top: 4dp; }
+            .cart-actions { margin-top: 4dp; height: 32dp; justify-content: flex-end; align-items: center; }
+            .cart-actions > button.default { min-width: 96dp; height: 28dp; padding: 2dp 13dp; line-height: 22dp; font-size: 13dp; white-space: nowrap; }
+        </style>
+    <style>
+@keyframes gl-open-a { 0% { opacity: 0; transform: translateY(5dp) scale(0.985); } 100% { opacity: 1; transform: translateY(0dp) scale(1); } }
+@keyframes gl-open-b { 0% { opacity: 0; transform: translateY(5dp) scale(0.985); } 100% { opacity: 1; transform: translateY(0dp) scale(1); } }
+</style>
+<script>
+-- Glass: each time the window opens it fades and settles in, then a streak of light crosses the glass.
+-- Two identical keyframe sets (-a / -b): switching to the other one restarts the animation.
+pcall(function()
+    local doc = document
+    local flip = false
+    local function opened()
+        flip = not flip
+        doc:SetClass('gl-shown-a', flip)
+        doc:SetClass('gl-shown-b', not flip)
+        doc.style.animation = '0.15s cubic-out 1 ' .. (flip and 'gl-open-a' or 'gl-open-b')
+    end
+    doc:AddEventListener('show', function() pcall(opened) end)
+    opened()
+end)
+</script>
+</head>
+    <body open-sound="3" close-sound="4" template="window-fixed-size" id="mall-cart">
+        <div data-model="mall-cart">
+        <div class="cart-recipient ui-section-title">For <span id="recipient">{{ recipient }}</span></div>
+        <div class="ui-section content-box">
+            <div class="cart-heading">
+                <span class="cart-quantity">Packs</span>
+                <span class="cart-item">Item</span>
+                <span class="cart-cost"><img sprite="mall-points" alt="Item Mall points" /></span>
+                <span class="cart-remove" />
+            </div>
+            <div id="cart-rows">
+                <div class="cart-row" data-for="row : rows">
+                    <span class="cart-quantity">{{ row.quantity }}</span>
+                    <div class="cart-item">{{ row.name }}<div class="pack-size" data-if="row.pack_size > 1">{{ row.pack_size }} items per pack</div></div>
+                    <span class="cart-cost">{{ row.cost }}</span>
+                    <button data-attr-id="'remove-' + it_index" class="close cart-remove" data-event-click="remove(it_index)" data-attrif-disabled="checking" />
+                </div>
+            </div>
+            <div class="ui-currency ui-footer"><span class="cart-total-label">Total:</span><img sprite="mall-points" alt="Item Mall points" /><span id="total">{{ total }}</span></div>
+        </div>
+        <div id="cart-state" class="ui-status" data-if="state != ''">{{ state }}</div>
+        <div class="cart-actions ui-actions"><button id="purchase" class="default" onclick="purchase" data-attrif-disabled="!purchase_enabled">{{ purchase_label }}</button></div>
+        </div>
+    </body>
+</rml>

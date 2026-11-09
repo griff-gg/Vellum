@@ -1,0 +1,89 @@
+<rml>
+    <head>
+        <title>Transaction</title>
+        <link type="text/template" href="../templates/window-fixed-size.html" />
+        <link type="text/rcss" href="../styles/spritesheet_itemicon.css" />
+        <link type="text/rcss" href="../styles/spritesheet_socketgem.css" />
+        <link type="text/rcss" href="../styles/item_slot.css" />
+        <link type="text/rcss" href="../styles/spritesheet_currencyicon.css" />
+        <link type="text/rcss" href="../styles/components.css" />
+        <style>
+            body { width: 242dp; max-width: 94vw; }
+            #npc-transaction #window-content { padding: 6dp; }
+            .cart-section.content-box { padding: 6dp; margin-bottom: 6dp; }
+            .cart-section .ui-section-title { margin-bottom: 4dp; }
+            .cart-section .ui-footer { margin-top: 4dp; padding-top: 4dp; }
+            #confirm { min-width: 100dp; height: 24dp; flex-shrink: 0; padding: 1dp 12dp; font-size: 13dp; line-height: 22dp; white-space: nowrap; }
+            /* Explicit five-slot rows avoid rounding-driven wrapping at 95% scale. */
+            .cart-grid { width: 216dp; flex-direction: column; flex-wrap: nowrap; }
+            .cart-row { display: flex; flex-wrap: nowrap; gap: 4dp; }
+        </style>
+    <style>
+@keyframes gl-open-a { 0% { opacity: 0; transform: translateY(5dp) scale(0.985); } 100% { opacity: 1; transform: translateY(0dp) scale(1); } }
+@keyframes gl-open-b { 0% { opacity: 0; transform: translateY(5dp) scale(0.985); } 100% { opacity: 1; transform: translateY(0dp) scale(1); } }
+</style>
+<script>
+-- Glass: each time the window opens it fades and settles in, then a streak of light crosses the glass.
+-- Two identical keyframe sets (-a / -b): switching to the other one restarts the animation.
+pcall(function()
+    local doc = document
+    local flip = false
+    local function opened()
+        flip = not flip
+        doc:SetClass('gl-shown-a', flip)
+        doc:SetClass('gl-shown-b', not flip)
+        doc.style.animation = '0.15s cubic-out 1 ' .. (flip and 'gl-open-a' or 'gl-open-b')
+    end
+    doc:AddEventListener('show', function() pcall(opened) end)
+    opened()
+end)
+</script>
+</head>
+    <body open-sound="5" close-sound="4" template="window-fixed-size" id="npc-transaction">
+        <div data-model="npc-transaction">
+        <div class="cart-section ui-section content-box">
+            <div class="ui-section-title" id="buy-label">{{ buy_label }}</div>
+            <div class="cart-grid ui-slot-grid" id="buy-slots">
+                <div class="cart-row">
+                    <item-slot id="cart-slot-0" />
+                    <item-slot id="cart-slot-1" />
+                    <item-slot id="cart-slot-2" />
+                    <item-slot id="cart-slot-3" />
+                    <item-slot id="cart-slot-4" />
+                </div>
+                <div class="cart-row">
+                    <item-slot id="cart-slot-5" />
+                    <item-slot id="cart-slot-6" />
+                    <item-slot id="cart-slot-7" />
+                    <item-slot id="cart-slot-8" />
+                    <item-slot id="cart-slot-9" />
+                </div>
+            </div>
+            <div class="ui-currency ui-footer"><img id="buy-currency" data-attr-sprite="buy_currency" /><span id="buy-total">{{ buy_total }}</span></div>
+        </div>
+        <div class="cart-section ui-section content-box">
+            <div class="ui-section-title" id="sell-label">{{ sell_label }}</div>
+            <div class="cart-grid ui-slot-grid" id="sell-slots">
+                <div class="cart-row">
+                    <item-slot id="cart-slot-10" />
+                    <item-slot id="cart-slot-11" />
+                    <item-slot id="cart-slot-12" />
+                    <item-slot id="cart-slot-13" />
+                    <item-slot id="cart-slot-14" />
+                </div>
+                <div class="cart-row">
+                    <item-slot id="cart-slot-15" />
+                    <item-slot id="cart-slot-16" />
+                    <item-slot id="cart-slot-17" />
+                    <item-slot id="cart-slot-18" />
+                    <item-slot id="cart-slot-19" />
+                </div>
+            </div>
+            <div class="ui-currency ui-footer"><img sprite="button-zulie-n" /><span id="sell-total">{{ sell_total }}</span></div>
+        </div>
+        <div class="ui-actions">
+            <button id="confirm" class="default" onclick="confirm" data-attrif-disabled="!confirm_enabled">{{ confirm_label }}</button>
+        </div>
+        </div>
+    </body>
+</rml>

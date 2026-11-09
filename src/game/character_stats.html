@@ -1,0 +1,295 @@
+<rml>
+    <head>
+        <title>Character Info</title>
+        <link type="text/template" href="../templates/window-resizeable.html" />
+        <link type="text/rcss" href="../styles/spritesheet_currencyicon.css" />
+        <link type="text/rcss" href="../styles/components.css" />
+
+        <style>
+            #character-stats {
+                width: 600dp;
+                height: auto;
+                min-width: 600dp;
+                min-height: 392dp;
+                padding-bottom: 4dp;
+            }
+
+            #character-stats.avatar-dead { display: none; }
+            #character-stats #window-content {
+                height: 100%;
+                max-height: none;
+                padding: 6dp;
+                overflow: hidden;
+            }
+
+            #stats-scroll { width: 100%; height: 100%; overflow: hidden auto; }
+            .overview, .stats-columns, .identity-row, .resource-heading,
+            .primary-row, .primary-heading, .derived-row, .stat-points-row, .currency-row {
+                display: flex;
+                align-items: center;
+                gap: 4dp;
+                min-height: 20dp;
+                font-size: 14dp;
+            }
+
+            .identity-row { gap: 8dp; }
+            .identity-row .character-name { flex: 1; font-weight: 800; }
+            .identity-row .identity-value { min-width: 0dp; word-break: break-word; }
+            .identity-row .stat-label { flex: 0 0 auto; }
+            .clan-name { flex: 1; }
+            .overview { align-items: flex-start; gap: 12dp; margin: 4dp 0dp 6dp; }
+            .resources { flex: 3; min-width: 0dp; }
+            .currency-section { flex: 2; min-width: 0dp; }
+            .stat-label { flex: 1; min-width: 0dp; color: #cccccc; }
+            .stat-value { flex-shrink: 0; font-size: 15dp; text-align: right; white-space: nowrap; }
+
+            gauge.resource-gauge {
+                display: block;
+                box-sizing: border-box;
+                width: 100%;
+                margin-bottom: 2dp;
+            }
+            gauge.resource-gauge.horizontal-lg-lg { width: 100%; height: 21dp; }
+            gauge.resource-gauge.horizontal-lg-lg > span { height: 21dp; line-height: 21dp; font-size: 14dp; }
+            gauge.resource-gauge.horizontal-sm-lg { width: 100%; margin: 0dp; }
+            .resource-heading { flex-wrap: wrap; }
+            .experience-value { flex: 1 0 auto; font-size: 14dp; text-align: right; white-space: nowrap; }
+            .experience-lock { display: flex; align-items: center; flex-shrink: 0; gap: 0dp; margin-left: 8dp; min-height: 20dp; font-size: 14dp; white-space: nowrap; }
+            .experience-lock input { margin: 0dp; }
+
+            .currency-row { min-height: 22dp; color: #cccccc; }
+            .currency-row img { width: 21dp; height: 21dp; flex-shrink: 0; }
+            .currency-value { flex: 1; font-size: 15dp; text-align: right; white-space: nowrap; color: yellow; }
+
+            .stats-columns { align-items: stretch; gap: 6dp; }
+            .stats-column { flex: 1; min-width: 0dp; }
+            .stats-column.primary-stats { display: flex; flex-direction: column; flex: 0 0 154dp; }
+            #character-stats .stats-section { padding: 4dp; }
+            #character-stats .ui-section-heading {
+                min-height: 20dp;
+                margin-bottom: 2dp;
+                padding-bottom: 2dp;
+                font-size: 14dp;
+            }
+            .stat-points-row .stat-value { color: rgb(255, 247, 191); font-weight: 800; }
+            .primary-heading { font-size: 12dp; color: #cccccc; }
+            .primary-heading .total-heading { flex: 1; text-align: right; }
+            .primary-row { min-height: 24dp; }
+            .primary-row > .stat-label { flex: 0 0 30dp; }
+            .primary-row > .stat-value { flex: 1; }
+            .stat-cost { width: 30dp; flex-shrink: 0; text-align: right; color: rgb(255, 247, 191); font-size: 15dp; }
+            .primary-heading .stat-cost { font-size: 12dp; }
+            .primary-row button.plus { margin: 0dp; flex-shrink: 0; }
+            .bulk-hint { margin-top: auto; padding-top: 4dp; font-size: 12dp; color: #cccccc; }
+            .derived-row { min-height: 20dp; }
+            .derived-row .stat-label { word-break: break-word; }
+            .primary-row:hover, .derived-row:hover { background-color: rgba(180, 195, 225, 22); border-radius: 3dp; }
+        </style>
+    <style>
+@keyframes gl-open-a { 0% { opacity: 0; transform: translateY(5dp) scale(0.985); } 100% { opacity: 1; transform: translateY(0dp) scale(1); } }
+@keyframes gl-open-b { 0% { opacity: 0; transform: translateY(5dp) scale(0.985); } 100% { opacity: 1; transform: translateY(0dp) scale(1); } }
+</style>
+<script>
+-- Glass: each time the window opens it fades and settles in, then a streak of light crosses the glass.
+-- Two identical keyframe sets (-a / -b): switching to the other one restarts the animation.
+pcall(function()
+    local doc = document
+    local flip = false
+    local function opened()
+        flip = not flip
+        doc:SetClass('gl-shown-a', flip)
+        doc:SetClass('gl-shown-b', not flip)
+        doc.style.animation = '0.15s cubic-out 1 ' .. (flip and 'gl-open-a' or 'gl-open-b')
+    end
+    doc:AddEventListener('show', function() pcall(opened) end)
+    opened()
+end)
+</script>
+</head>
+
+    <body open-sound="3" close-sound="4" template="window-resizeable" id="character-stats" data-model="character"
+        data-class-avatar-dead="health <= 0">
+        <div id="stats-scroll">
+            <div class="identity-row">
+                <span class="character-name identity-value">{{name}}</span>
+                <span class="stat-label"><str string-id="313">LVL</str></span>
+                <span class="stat-value">{{format_number(level)}}</span>
+                <span class="stat-label"><str string-id="813">Job</str></span>
+                <span class="identity-value">{{stats_job_name(job)}}</span>
+            </div>
+            <div class="overview">
+                <div class="resources">
+                    <div class="identity-row">
+                        <span class="stat-label"><str string-id="44">Clan</str></span>
+                        <span class="identity-value clan-name">{{clan_name}}</span>
+                    </div>
+                    <gauge id="stats-health" class="resource-gauge horizontal-lg-lg red" stat-tooltip="28"
+                        data-attr-gvalue="health" data-attr-gmax="max_health">
+                        <span><str string-id="833">HP</str> {{format_number(health)}} / {{format_number(max_health)}}</span>
+                    </gauge>
+                    <gauge id="stats-mana" class="resource-gauge horizontal-lg-lg blue" stat-tooltip="29"
+                        data-attr-gvalue="mana" data-attr-gmax="max_mana">
+                        <span><str string-id="834">MP</str> {{format_number(mana)}} / {{format_number(max_mana)}}</span>
+                    </gauge>
+                    <div class="resource-heading">
+                        <str string-id="814">EXP</str>
+                        <div class="experience-lock" stat-tooltip="31">
+                            <input id="lock-exp" type="checkbox" data-checked="experience_gain_disabled" onclick="toggle-exp" />
+                            <label for="lock-exp">Lock</label>
+                        </div>
+                        <span class="experience-value">{{format_number(experience)}} / {{format_number(max_experience)}}</span>
+                    </div>
+                    <gauge id="stats-experience" class="resource-gauge horizontal-sm-lg yellow"
+                        data-attr-gvalue="experience" data-attr-gmax="max_experience" />
+                </div>
+                <div class="currency-section">
+                    <!-- Filled from the currency STB, including localized names, icons and limits. -->
+                    <div id="currencies" />
+                </div>
+            </div>
+            <div class="stats-columns">
+                <div class="stats-column primary-stats content-box ui-section stats-section">
+                    <div class="stat-points-row ui-section-title ui-section-heading">
+                        <span class="stat-label"><str string-id="750">Stat Points</str></span>
+                        <span class="stat-value">{{format_number(stat_points)}}</span>
+                    </div>
+                    <div class="primary-heading">
+                        <span id="tooltip-cost" class="stat-cost" stat-tooltip="30"><str string-id="574">Cost</str></span>
+                        <span class="total-heading"><str string-id="306">Total</str></span>
+                    </div>
+                    <div class="primary-row" stat-tooltip="0">
+                        <span class="stat-cost" stat-tooltip="30">{{format_number(add_strength_cost)}}</span>
+                        <button id="add-strength" class="plus" data-attrif-disabled="!can_add_strength" onclick="add-stat:0" />
+                        <span class="stat-label"><str string-id="744">STR</str></span>
+                        <span class="stat-value">{{format_number(strength)}}</span>
+                    </div>
+                    <div class="primary-row" stat-tooltip="1">
+                        <span class="stat-cost" stat-tooltip="30">{{format_number(add_dexterity_cost)}}</span>
+                        <button id="add-dexterity" class="plus" data-attrif-disabled="!can_add_dexterity" onclick="add-stat:1" />
+                        <span class="stat-label"><str string-id="745">DEX</str></span>
+                        <span class="stat-value">{{format_number(dexterity)}}</span>
+                    </div>
+                    <div class="primary-row" stat-tooltip="2">
+                        <span class="stat-cost" stat-tooltip="30">{{format_number(add_intelligence_cost)}}</span>
+                        <button id="add-intelligence" class="plus" data-attrif-disabled="!can_add_intelligence" onclick="add-stat:2" />
+                        <span class="stat-label"><str string-id="746">INT</str></span>
+                        <span class="stat-value">{{format_number(intelligence)}}</span>
+                    </div>
+                    <div class="primary-row" stat-tooltip="3">
+                        <span class="stat-cost" stat-tooltip="30">{{format_number(add_concentration_cost)}}</span>
+                        <button id="add-concentration" class="plus" data-attrif-disabled="!can_add_concentration" onclick="add-stat:3" />
+                        <span class="stat-label"><str string-id="747">CON</str></span>
+                        <span class="stat-value">{{format_number(concentration)}}</span>
+                    </div>
+                    <div class="primary-row" stat-tooltip="4">
+                        <span class="stat-cost" stat-tooltip="30">{{format_number(add_charm_cost)}}</span>
+                        <button id="add-charm" class="plus" data-attrif-disabled="!can_add_charm" onclick="add-stat:4" />
+                        <span class="stat-label"><str string-id="748">CHA</str></span>
+                        <span class="stat-value">{{format_number(charm)}}</span>
+                    </div>
+                    <div class="primary-row" stat-tooltip="5">
+                        <span class="stat-cost" stat-tooltip="30">{{format_number(add_sense_cost)}}</span>
+                        <button id="add-sense" class="plus" data-attrif-disabled="!can_add_sense" onclick="add-stat:5" />
+                        <span class="stat-label"><str string-id="749">SEN</str></span>
+                        <span class="stat-value">{{format_number(sense)}}</span>
+                    </div>
+                    <div class="bulk-hint">Shift click for bulk</div>
+                </div>
+                <div class="stats-column content-box ui-section stats-section">
+                    <div class="ui-section-title ui-section-heading">Offense</div>
+                    <div class="derived-row" stat-tooltip="6">
+                        <span class="stat-label"><str string-id="735">Attack</str></span>
+                        <span class="stat-value">{{format_number(attack + attack_bonus)}}</span>
+                    </div>
+                    <div class="derived-row" stat-tooltip="9">
+                        <span class="stat-label"><str string-id="743">Accuracy</str></span>
+                        <span class="stat-value">{{format_number(accuracy)}}</span>
+                    </div>
+                    <div class="derived-row" stat-tooltip="10">
+                        <span class="stat-label"><str string-id="741">Critical</str></span>
+                        <span class="stat-value">{{stats_decimal(critical_chance, 2)}}%</span>
+                    </div>
+                    <div class="derived-row" stat-tooltip="14">
+                        <span class="stat-label"><str string-id="1150">Critical Damage</str></span>
+                        <span class="stat-value">{{stats_combined(critical_damage_rate, critical_damage_amount)}}</span>
+                    </div>
+                    <div class="derived-row" stat-tooltip="15">
+                        <span class="stat-label"><str string-id="1151">Pierce Physical</str></span>
+                        <span class="stat-value">{{stats_combined(pierce_defence_rate, pierce_defence_amount)}}</span>
+                    </div>
+                    <div class="derived-row" stat-tooltip="16">
+                        <span class="stat-label"><str string-id="1152">Pierce Magical</str></span>
+                        <span class="stat-value">{{stats_combined(pierce_resistance_rate, pierce_resistance_amount)}}</span>
+                    </div>
+                    <div class="derived-row" stat-tooltip="12">
+                        <span class="stat-label"><str string-id="435">Attacks/Second</str></span>
+                        <span class="stat-value">{{stats_decimal(attacks_per_second, 2)}}</span>
+                    </div>
+                    <div class="derived-row" stat-tooltip="26">
+                        <span class="stat-label"><str string-id="1164">PVM Offense</str></span>
+                        <span class="stat-value">{{format_number(pvm_offence)}}%</span>
+                    </div>
+                    <div class="derived-row" stat-tooltip="24">
+                        <span class="stat-label"><str string-id="1162">PVP Offense</str></span>
+                        <span class="stat-value">{{format_number(pvp_offence)}}%</span>
+                    </div>
+                    <div class="derived-row" stat-tooltip="23">
+                        <span class="stat-label"><str string-id="1155">MP Cost</str></span>
+                        <span class="stat-value">{{stats_combined(mana_cost_reduction_rate, mana_cost_reduction_amount)}}</span>
+                    </div>
+                    <div class="derived-row" stat-tooltip="22">
+                        <span class="stat-label"><str string-id="1160">Summon Gauge</str></span>
+                        <span class="stat-value">{{format_number(summon_guage)}}</span>
+                    </div>
+                </div>
+                <div class="stats-column content-box ui-section stats-section">
+                    <div class="ui-section-title ui-section-heading"><str string-id="736">Defense</str></div>
+                    <div class="derived-row" stat-tooltip="7">
+                        <span class="stat-label"><str string-id="736">Defense</str></span>
+                        <span class="stat-value">{{format_number(defence)}}</span>
+                    </div>
+                    <div class="derived-row" stat-tooltip="8">
+                        <span class="stat-label"><str string-id="737">Magic Defense</str></span>
+                        <span class="stat-value">{{format_number(resistance)}}</span>
+                    </div>
+                    <div class="derived-row" stat-tooltip="11">
+                        <span class="stat-label"><str string-id="742">Dodge</str></span>
+                        <span class="stat-value">{{format_number(dodge)}}</span>
+                    </div>
+                    <div class="derived-row" stat-tooltip="17">
+                        <span class="stat-label"><str string-id="1161">Block Rate</str></span>
+                        <span class="stat-value">{{stats_decimal(block_rate, 1)}}%</span>
+                    </div>
+                    <div class="derived-row" stat-tooltip="18">
+                        <span class="stat-label"><str string-id="1158">Block Physical</str></span>
+                        <span class="stat-value">{{format_number(block_physical)}}</span>
+                    </div>
+                    <div class="derived-row" stat-tooltip="19">
+                        <span class="stat-label"><str string-id="1159">Block Magical</str></span>
+                        <span class="stat-value">{{format_number(block_magical)}}</span>
+                    </div>
+                    <div class="derived-row" stat-tooltip="13">
+                        <span class="stat-label"><str string-id="740">MSPD</str></span>
+                        <span class="stat-value">{{format_number(move_speed)}}</span>
+                    </div>
+                    <div class="derived-row" stat-tooltip="27">
+                        <span class="stat-label"><str string-id="1165">PVM Defense</str></span>
+                        <span class="stat-value">{{format_number(pvm_defence)}}%</span>
+                    </div>
+                    <div class="derived-row" stat-tooltip="25">
+                        <span class="stat-label"><str string-id="1163">PVP Defense</str></span>
+                        <span class="stat-value">{{format_number(pvp_defence)}}%</span>
+                    </div>
+                    <div class="derived-row" stat-tooltip="20">
+                        <span class="stat-label"><str string-id="1153">HP Recovery</str></span>
+                        <span class="stat-value">{{format_number(health_recovery)}} / s</span>
+                    </div>
+                    <div class="derived-row" stat-tooltip="21">
+                        <span class="stat-label"><str string-id="1154">MP Recovery</str></span>
+                        <span class="stat-value">{{format_number(mana_recovery)}} / s</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </body>
+</rml>

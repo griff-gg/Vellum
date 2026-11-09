@@ -1,0 +1,135 @@
+<rml>
+    <head>
+        <title>Personal Store</title>
+
+        <link type="text/template" href="../templates/window-fixed-size.html" />
+        <link type="text/rcss" href="../styles/spritesheet_itemicon.css" />
+        <link type="text/rcss" href="../styles/spritesheet_socketgem.css" />
+        <link type="text/rcss" href="../styles/item_slot.css" />
+
+        <style>
+            body
+            {
+                width: 240dp;
+                font-effect: outline(1dp black);
+            }
+
+            #window-content
+            {
+                height: auto;
+            }
+
+            label.item-name
+            {
+                width: 160dp;
+                font-size: 14dp;
+                color: yellow;
+                white-space: nowrap;
+                overflow: hidden;
+                text-overflow: ellipsis;
+            }
+
+            label.item-price
+            {
+                width: 180dp;
+                white-space: nowrap;
+                cursor: hand;
+            }
+
+            label.item-quantity
+            {
+                width: 50dp;
+                font-size: 14dp;
+                color: yellow;
+                cursor: hand;
+            }
+
+            tr > td:nth-child(1) {
+                width: 50dp;
+            }
+
+            tr > td:nth-child(2) {
+                width: 160dp;
+            }
+
+            tr {
+                min-height: 15dp;
+            }
+
+            td {
+                vertical-align: top;
+            }
+
+            td.item-name
+            {
+                vertical-align: top;
+            }
+
+            button.default {
+                min-width: 90dp;
+                width: 90dp;
+                height: 28dp;
+                line-height: 22dp;
+                padding: 2dp 7dp;
+            }
+
+            .item-container {
+                display: flex;
+                flex-direction: row;
+                align-items: center;
+                margin: 4dp;
+                gap: 10dp;
+            }
+
+            .item-container > label {
+                flex: 1;
+            }
+
+            .tooltip {
+                width: 100%;
+                text-align: center;
+            }
+        </style>
+    <style>
+@keyframes gl-open-a { 0% { opacity: 0; transform: translateY(5dp) scale(0.985); } 100% { opacity: 1; transform: translateY(0dp) scale(1); } }
+@keyframes gl-open-b { 0% { opacity: 0; transform: translateY(5dp) scale(0.985); } 100% { opacity: 1; transform: translateY(0dp) scale(1); } }
+</style>
+<script>
+-- Glass: each time the window opens it fades and settles in, then a streak of light crosses the glass.
+-- Two identical keyframe sets (-a / -b): switching to the other one restarts the animation.
+pcall(function()
+    local doc = document
+    local flip = false
+    local function opened()
+        flip = not flip
+        doc:SetClass('gl-shown-a', flip)
+        doc:SetClass('gl-shown-b', not flip)
+        doc.style.animation = '0.15s cubic-out 1 ' .. (flip and 'gl-open-a' or 'gl-open-b')
+    end
+    doc:AddEventListener('show', function() pcall(opened) end)
+    opened()
+end)
+</script>
+</head>
+
+    <body id="game-personal-store-price" onkeyup="key" data-model="personalstore-price-data" template="window-fixed-size">
+        <div class="item-container">
+            <item-slot item-actions id="item-slot" class="slot" sprite="slot-icon" />
+            <label id="item-name" class="custom-2 item-name">{{data.name}}</label>
+        </div>
+
+        <div class="tooltip">
+            <label>Quantity</label>
+            <label id="quantity" class="custom item-quantity" onclick="quantity"><b>x{{data.quantity}}</b></label>
+            <span class="tooltiptext">Quantity</span>
+        </div>
+
+        <div class="tooltip">
+            <button id="price" class="zulie" onclick="price"></button>
+            <label id="price-value" class="custom item-price" onclick="price">{{format_money(data.price)}}</label>
+            <span class="tooltiptext">Set unit price</span>
+        </div>
+
+        <button id="confirm" class="default" onclick="confirm" style="margin: 8dp auto;">Confirm</button>
+	</body>
+</rml>

@@ -85,7 +85,13 @@ def sprites():
     return out
 
 # Windows (body ids) that get the shared glass look from tools/glass_window.css. The inventory has its own page styles.
-GLASS_WINDOWS = ('game-arena', 'group-manager', '#group-settings-panel', 'game-options')
+GLASS_WINDOWS = ('game-arena', 'group-manager', '#group-settings-panel', 'game-options',
+                 'game-character-actions', 'game-character-preview', 'character-stats', 'game-choice-box', 'clan-create',
+                 'disassembly', 'game-duel', 'empowerment', 'mall-cart', 'mall-storage', 'game-monster-inspector',
+                 'npc-dialog', 'npc-transaction', 'game-number-input', 'game-party-finder', 'party-options',
+                 'game-personal-store-price', 'player-trade', 'game-private-chat', 'game-quest-list', 'refine',
+                 'game-reinforcement', 'respawn', 'game-style-change', 'tutorial', 'game-world-map',
+                 'ui_gamearena_scoreboard', 'personal-vending', 'item-mall', 'common-message-box', 'game-system-menu')
 # Scripts the glass windows run on open: fade/settle in (tools/glass_open.lua).
 OPEN_KEYFRAMES = '''@keyframes gl-open-a { 0% { opacity: 0; transform: translateY(5dp) scale(0.985); } 100% { opacity: 1; transform: translateY(0dp) scale(1); } }
 @keyframes gl-open-b { 0% { opacity: 0; transform: translateY(5dp) scale(0.985); } 100% { opacity: 1; transform: translateY(0dp) scale(1); } }
@@ -163,7 +169,7 @@ def glass_css():
 
 def build():
     import runpy
-    for script in ('patch_inventory.py', 'patch_windows.py', 'patch_zone.py'):   # regenerate src/game pages from upstream
+    for script in ('patch_inventory.py', 'patch_windows.py', 'patch_zone.py', 'patch_generic.py'):   # regenerate src/game pages from upstream
         runpy.run_path(os.path.join(ROOT, 'tools', script))
     shutil.rmtree(OUT, ignore_errors=True)
     shutil.copytree(UP, OUT)
