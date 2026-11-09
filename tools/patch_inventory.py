@@ -15,6 +15,12 @@ s = swap(s, '        <style>', '        <link type="text/rcss" href="../styles/g
 s = swap(s, '        </style>', css + '        </style>')
 s = swap(s, '<button class="window-title-close" onclick="close"></button>',
          '<button class="window-title-close" onclick="close"><span>&#215;</span></button>')
+# sliding glass pills (tab order: Avatar = mode 1, Costume = mode 0, PAT = mode 2; bags 0, 1, 2)
+s = swap(s, '<div class="inventory-mode-tabs">',
+         '<div class="inventory-mode-tabs"><div class="gl-slider" data-class-at1="mode == 0" data-class-at2="mode == 2"></div>')
+s = swap(s, '<div class="ui-tab-strip" id="inventory-bag-tabs">',
+         '<div class="ui-tab-strip" id="inventory-bag-tabs"><div class="gl-slider" data-if="mode != 2"'
+         ' data-class-at1="bag == 1" data-class-at2="bag == 2"></div>')
 out = os.path.join(ROOT, 'src', 'game', 'inventory.html')
 os.makedirs(os.path.dirname(out), exist_ok=True)
 open(out, 'w', encoding='utf-8', newline='').write(s)

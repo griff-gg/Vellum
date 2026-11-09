@@ -36,23 +36,39 @@
                 decorator: tiled-box(gl-track-tl, gl-track-t, gl-track-tr, gl-track-l, gl-track-c, gl-track-r, gl-track-bl, gl-track-b, gl-track-br);
             }
             body#inventory-window .inventory-mode-tabs { top: 21dp; right: 50dp; width: 146dp; height: 22dp; border-radius: 11dp; }
-            body#inventory-window #inventory-bag-tabs { height: 26dp; margin: 2dp 0dp 8dp 0dp; border-radius: 13dp; }
+            body#inventory-window #inventory-bag-tabs { position: relative; height: 26dp; margin: 2dp 0dp 8dp 0dp; border-radius: 13dp; }
             body#inventory-window .inventory-tab,
             body#inventory-window .inventory-tab:hover {
                 flex: 1; min-width: 0; padding: 0dp 4dp; text-align: center;
                 decorator: none; background-color: transparent;
                 border-width: 0dp; font-effect: none;
                 color: rgba(255,255,255,170);
+                position: relative;
+                transition: color background-color 0.2s cubic-out;
             }
             body#inventory-window .inventory-mode-tabs > .inventory-tab { height: 16dp; line-height: 16dp; font-size: 11dp; border-radius: 8dp; }
             body#inventory-window #inventory-bag-tabs > .inventory-tab { height: 20dp; line-height: 20dp; font-size: 12dp; border-radius: 10dp; }
             body#inventory-window .inventory-tab:hover { color: white; background-color: rgba(255,255,255,22); }
             body#inventory-window .inventory-tab.selected {
-                color: rgb(255,255,255); font-weight: 800;
+                color: rgb(255,255,255);
                 background-color: transparent;
-                decorator: tiled-box(gl-pill-tl, gl-pill-t, gl-pill-tr, gl-pill-l, gl-pill-c, gl-pill-r, gl-pill-bl, gl-pill-b, gl-pill-br);
                 border-width: 0dp;
             }
+
+            /* the glass pill slides under the selected tab (tabs paint above it: position relative, later in the page).
+               Lefts/widths in dp: track padding 3dp, gap 2dp, three equal tabs. */
+            body#inventory-window .gl-slider {
+                position: absolute; top: 3dp; left: 3dp;
+                decorator: tiled-box(gl-pill-tl, gl-pill-t, gl-pill-tr, gl-pill-l, gl-pill-c, gl-pill-r, gl-pill-bl, gl-pill-b, gl-pill-br);
+                transition: left 0.28s cubic-out;
+                pointer-events: none;
+            }
+            body#inventory-window .inventory-mode-tabs > .gl-slider { width: 45.3dp; height: 16dp; }
+            body#inventory-window .inventory-mode-tabs > .gl-slider.at1 { left: 50.3dp; }
+            body#inventory-window .inventory-mode-tabs > .gl-slider.at2 { left: 97.7dp; }
+            body#inventory-window #inventory-bag-tabs > .gl-slider { width: 81.7dp; height: 20dp; }
+            body#inventory-window #inventory-bag-tabs > .gl-slider.at1 { left: 86.7dp; }
+            body#inventory-window #inventory-bag-tabs > .gl-slider.at2 { left: 170.3dp; }
             body#inventory-window .inventory-bag-label { color: white; text-align: center; line-height: 20dp; height: 20dp; }
 
             /* slots */
