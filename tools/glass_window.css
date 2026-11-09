@@ -102,14 +102,14 @@ W .ui-list-row:hover, W .ui-list > listbox-item:not([disabled]):not([selected]):
 W .ui-list-row.selected, W .ui-list > listbox-item:not([disabled])[selected] { background: rgba(255, 255, 255, 55); color: rgb(246, 200, 118); }
 W .group-leader { color: rgb(246, 200, 118); }
 
-/* scrollbars: thin glass (8dp), groove + thumb */
+/* scrollbars: 10dp groove with a 6dp glass thumb centred inside it */
 W scrollbarvertical { width: 12dp; }
-W scrollbarvertical slidertrack { margin-left: 2dp; width: 8dp; image-color: white; decorator: tiled-box(gl-sbt-tl, gl-sbt-t, gl-sbt-tr, gl-sbt-l, gl-sbt-c, gl-sbt-r, gl-sbt-bl, gl-sbt-b, gl-sbt-br); }
-W scrollbarvertical sliderbar { margin-left: 0dp; width: 8dp; min-height: 28dp; padding: 0dp; box-sizing: border-box; decorator: tiled-box(gl-sbb-tl, gl-sbb-t, gl-sbb-tr, gl-sbb-l, gl-sbb-c, gl-sbb-r, gl-sbb-bl, gl-sbb-b, gl-sbb-br); }
+W scrollbarvertical slidertrack { margin-left: 1dp; width: 10dp; image-color: white; decorator: tiled-box(gl-sbt-tl, gl-sbt-t, gl-sbt-tr, gl-sbt-l, gl-sbt-c, gl-sbt-r, gl-sbt-bl, gl-sbt-b, gl-sbt-br); }
+W scrollbarvertical sliderbar { margin-left: 2dp; width: 6dp; min-height: 28dp; padding: 0dp; box-sizing: border-box; decorator: tiled-box(gl-sbb-tl, gl-sbb-t, gl-sbb-tr, gl-sbb-l, gl-sbb-c, gl-sbb-r, gl-sbb-bl, gl-sbb-b, gl-sbb-br); }
 W scrollbarvertical sliderbar:hover { decorator: tiled-box(gl-sbbh-tl, gl-sbbh-t, gl-sbbh-tr, gl-sbbh-l, gl-sbbh-c, gl-sbbh-r, gl-sbbh-bl, gl-sbbh-b, gl-sbbh-br); }
 W scrollbarvertical sliderbar:active { decorator: tiled-box(gl-sbbp-tl, gl-sbbp-t, gl-sbbp-tr, gl-sbbp-l, gl-sbbp-c, gl-sbbp-r, gl-sbbp-bl, gl-sbbp-b, gl-sbbp-br); }
 W scrollbarhorizontal { height: 12dp; }
-W scrollbarhorizontal slidertrack { margin-top: 2dp; height: 8dp; image-color: white; decorator: tiled-box(gl-sbt-tl, gl-sbt-t, gl-sbt-tr, gl-sbt-l, gl-sbt-c, gl-sbt-r, gl-sbt-bl, gl-sbt-b, gl-sbt-br); }
-W scrollbarhorizontal sliderbar { margin-top: 0dp; height: 8dp; min-width: 28dp; padding: 0dp; box-sizing: border-box; background-color: transparent; border-radius: 0dp; decorator: tiled-box(gl-sbb-tl, gl-sbb-t, gl-sbb-tr, gl-sbb-l, gl-sbb-c, gl-sbb-r, gl-sbb-bl, gl-sbb-b, gl-sbb-br); }
+W scrollbarhorizontal slidertrack { margin-top: 1dp; height: 10dp; image-color: white; decorator: tiled-box(gl-sbt-tl, gl-sbt-t, gl-sbt-tr, gl-sbt-l, gl-sbt-c, gl-sbt-r, gl-sbt-bl, gl-sbt-b, gl-sbt-br); }
+W scrollbarhorizontal sliderbar { margin-top: 2dp; height: 6dp; min-width: 28dp; padding: 0dp; box-sizing: border-box; background-color: transparent; border-radius: 0dp; decorator: tiled-box(gl-sbb-tl, gl-sbb-t, gl-sbb-tr, gl-sbb-l, gl-sbb-c, gl-sbb-r, gl-sbb-bl, gl-sbb-b, gl-sbb-br); }
 W scrollbarhorizontal sliderbar:hover { decorator: tiled-box(gl-sbbh-tl, gl-sbbh-t, gl-sbbh-tr, gl-sbbh-l, gl-sbbh-c, gl-sbbh-r, gl-sbbh-bl, gl-sbbh-b, gl-sbbh-br); }
 W scrollbarhorizontal sliderbar:active, W scrollbarhorizontal sliderbar:hover:active { decorator: tiled-box(gl-sbbp-tl, gl-sbbp-t, gl-sbbp-tr, gl-sbbp-l, gl-sbbp-c, gl-sbbp-r, gl-sbbp-bl, gl-sbbp-b, gl-sbbp-br); }
