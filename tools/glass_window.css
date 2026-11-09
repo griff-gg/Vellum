@@ -1,0 +1,100 @@
+/* Shared glass look for windows built on the window-fixed-size template.
+   "W" stands for body#<window id>; tools/build.py expands every rule once per id in GLASS_WINDOWS.
+   The game draws no CSS shadow / blur / filter: depth comes from the baked art (gl-*). */
+
+/* frame: the image carries tint, rim, sheen and shadow; 12dp of it around the glass is shadow room */
+W {
+    padding: 52dp 20dp 20dp 20dp;
+    background-color: transparent;
+    border-width: 0dp;
+    decorator: tiled-box(gl-win-tl, gl-win-t, gl-win-tr, gl-win-l, gl-win-c, gl-win-r, gl-win-bl, gl-win-b, gl-win-br);
+    color: rgb(255, 255, 255);
+    transform-origin: 50% 0% 0;
+}
+W #window-content { decorator: none; background-color: transparent; border-width: 0dp; padding: 0dp; }
+
+/* quiet title: small, wide-spaced capitals */
+W > .window-title {
+    top: 21dp; left: 12dp; width: 75%; padding-left: 14dp;
+    line-height: 24dp; font-size: 10dp; font-weight: 800;
+    text-transform: uppercase; letter-spacing: 1.6dp;
+    color: rgba(255, 255, 255, 215); font-effect: shadow(0dp 1dp rgba(0,0,0,120));
+}
+
+/* round glass close button (baked circle with the x) */
+W > button.window-title-close {
+    top: 21dp; right: 22dp; width: 26dp; height: 26dp; min-width: 26dp; padding: 0dp;
+    box-sizing: border-box; background-color: transparent; border-width: 0dp;
+    decorator: image(gl-close);
+}
+W > button.window-title-close:not([disabled]):hover,
+W > button.window-title-close:not([disabled]):focus { decorator: image(gl-close-h); }
+W > button.window-title-close:not([disabled]):active { decorator: image(gl-close); opacity: 0.8; }
+
+/* inner panels */
+W .content-box {
+    background-color: rgba(255, 255, 255, 16);
+    border: 1dp rgba(255, 255, 255, 55);
+    border-radius: 12dp;
+}
+W .ui-section-title { color: rgb(255, 255, 255); }
+W .ui-footer { border-top: 1dp rgba(255, 255, 255, 60); }
+W .ui-status { color: rgba(255, 255, 255, 150); }
+W .ui-currency { color: rgb(255, 255, 255); }
+
+/* tab strips: recessed glass bar, selected tab is a glass pill; each tab is exactly a third */
+W .ui-tab-strip {
+    box-sizing: border-box; height: 30dp; padding: 3dp 0dp; gap: 0dp; margin-bottom: 8dp;
+    background-color: transparent; border-width: 0dp;
+    decorator: tiled-box(gl-track-tl, gl-track-t, gl-track-tr, gl-track-l, gl-track-c, gl-track-r, gl-track-bl, gl-track-b, gl-track-br);
+}
+W .ui-tab,
+W .ui-tab:hover {
+    flex: none; width: 33.333%; min-width: 0; height: 24dp; line-height: 24dp; padding: 0dp 2dp; box-sizing: border-box;
+    text-align: center; font-size: 12dp; font-effect: none;
+    decorator: none; background-color: transparent; border-width: 0dp; border-radius: 0dp;
+    color: rgba(255, 255, 255, 170);
+}
+W .ui-tab:hover { color: rgb(255, 255, 255); }
+W .ui-tab.selected, W .ui-tab.active, W .ui-tab:selected {
+    color: rgb(255, 255, 255); background-color: transparent; border-width: 0dp;
+    decorator: tiled-box(gl-pill-tl, gl-pill-t, gl-pill-tr, gl-pill-l, gl-pill-c, gl-pill-r, gl-pill-bl, gl-pill-b, gl-pill-br);
+}
+
+/* glass buttons (look only: each window keeps its own size) */
+W button.default {
+    decorator: tiled-box(gl-btn-tl, gl-btn-t, gl-btn-tr, gl-btn-l, gl-btn-c, gl-btn-r, gl-btn-bl, gl-btn-b, gl-btn-br);
+    background-color: transparent; border-width: 0dp; border-radius: 12dp;
+    color: rgb(255, 255, 255); font-effect: shadow(0dp 1dp rgba(0,0,0,90));
+}
+W button.default.selected:not([disabled]) {
+    decorator: tiled-box(gl-pill-tl, gl-pill-t, gl-pill-tr, gl-pill-l, gl-pill-c, gl-pill-r, gl-pill-bl, gl-pill-b, gl-pill-br);
+    color: rgb(255, 255, 255); border-width: 0dp;
+}
+W button.default:not([disabled]):hover,
+W button.default:not([disabled]):focus {
+    decorator: tiled-box(gl-btnh-tl, gl-btnh-t, gl-btnh-tr, gl-btnh-l, gl-btnh-c, gl-btnh-r, gl-btnh-bl, gl-btnh-b, gl-btnh-br);
+    color: rgb(255, 255, 255); border-width: 0dp;
+}
+W button.default:not([disabled]):active {
+    decorator: tiled-box(gl-btnp-tl, gl-btnp-t, gl-btnp-tr, gl-btnp-l, gl-btnp-c, gl-btnp-r, gl-btnp-bl, gl-btnp-b, gl-btnp-br);
+    color: rgba(255, 255, 255, 220); border-width: 0dp;
+}
+W button.default:disabled,
+W button.default[disabled] {
+    decorator: tiled-box(gl-btnd-tl, gl-btnd-t, gl-btnd-tr, gl-btnd-l, gl-btnd-c, gl-btnd-r, gl-btnd-bl, gl-btnd-b, gl-btnd-br);
+    background-color: transparent; color: rgba(255, 255, 255, 95); border-width: 0dp;
+}
+
+/* text boxes */
+W input[type="text"] {
+    background-color: rgba(0, 0, 0, 70); color: rgb(255, 255, 255);
+    border: 1dp rgba(255, 255, 255, 80); border-radius: 10dp;
+}
+W input[type="text"]:focus { border-color: rgb(246, 200, 118); }
+
+/* list rows */
+W .ui-list-row, W .ui-list > listbox-item { border-radius: 8dp; }
+W .ui-list-row:hover, W .ui-list > listbox-item:not([disabled]):not([selected]):hover { background: rgba(255, 255, 255, 28); }
+W .ui-list-row.selected, W .ui-list > listbox-item:not([disabled])[selected] { background: rgba(255, 255, 255, 55); color: rgb(246, 200, 118); }
+W .group-leader { color: rgb(246, 200, 118); }

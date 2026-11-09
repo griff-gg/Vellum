@@ -1,0 +1,84 @@
+<rml>
+<head>
+    <title>Group Manager</title>
+    <link type="text/template" href="../templates/window-fixed-size.html" />
+    <link type="text/rcss" href="../styles/components.css" />
+    <style>
+        body { width: 550dp; max-width: 94vw; }
+        #group-manager #window-content { padding: 6dp; }
+        #group-manager button.default { min-width: 0; height: 24dp; padding: 0dp 7dp; line-height: 22dp; font-size: 13dp; white-space: nowrap; }
+        .group-columns { display: flex; gap: 6dp; height: 340dp; max-height: 70vh; min-height: 280dp; }
+        .group-roster { flex: 1; min-width: 0; display: flex; flex-direction: column; }
+        .group-directory { width: 225dp; flex: 0 0 225dp; min-width: 215dp; display: flex; flex-direction: column; }
+        .group-heading { display: flex; justify-content: space-between; padding: 6dp; flex-shrink: 0; }
+        .group-heading .ui-section-title { margin: 0; }
+        .group-scroll { flex: 1; min-height: 0; overflow-y: auto; }
+        .group-name { flex: 1; min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+        .group-job { width: 72dp; flex-shrink: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+        .group-level { width: 24dp; text-align: right; flex-shrink: 0; }
+        .group-leader { width: 12dp; color: yellow; flex-shrink: 0; }
+        .group-roster .ui-list-row { min-height: 24dp; padding: 2dp 4dp; gap: 4dp; }
+        .group-row { cursor: hand; }
+        .group-empty { padding: 12dp 6dp; }
+        .group-actions { display: flex; flex-wrap: wrap; gap: 4dp; margin-top: 4dp; padding: 6dp; flex-shrink: 0; }
+        .group-actions button { flex: 1 0 46%; }
+        .group-invite-entry { display: flex; align-items: center; gap: 4dp; padding: 0 6dp 4dp; flex-shrink: 0; }
+        .group-invite-entry input { flex: 1; width: 100dp; min-width: 0; height: 24dp; padding: 2dp 5dp; font-size: 13dp; }
+        .group-invite-entry button.default, .group-directory-row button.default { flex: 0 0 auto; }
+        .group-directory-row { display: flex; align-items: center; gap: 4dp; padding: 3dp 6dp; font-size: 13dp; }
+        .group-directory-row > span { white-space: nowrap; }
+        .group-directory-label { padding: 6dp; margin-bottom: 0; }
+        .group-help { padding: 6dp; }
+    </style>
+<script>
+-- Glass: each time the window opens it fades and settles in, then a streak of light crosses the glass.
+-- Two identical keyframe sets (-a / -b): switching to the other one restarts the animation.
+pcall(function()
+    local doc = document
+    local flip = false
+    local function opened()
+        flip = not flip
+        doc:SetClass('gl-shown-a', flip)
+        doc:SetClass('gl-shown-b', not flip)
+        doc.style.animation = '0.15s cubic-out 1 ' .. (flip and 'gl-open-a' or 'gl-open-b')
+    end
+    doc:AddEventListener('show', function() pcall(opened) end)
+    opened()
+end)
+</script>
+</head>
+<body template="window-fixed-size" id="group-manager">
+    <div data-model="game-arena" class="group-columns">
+        <div class="group-roster content-box">
+            <div class="group-heading"><span class="ui-section-title"><str string-id="990">Members</str></span><span>{{members.size}} / {{member_limit}}</span></div>
+            <div class="ui-list-row"><span class="group-leader" /><span class="group-name"><str string-id="992">Name</str></span><span class="group-job"><str string-id="993">Class</str></span><span class="group-level">Lv</span></div>
+            <div id="arena-member-list" class="group-scroll">
+                <div class="group-empty ui-status" data-if="!has_group"><str string-id="1063">Not in a group</str><br/>Invite a player to start a group.</div>
+                <div class="ui-list-row group-row" data-for="member : members" data-attr-id="'arena-member-' + member.tag" data-attr-onclick="'member:' + member.tag" data-class-selected="selected_member == member.tag">
+                    <span class="group-leader"><span data-if="member.leader">&#9733;</span></span><span class="group-name">{{member.name}}</span><span class="group-job">{{member.job}}</span><span class="group-level">{{member.level}}</span>
+                </div>
+                <div class="group-help ui-status" data-if="has_group">{{member_limit - members.size}} open slots</div>
+            </div>
+            <div class="group-actions ui-footer">
+                <button id="arena-promote" class="default" onclick="promote" data-attrif-disabled="!can_promote"><str string-id="997">Promote</str></button>
+                <button id="arena-kick" class="default" onclick="kick" data-attrif-disabled="!can_kick">{{kick_text}}</button>
+                <button id="arena-leave" class="default" onclick="leave" data-attrif-disabled="!can_leave">{{leave_text}}</button>
+                <button id="arena-disband" class="default" onclick="disband" data-attrif-disabled="!can_disband"><str string-id="998">Disband</str></button>
+            </div>
+        </div>
+        <div class="group-directory content-box">
+            <div class="group-heading ui-section-title"><str string-id="991">Invite</str></div>
+            <div class="group-invite-entry"><input id="arena-invite-name" type="text" maxlength="32" placeholder="Player name..." data-value="invite_name" /><button id="arena-send-invite" class="default ui-compact" onclick="invite" data-attrif-disabled="!can_invite || invite_name == ''"><str string-id="1000">Invite</str></button></div>
+            <div class="group-help ui-status" data-if="!can_invite">Invites are available while solo or leading a group, outside a game.</div>
+            <div class="group-scroll" id="arena-directory-list">
+                <div class="group-directory-label ui-section-title">Friends online</div>
+                <div class="group-help ui-status" data-if="friends.size == 0">No friends online</div>
+                <div class="group-directory-row" data-for="person : friends"><span class="group-name">{{person.name}}</span><span data-if="person.level > 0">Lv {{person.level}}</span><button class="default ui-compact" data-attr-id="'arena-friend-' + person.tag" data-attr-onclick="'friend:' + person.tag" data-attrif-disabled="!can_invite">Invite</button></div>
+                <div class="group-directory-label ui-section-title">Clan members online</div>
+                <div class="group-help ui-status" data-if="clan.size == 0">No clan members online</div>
+                <div class="group-directory-row" data-for="person : clan"><span class="group-name">{{person.name}}</span><span data-if="person.level > 0">Lv {{person.level}}</span><button class="default ui-compact" data-attr-id="'arena-clan-' + person.tag" data-attr-onclick="'clan-member:' + person.tag" data-attrif-disabled="!can_invite">Invite</button></div>
+            </div>
+        </div>
+    </div>
+</body>
+</rml>

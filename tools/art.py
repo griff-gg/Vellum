@@ -106,3 +106,23 @@ def sweep(w=160, h=480, angle=10, core=(3.0, 95), soft=(14.0, 55)):
     img[..., :3] = 255
     img[..., 3] = np.clip(a, 0, 255).astype(np.uint8)
     return Image.fromarray(img, 'RGBA')
+
+
+def close_icon(hover, radius=13):
+    """Round glass close button with a thin x (one sprite, 2 px per dp)."""
+    img, _, _ = glass_panel(margin=0, radius=radius, tint=(255, 255, 255, 72 if hover else 42),
+                            rim_top=245 if hover else 225, rim_mid=150 if hover else 110, rim_bottom=95 if hover else 70,
+                            sheen=70 if hover else 50, shadow=0, shadow_dy=0, shadow_blur=1, edge=0)
+    k = 8
+    n = img.width * k // 1
+    glyph = Image.new('L', (n, n), 0)
+    d = ImageDraw.Draw(glyph)
+    c, r, wd = n / 2, n * 0.19, int(n * 0.07)
+    d.line((c - r, c - r, c + r, c + r), fill=255, width=wd)
+    d.line((c - r, c + r, c + r, c - r), fill=255, width=wd)
+    glyph = glyph.resize(img.size, Image.LANCZOS)
+    white = Image.new('RGBA', img.size, (255, 255, 255, 255))
+    white.putalpha(glyph.point(lambda v: int(v * (1.0 if hover else 0.92))))
+    out = img.copy()
+    out.alpha_composite(white)
+    return out
