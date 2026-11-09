@@ -13,6 +13,12 @@ def swap(text, old, new):
 
 s = swap(s, '        <style>', '        <link type="text/rcss" href="../styles/glass_frame.css" />\n        <style>')
 s = swap(s, '        </style>', css + '        </style>')
+lua = open(os.path.join(ROOT, 'tools', 'glass_open.lua'), encoding='utf-8').read()
+assert '<' not in lua and '&' not in lua   # the page is XML
+NL = chr(10)
+s = swap(s, '    </head>', '        <script>' + NL + lua + '        </script>' + NL + '    </head>')
+s = swap(s, '        <div id="window-content">',
+         '        <div class="gl-sweep-clip"><div class="gl-sweep"></div></div>' + NL + '        <div id="window-content">')
 s = swap(s, '<button class="window-title-close" onclick="close"></button>',
          '<button class="window-title-close" onclick="close"><span>&#215;</span></button>')
 # sliding glass pills (tab order: Avatar = mode 1, Costume = mode 0, PAT = mode 2; bags 0, 1, 2)

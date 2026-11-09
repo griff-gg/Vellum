@@ -10,10 +10,12 @@
                 color: rgb(245, 247, 250);
             }
             body#inventory-window #window-content { decorator: none; background-color: transparent; border-width: 0dp; padding: 0dp 4dp; }
+            /* quiet title: small, wide-spaced capitals */
             body#inventory-window > .window-title {
-                top: 21dp; left: 12dp; width: 92dp; padding-left: 16dp;
-                line-height: 22dp; font-size: 15dp; font-weight: 800;
-                color: rgb(255, 255, 255); font-effect: shadow(0dp 1dp rgba(0,0,0,120));
+                top: 21dp; left: 12dp; width: 94dp; padding-left: 14dp;
+                line-height: 24dp; font-size: 10dp; font-weight: 800;
+                text-transform: uppercase; letter-spacing: 1.6dp;
+                color: rgba(255, 255, 255, 215); font-effect: shadow(0dp 1dp rgba(0,0,0,120));
             }
             body#inventory-window > button.window-title-close,
             body#inventory-window > button.window-title-close:hover,
@@ -86,3 +88,16 @@
             body#inventory-window #inventory-weight { color: rgb(100, 210, 255); }
             body#inventory-window #inventory-zulie { color: rgb(255, 255, 255); }
 
+
+            /* open: fade + settle (glass_open.lua starts it on every show) */
+            body#inventory-window { transform-origin: 50% 0% 0; }
+            @keyframes gl-open-a { 0% { opacity: 0; transform: translateY(10dp) scale(0.96); } 100% { opacity: 1; transform: translateY(0dp) scale(1); } }
+            @keyframes gl-open-b { 0% { opacity: 0; transform: translateY(10dp) scale(0.96); } 100% { opacity: 1; transform: translateY(0dp) scale(1); } }
+
+            /* light sweep: a streak crosses the glass once after it opens; the clip box is the glass (inside the shadow room) */
+            body#inventory-window > .gl-sweep-clip { position: absolute; top: 12dp; left: 12dp; right: 12dp; bottom: 12dp; overflow: hidden; pointer-events: none; }
+            body#inventory-window .gl-sweep { position: absolute; top: -20dp; left: -170dp; width: 160dp; height: 480dp; decorator: image(gl-sweep); pointer-events: none; }
+            body#inventory-window.gl-shown-a .gl-sweep { animation: 0.85s 0.25s cubic-in-out 1 gl-sweep-a; }
+            body#inventory-window.gl-shown-b .gl-sweep { animation: 0.85s 0.25s cubic-in-out 1 gl-sweep-b; }
+            @keyframes gl-sweep-a { from { left: -170dp; } to { left: 300dp; } }
+            @keyframes gl-sweep-b { from { left: -170dp; } to { left: 300dp; } }

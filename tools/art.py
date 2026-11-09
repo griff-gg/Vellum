@@ -93,3 +93,16 @@ def slices(prefix, x0, y0, corner, edge):
         for q, (xx, ww) in enumerate(cols):
             out['%s-%s' % (prefix, names[r][q])] = (xx, yy, ww, hh)
     return out
+
+
+def sweep(w=160, h=480, angle=10, core=(3.0, 95), soft=(14.0, 55)):
+    """A soft diagonal streak of light (1 px per dp), brighter towards the top; moved across a window on open."""
+    y, x = np.mgrid[0:h, 0:w].astype(np.float32)
+    t = np.radians(angle)
+    d = (x - w / 2) * np.cos(t) + (y - h / 2) * np.sin(t)      # distance from the streak's centre line
+    a = soft[1] * np.exp(-(d / soft[0]) ** 2) + core[1] * np.exp(-(d / core[0]) ** 2)
+    a *= 1.0 - 0.65 * (y / h)                                   # light from above
+    img = np.zeros((h, w, 4), np.uint8)
+    img[..., :3] = 255
+    img[..., 3] = np.clip(a, 0, 255).astype(np.uint8)
+    return Image.fromarray(img, 'RGBA')

@@ -51,10 +51,12 @@
                 color: rgb(245, 247, 250);
             }
             body#inventory-window #window-content { decorator: none; background-color: transparent; border-width: 0dp; padding: 0dp 4dp; }
+            /* quiet title: small, wide-spaced capitals */
             body#inventory-window > .window-title {
-                top: 21dp; left: 12dp; width: 92dp; padding-left: 16dp;
-                line-height: 22dp; font-size: 15dp; font-weight: 800;
-                color: rgb(255, 255, 255); font-effect: shadow(0dp 1dp rgba(0,0,0,120));
+                top: 21dp; left: 12dp; width: 94dp; padding-left: 14dp;
+                line-height: 24dp; font-size: 10dp; font-weight: 800;
+                text-transform: uppercase; letter-spacing: 1.6dp;
+                color: rgba(255, 255, 255, 215); font-effect: shadow(0dp 1dp rgba(0,0,0,120));
             }
             body#inventory-window > button.window-title-close,
             body#inventory-window > button.window-title-close:hover,
@@ -127,7 +129,36 @@
             body#inventory-window #inventory-weight { color: rgb(100, 210, 255); }
             body#inventory-window #inventory-zulie { color: rgb(255, 255, 255); }
 
+
+            /* open: fade + settle (glass_open.lua starts it on every show) */
+            body#inventory-window { transform-origin: 50% 0% 0; }
+            @keyframes gl-open-a { 0% { opacity: 0; transform: translateY(10dp) scale(0.96); } 100% { opacity: 1; transform: translateY(0dp) scale(1); } }
+            @keyframes gl-open-b { 0% { opacity: 0; transform: translateY(10dp) scale(0.96); } 100% { opacity: 1; transform: translateY(0dp) scale(1); } }
+
+            /* light sweep: a streak crosses the glass once after it opens; the clip box is the glass (inside the shadow room) */
+            body#inventory-window > .gl-sweep-clip { position: absolute; top: 12dp; left: 12dp; right: 12dp; bottom: 12dp; overflow: hidden; pointer-events: none; }
+            body#inventory-window .gl-sweep { position: absolute; top: -20dp; left: -170dp; width: 160dp; height: 480dp; decorator: image(gl-sweep); pointer-events: none; }
+            body#inventory-window.gl-shown-a .gl-sweep { animation: 0.85s 0.25s cubic-in-out 1 gl-sweep-a; }
+            body#inventory-window.gl-shown-b .gl-sweep { animation: 0.85s 0.25s cubic-in-out 1 gl-sweep-b; }
+            @keyframes gl-sweep-a { from { left: -170dp; } to { left: 300dp; } }
+            @keyframes gl-sweep-b { from { left: -170dp; } to { left: 300dp; } }
         </style>
+        <script>
+-- Glass: each time the window opens it fades and settles in, then a streak of light crosses the glass.
+-- Two identical keyframe sets (-a / -b): switching to the other one restarts the animation.
+pcall(function()
+    local doc = document
+    local flip = false
+    local function opened()
+        flip = not flip
+        doc:SetClass('gl-shown-a', flip)
+        doc:SetClass('gl-shown-b', not flip)
+        doc.style.animation = '0.26s cubic-out 1 ' .. (flip and 'gl-open-a' or 'gl-open-b')
+    end
+    doc:AddEventListener('show', function() pcall(opened) end)
+    opened()
+end)
+        </script>
     </head>
     <!-- Keep header controls outside the content frame instead of overflowing it. -->
     <body open-sound="3" close-sound="4" class="window-fixed-size" id="inventory-window" data-model="inventory-window">
@@ -138,6 +169,7 @@
             <tab id="inventory-costume" class="inventory-tab ui-tab" onclick="mode:0" data-class-selected="mode == 0"><str string-id="975">Costume</str></tab>
             <tab id="inventory-vehicle" class="inventory-tab ui-tab" onclick="mode:2" data-class-selected="mode == 2"><str string-id="930">PAT</str></tab>
         </div>
+        <div class="gl-sweep-clip"><div class="gl-sweep"></div></div>
         <div id="window-content">
             <div class="equipment-pane" id="equipment-0" data-if="mode == 0">
                 <div class="equipment-cell" style="left: 62dp; top: 0dp;"><img sprite="GEN_INVSLOT17" /><item-slot id="costume-1" /></div>
