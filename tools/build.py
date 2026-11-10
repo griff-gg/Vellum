@@ -387,9 +387,38 @@ def build():
     print('built', OUT)
 
 
+def install():
+    """Copy the build over the installed theme IN PLACE: files are overwritten one by one and stale ones removed afterwards,
+    so the theme folder is never empty (a running game that reloads mid-install used to log 'Cant get file from vfs')."""
+    import time
+    os.makedirs(GAME, exist_ok=True)
+    wanted = set()
+    for dirpath, _, files in os.walk(OUT):
+        rel_dir = os.path.relpath(dirpath, OUT)
+        dst_dir = os.path.normpath(os.path.join(GAME, rel_dir))
+        os.makedirs(dst_dir, exist_ok=True)
+        for f in files:
+            src, dst = os.path.join(dirpath, f), os.path.join(dst_dir, f)
+            wanted.add(os.path.normcase(dst))
+            for attempt in range(5):   # the game may hold a file open for a moment
+                try:
+                    shutil.copy2(src, dst)
+                    break
+                except PermissionError:
+                    time.sleep(0.4)
+            else:
+                raise SystemExit('could not overwrite (in use?): ' + dst)
+    for dirpath, _, files in os.walk(GAME, topdown=False):
+        for f in files:
+            full = os.path.join(dirpath, f)
+            if os.path.normcase(full) not in wanted:
+                os.remove(full)
+        if dirpath != GAME and not os.listdir(dirpath):
+            os.rmdir(dirpath)
+    print('installed', GAME)
+
+
 if __name__ == '__main__':
     build()
     if '--install' in sys.argv:
-        shutil.rmtree(GAME, ignore_errors=True)
-        shutil.copytree(OUT, GAME)
-        print('installed', GAME)
+        install()
