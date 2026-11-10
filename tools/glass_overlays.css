@@ -106,3 +106,13 @@ button#suggestions { decorator: image(gl-chev); width: 24dp; height: 22dp; backg
 button#suggestions:hover { decorator: image(gl-chev-h); }
 #tos:hover { color: rgb(255, 255, 255); }
 #queue-position { color: rgb(255, 255, 255); }
+
+/* ---- chat corner buttons (settings, move, resize): small glass circles ---- */
+#chat-settings, #mover, #resizer { width: 22dp; height: 22dp; padding: 0dp; background-color: transparent; border-width: 0dp; }
+#chat-settings { decorator: image(gl-c-gear); }
+#chat-settings:hover, #chat-settings:active { decorator: image(gl-c-gear-h); }
+#mover { decorator: image(gl-c-move); }
+#mover:hover, #mover:active { decorator: image(gl-c-move-h); }
+#resizer { decorator: image(gl-c-resize); }
+#resizer:hover, #resizer:active { decorator: image(gl-c-resize-h); }
+#percentage-handle-icon { decorator: tiled-box(gl-pill-tl, gl-pill-t, gl-pill-tr, gl-pill-l, gl-pill-c, gl-pill-r, gl-pill-bl, gl-pill-b, gl-pill-br); }

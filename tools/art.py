@@ -282,6 +282,22 @@ def _glyph(kind, n):
             ang = i * np.pi / 4
             d.line((c + 0.17 * n * np.cos(ang), c + 0.17 * n * np.sin(ang), c + 0.27 * n * np.cos(ang), c + 0.27 * n * np.sin(ang)),
                    fill=255, width=wd + 2)
+    elif kind == 'move':
+        a = 0.25 * n
+        h = 0.07 * n
+        for dx, dy in ((1, 0), (-1, 0), (0, 1), (0, -1)):
+            tx, ty = c + dx * a, c + dy * a
+            d.line((c, c, tx, ty), fill=255, width=wd)
+            d.line((tx, ty, tx - dx * 0.08 * n - dy * h, ty - dy * 0.08 * n + dx * h), fill=255, width=wd)
+            d.line((tx, ty, tx - dx * 0.08 * n + dy * h, ty - dy * 0.08 * n - dx * h), fill=255, width=wd)
+    elif kind == 'resize':
+        d.line((c - 0.2 * n, c + 0.2 * n, c + 0.2 * n, c - 0.2 * n), fill=255, width=wd)
+        tx, ty = c + 0.22 * n, c - 0.22 * n
+        d.line((tx, ty, tx - 0.15 * n, ty), fill=255, width=wd)
+        d.line((tx, ty, tx, ty + 0.15 * n), fill=255, width=wd)
+        bx, by = c - 0.22 * n, c + 0.22 * n
+        d.line((bx, by, bx + 0.15 * n, by), fill=255, width=wd)
+        d.line((bx, by, bx, by - 0.15 * n), fill=255, width=wd)
     elif kind == 'menu':
         for dy in (-0.14, 0, 0.14):
             d.line((c - 0.2 * n, c + dy * n, c + 0.2 * n, c + dy * n), fill=255, width=wd)

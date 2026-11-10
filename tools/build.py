@@ -120,6 +120,9 @@ def sprites():
         for st in ('n', 'h'):
             out.append(('gl-mt-%s%s' % (kind, '' if st == 'n' else '-h'), art.round_icon(kind, st, radius=11, size=36)))
     out += [('gl-tg-up', art.toggle_chevron('up')), ('gl-tg-down', art.toggle_chevron('down'))]   # menu toggle chevrons
+    for kind in ('gear', 'move', 'resize'):                     # chat corner buttons, 22dp
+        for st in ('n', 'h'):
+            out.append(('gl-c-%s%s' % (kind, '' if st == 'n' else '-h'), art.round_icon(kind, st, radius=11)))
     for st in ('n', 'h'):                                       # notification bell, 36dp
         out.append(('gl-bell' + ('' if st == 'n' else '-h'), art.round_icon('bell', st, radius=18)))
     for kind in ('cb', 'rd'):
@@ -223,6 +226,11 @@ def window_css():
         keep = ['body ' + x.strip()[2:] for x in m.group(1).split(',') if x.strip().startswith('W scrollbar')]
         if keep:
             shared += ',\n'.join(keep) + ' {' + m.group(2) + '}\n'
+    sb_only = shared[shared.index('body scrollbar'):] if 'body scrollbar' in shared else ''
+    sbp = os.path.join(OUT, 'styles', 'scrollbar.css')
+    sb_stock = open(sbp, encoding='utf-8').read()
+    assert len(sb_stock) > 500, 'scrollbar.css is empty'
+    open(sbp, 'w', encoding='utf-8', newline='').write(sb_stock + chr(10) + sb_only)
     stock = open(comp, encoding='utf-8').read()   # read BEFORE opening for write (open(..., 'w') truncates the file)
     assert len(stock) > 1000, 'components.css is empty'
     open(comp, 'w', encoding='utf-8', newline='').write(stock + shared)
