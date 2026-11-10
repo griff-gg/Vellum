@@ -15,6 +15,7 @@ W #window-content { decorator: none; background-color: transparent; border-width
 
 /* quiet title: small, wide-spaced capitals */
 W > .window-title {
+    white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
     top: 21dp; left: 12dp; width: 75%; padding-left: 14dp;
     line-height: 24dp; font-size: 10dp; font-weight: 800;
     text-transform: uppercase; letter-spacing: 1.6dp;

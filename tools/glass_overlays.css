@@ -35,8 +35,12 @@ body#common-modal-overlay { background: rgba(12, 16, 24, 150); }
 .despawntip .despawntiptext { background-color: rgba(26, 30, 40, 235); border-radius: 8dp; color: rgb(255, 255, 255); }
 
 /* ---- store signs ---- */
-.shop-frame { decorator: none; background-color: rgba(26, 30, 40, 215); border: 1dp rgba(255, 255, 255, 90); border-radius: 10dp; }
-.shop-title { color: rgb(255, 255, 255); }
+.shop-frame {
+    background-color: transparent; border-width: 0dp;
+    decorator: tiled-box(gl-track-tl, gl-track-t, gl-track-tr, gl-track-l, gl-track-c, gl-track-r, gl-track-bl, gl-track-b, gl-track-br);
+}
+.shop-title { color: rgb(255, 255, 255); font-effect: none; }
+.shop-owner { color: rgba(255, 255, 255, 205); }
 .shop-selection { border-color: rgba(255, 255, 255, 220); border-radius: 10dp; }
 
 /* ---- speech bubbles (frosted dark glass, white text; the channel only tints the rim) ---- */

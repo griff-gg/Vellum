@@ -328,9 +328,10 @@ def _glyph(kind, n):
         d.polygon([(c, c - 0.25 * n), (c + 0.22 * n, c - 0.05 * n), (c, c + 0.25 * n), (c - 0.22 * n, c - 0.05 * n)], outline=255, width=t)
         d.line((c - 0.22 * n, c - 0.05 * n, c + 0.22 * n, c - 0.05 * n), fill=255, width=t)
     elif kind == 'zulie':
-        d.line([(c - 0.17 * n, c - 0.2 * n), (c + 0.17 * n, c - 0.2 * n), (c - 0.17 * n, c + 0.2 * n), (c + 0.17 * n, c + 0.2 * n)],
-               fill=255, width=wd, joint='curve')
-        d.line((c, c - 0.29 * n, c, c + 0.29 * n), fill=255, width=max(wd - 1, 2))
+        zw = int(wd * 1.25)
+        d.line([(c - 0.24 * n, c - 0.26 * n), (c + 0.24 * n, c - 0.26 * n), (c - 0.24 * n, c + 0.26 * n), (c + 0.24 * n, c + 0.26 * n)],
+               fill=255, width=zw, joint='curve')
+        d.line((c, c - 0.35 * n, c, c + 0.35 * n), fill=255, width=wd)
     elif kind == 'letter-h':
         d.line((c - 0.16 * n, c - 0.23 * n, c - 0.16 * n, c + 0.23 * n), fill=255, width=wd)
         d.line((c + 0.16 * n, c - 0.23 * n, c + 0.16 * n, c + 0.23 * n), fill=255, width=wd)
