@@ -165,7 +165,7 @@ def scoped(css, ids):
 # STRIP_HEADERS: body id -> (strip selector, bar width dp, tab count for the sliding pill or 0 for a static pill).
 TAB_W = 76
 TABSET_HEADERS = {'game-clan': 2, 'game-friend-list': 2, 'game-mail': 2, 'game-personal-store': 2}
-STRIP_HEADERS = {'storage': ('#storage-tabs', 230, 4), 'npc-shop': ('#shop-tabs', 240, 0), 'skills': ('#skills-tabs', 200, 0)}
+STRIP_HEADERS = {'storage': ('#storage-tabs', 230, 4), 'npc-shop': ('#shop-tabs', 240, 0), 'skills': ('#skills-tabs', 340, 0)}
 IN_CONTENT_SLIDERS = {'game-avatar-store': 2}   # sliding pill in a strip that stays below the title
 
 
@@ -178,7 +178,7 @@ def tabs_css():
     track = 'tiled-box(gl-track-tl, gl-track-t, gl-track-tr, gl-track-l, gl-track-c, gl-track-r, gl-track-bl, gl-track-b, gl-track-br)'
     tab = ('flex: none; height: 16dp; line-height: 16dp; margin: 0dp; padding: 0dp 2dp; box-sizing: border-box; text-align: center; '
            'font-size: 11dp; font-weight: 700; font-effect: none; decorator: none; background-color: transparent; border-width: 0dp; '
-           'border-radius: 8dp; color: rgba(255, 255, 255, 170); position: relative; '
+           'white-space: nowrap; border-radius: 8dp; color: rgba(255, 255, 255, 170); position: relative; '
            'transition: background-color 0.16s cubic-out, color 0.16s cubic-out;')
     for i, n in TABSET_HEADERS.items():
         w = n * TAB_W
@@ -196,7 +196,8 @@ def tabs_css():
     for i, (sel, w, n) in STRIP_HEADERS.items():
         out.append('body#%s #window-content { position: static; overflow: visible; max-height: none; }' % i)
         out.append('body#%s %s { position: absolute; top: 21dp; right: 54dp; width: %ddp; height: 22dp; margin: 0dp; }' % (i, sel, w))
-        out.append('body#%s %s > .ui-tab, body#%s %s > .ui-tab:hover { height: 16dp; line-height: 16dp; font-size: 11dp; }' % (i, sel, i, sel))
+        out.append('body#%s %s > .ui-tab, body#%s %s > .ui-tab:hover { height: 16dp; line-height: 16dp; font-size: 11dp; padding: 0dp 2dp; '
+                   'white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }' % (i, sel, i, sel))
         if n:
             out.append('body#%s %s > .gl-slider { height: 16dp; width: %.1f%%; left: 0.5%%; }' % (i, sel, 100.0 / n - 1))
             for k in range(1, n):
@@ -218,6 +219,10 @@ def window_css():
     open(os.path.join(OUT, 'styles', 'glass_menu.css'), 'w', encoding='utf-8', newline='').write(menu_css())
     comp = os.path.join(OUT, 'styles', 'components.css')
     shared = open(os.path.join(ROOT, 'tools', 'glass_shared.css'), encoding='utf-8').read()
+    for m in re.finditer(r'([^{}]+)\{([^{}]*)\}', re.sub(r'/\*.*?\*/', '', css, flags=re.S)):   # glass scrollbars for EVERY page
+        keep = ['body ' + x.strip()[2:] for x in m.group(1).split(',') if x.strip().startswith('W scrollbar')]
+        if keep:
+            shared += ',\n'.join(keep) + ' {' + m.group(2) + '}\n'
     stock = open(comp, encoding='utf-8').read()   # read BEFORE opening for write (open(..., 'w') truncates the file)
     assert len(stock) > 1000, 'components.css is empty'
     open(comp, 'w', encoding='utf-8', newline='').write(stock + shared)
