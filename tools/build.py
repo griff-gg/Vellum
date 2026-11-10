@@ -386,6 +386,64 @@ def restyle_glassui():
     print('glass icon sprites repainted:', total)
 
 
+# Stock gauge sprites (imgs/gauge.dds, loose) repainted as glass: the bars above characters (yours and your group's), monster and
+# NPC plates all draw from these. Red = dark, blue = light, everything else mid grey; they stay translucent (about 50 percent).
+GAUGE_BG = ('gauge-bg-sm-md', 'gauge-bg-sm-sm', 'gauge-bg-sm-lg-yellow', 'gauge-bg-lg-lg-red', 'gauge-bg-lg-lg-blue')
+GAUGE_FILL = {'gauge-red-sm-md': DARK, 'gauge-red-sm-sm': DARK, 'gauge-lg-lg-red': DARK,
+              'gauge-blue-sm-sm': LIGHT, 'gauge-lg-lg-blue': LIGHT,
+              'gauge-pink-sm-md': MID, 'gauge-green-sm-md': MID, 'gauge-purple-sm-sm': MID, 'gauge-sm-lg-yellow': MID}
+
+
+def restyle_gauge():
+    from PIL import ImageChops
+    css_path = os.path.join(OUT, 'styles', 'spritesheet_gauge.css')
+    css = open(css_path, encoding='utf-8').read()
+    path = os.path.join(OUT, 'imgs', 'gauge.dds')
+    original = Image.open(path).convert('RGBA')
+    sheet, mask, n = original.copy(), Image.new('L', original.size, 0), 0
+    for m in re.finditer(r'^\s+([\w-]+):\s*(\d+)px\s+(\d+)px\s+(\d+)px\s+(\d+)px;', css, re.M):
+        name, x, y, w, h = m.group(1), *(int(m.group(i)) for i in (2, 3, 4, 5))
+        small = h <= 6
+        if name in GAUGE_BG:
+            spec = dict(margin=0, radius=1 if small else (4 if h <= 12 else 6), tint=(255, 255, 255, 45 if small else 34),
+                        rim_top=45 if small else 120, rim_mid=45 if small else 110, rim_bottom=45 if small else 190, sheen=0,
+                        shadow=0, shadow_dy=0, shadow_blur=1, inner_top=0 if small else 110)
+            panel, corner, edge = art.glass_panel(**spec)
+            icon = art.nine_slice(panel, corner, edge, w * 2, h * 2).resize((w, h), Image.LANCZOS)
+        elif name in GAUGE_FILL:
+            c = GAUGE_FILL[name]
+            flat = dict(c, rim_a=0, hl_a=0, rim_top_a=0, sheen=0) if small else c
+            icon = art.gauge_fill(w, h, 1 if small else (3 if h <= 12 else 5), flat['top'], flat['bottom'], flat['alpha'], flat['rim'],
+                                  flat['rim_a'], flat['hl_a'], 0 if small else (1 if h <= 12 else 2), flat.get('rim_top_a'), flat.get('sheen', 0)
+                                  ).resize((w, h), Image.LANCZOS)
+        else:
+            continue
+        sheet.paste(icon, (x, y))
+        mask.paste(255, (x, y, x + w, y + h))
+        n += 1
+    outside = ImageChops.subtract(ImageChops.difference(original, sheet).convert('L').point(lambda v: 255 if v else 0), mask)
+    assert outside.getbbox() is None, 'gauge repaint touched pixels outside its sprites'
+    new_name = 'gauge_%s.dds' % hashlib.sha1(sheet.tobytes()).hexdigest()[:8]
+    art.write_dds(os.path.join(OUT, 'imgs', new_name), sheet)
+    os.remove(path)
+    assert css.count('../imgs/gauge.dds') == 1
+    open(css_path, 'w', encoding='utf-8', newline='').write(css.replace('../imgs/gauge.dds', '../imgs/' + new_name))
+    print('gauge sprites repainted:', n, '->', new_name)
+
+
+def check_no_empty_sprite_blocks():
+    bad = []
+    for dirpath, _, files in os.walk(os.path.join(OUT, 'styles')):
+        for f in files:
+            if not f.endswith('.css'):
+                continue
+            text = open(os.path.join(dirpath, f), encoding='utf-8').read()
+            for m in re.finditer(r'@spritesheet\s+([\w-]+)\s*\{([^}]*)\}', text):
+                if not re.search(r'^\s*[\w-]+\s*:\s*-?\d+(?:px)?\s', m.group(2) + ' ', re.M) and 'px' not in re.sub(r'src:[^;]*;|resolution:[^;]*;', '', m.group(2)):
+                    bad.append('%s: %s' % (f, m.group(1)))
+    assert not bad, 'empty @spritesheet blocks (the game logs an error for each): ' + ', '.join(bad)
+
+
 def retarget_sprites():
     """inventory-weight and mall-points are defined inside the game's own archive sheets; drop those two definitions so the
     glass versions (defined in glass_frame.css under the same names) are the only ones."""
@@ -395,7 +453,7 @@ def retarget_sprites():
         text = open(path, encoding='utf-8').read().replace('\r\n', '\n')
         assert text.count(line) == 1, (fname, line)
         text = text.replace(line, '')
-        text = re.sub(r'@spritesheet mall_currency\s*\{\s*src:[^;]*;\s*\}\s*', '', text)
+        text = re.sub(r'@spritesheet (?:mall_currency|inventory-resources)\s*\{\s*src:[^;]*;\s*\}\s*', '', text)
         open(path, 'w', encoding='utf-8', newline='').write(text)
 
 
@@ -413,7 +471,9 @@ def build():
             shutil.copy2(src, dst)
     glass_css()
     restyle_glassui()
+    restyle_gauge()
     retarget_sprites()
+    check_no_empty_sprite_blocks()
     window_css()
     monotone_pass()
     toml = os.path.join(OUT, 'theme.toml')

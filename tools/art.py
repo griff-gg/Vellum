@@ -484,3 +484,20 @@ def write_tga(path, img):
     with open(path, 'wb') as f:
         f.write(hdr)
         f.write(Image.merge('RGBA', (b, g, r, a)).tobytes())
+
+
+def nine_slice(img, corner, edge, W, H):
+    """Stretch a 9-slice panel (as returned by glass_panel) to W x H pixels."""
+    n = img.width
+    out = Image.new('RGBA', (W, H), (0, 0, 0, 0))
+
+    def cr(x, y, w, h):
+        return img.crop((x, y, x + w, y + h))
+    c = corner
+    out.paste(cr(0, 0, c, c), (0, 0)); out.paste(cr(n - c, 0, c, c), (W - c, 0))
+    out.paste(cr(0, n - c, c, c), (0, H - c)); out.paste(cr(n - c, n - c, c, c), (W - c, H - c))
+    out.paste(cr(c, 0, edge, c).resize((W - 2 * c, c)), (c, 0)); out.paste(cr(c, n - c, edge, c).resize((W - 2 * c, c)), (c, H - c))
+    if H > 2 * c:
+        out.paste(cr(0, c, c, edge).resize((c, H - 2 * c)), (0, c)); out.paste(cr(n - c, c, c, edge).resize((c, H - 2 * c)), (W - c, c))
+        out.paste(cr(c, c, edge, edge).resize((W - 2 * c, H - 2 * c)), (c, c))
+    return out
