@@ -64,9 +64,9 @@ body#game-chat-box { background-color: rgba(26, 30, 40, 125); border: 1dp rgba(2
 #input-tab-container { font-effect: shadow(0dp 1dp rgba(0, 0, 0, 180)); }
 #game-chat-box #input-tab-container .ui-tab, #game-chat-box #input-tab-container .ui-tab:hover {
     decorator: none; background-color: transparent; border-width: 0dp; border-radius: 8dp; color: rgba(255, 255, 255, 170); font-effect: none;
-    transition: background-color 0.16s cubic-out, color 0.16s cubic-out;
+    transition: background-color 0.2s cubic-out;
 }
-#game-chat-box #input-tab-container .ui-tab:hover { color: rgb(255, 255, 255); background-color: rgba(255, 255, 255, 30); }
+#game-chat-box #input-tab-container .ui-tab:hover { color: rgb(255, 255, 255); background-color: rgba(255, 255, 255, 55); }
 #game-chat-box #input-tab-container .ui-tab.selected, #game-chat-box #input-tab-container .ui-tab:selected, #game-chat-box #input-tab-container .ui-tab.active {
     color: rgb(255, 255, 255);
     decorator: tiled-box(gl-pill-tl, gl-pill-t, gl-pill-tr, gl-pill-l, gl-pill-c, gl-pill-r, gl-pill-bl, gl-pill-b, gl-pill-br);

@@ -67,8 +67,12 @@ FILLS = (('gl-f-dark-lg', 185, 18, 5, DARK, 2), ('gl-f-light-lg', 185, 18, 5, LI
 # menu strip button id -> glyph (tools/glass_menu: generated css below)
 MENU = {'gamearena-scoreboard': 'bars', 'item-mall': 'bag', 'premium-storage': 'star', 'character': 'person',
         'game-arena': 'swords', 'group-manager-menu': 'users', 'inventory': 'box', 'skill-list': 'bolt', 'quest-list': 'list',
-        'friend-list': 'heart', 'party-finder': 'search', 'mail': 'envelope', 'clan': 'shield', 'system': 'gear', 'menu-toggle': 'menu'}
+        'friend-list': 'heart', 'party-finder': 'search', 'mail': 'envelope', 'clan': 'shield', 'system': 'gear'}
 MENU_KINDS = sorted(set(MENU.values()))
+
+
+BTN_DECO = 'tiled-box(gl-btn-tl, gl-btn-t, gl-btn-tr, gl-btn-l, gl-btn-c, gl-btn-r, gl-btn-bl, gl-btn-b, gl-btn-br)'
+BTN_DECO_H = 'tiled-box(gl-btnh-tl, gl-btnh-t, gl-btnh-tr, gl-btnh-l, gl-btnh-c, gl-btnh-r, gl-btnh-bl, gl-btnh-b, gl-btnh-br)'
 
 
 def menu_css():
@@ -84,9 +88,12 @@ def menu_css():
            '#game-menu-hud .tooltip { width: 36dp; height: 36dp; }',
            '#game-menu-hud button { width: 36dp; height: 36dp; opacity: 1; transition: transform 0.14s cubic-out; }',
            '#game-menu-hud button:hover { transform: scale(1.08); }', '#game-menu-hud button:active { transform: scale(0.92); }',
-           '#game-menu-hud #menu-toggle { width: 30dp; height: 30dp; margin-left: 67dp; }']
+           '#game-menu-hud #menu-toggle { width: 56dp; height: 24dp; margin-left: 54dp; decorator: %s, image(gl-tg-up); }' % BTN_DECO,
+           '#game-menu-hud #menu-toggle:hover, #game-menu-hud #menu-toggle:active { decorator: %s, image(gl-tg-up); }' % BTN_DECO_H,
+           '#game-menu-hud #menu-toggle.open { decorator: %s, image(gl-tg-down); }' % BTN_DECO,
+           '#game-menu-hud #menu-toggle.open:hover, #game-menu-hud #menu-toggle.open:active { decorator: %s, image(gl-tg-down); }' % BTN_DECO_H]
     for bid, kind in MENU.items():
-        art_name = 'gl-mb-%s' % kind if bid == 'menu-toggle' else 'gl-mt-%s' % kind
+        art_name = 'gl-mt-%s' % kind
         out.append('#game-menu-hud #%s { decorator: image(%s); }' % (bid, art_name))
         out.append('#game-menu-hud #%s:hover, #game-menu-hud #%s:active { decorator: image(%s-h); }' % (bid, bid, art_name))
     return chr(10).join(out) + chr(10)
@@ -112,6 +119,7 @@ def sprites():
     for kind in MENU_KINDS:                                     # menu tiles, 36dp rounded squares
         for st in ('n', 'h'):
             out.append(('gl-mt-%s%s' % (kind, '' if st == 'n' else '-h'), art.round_icon(kind, st, radius=11, size=36)))
+    out += [('gl-tg-up', art.toggle_chevron('up')), ('gl-tg-down', art.toggle_chevron('down'))]   # menu toggle chevrons
     for st in ('n', 'h'):                                       # notification bell, 36dp
         out.append(('gl-bell' + ('' if st == 'n' else '-h'), art.round_icon('bell', st, radius=18)))
     for kind in ('cb', 'rd'):

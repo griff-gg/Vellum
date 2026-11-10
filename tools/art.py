@@ -403,3 +403,24 @@ def plain_glyph(kind, alpha=0.9, size=20):
     """A bare white glyph (no button), size x size dp at 2 px per dp."""
     img = Image.new('RGBA', (size * 2, size * 2), (0, 0, 0, 0))
     return _overlay(img, lambda d, n: d.bitmap((0, 0), _glyph(kind, n), fill=255), (255, 255, 255), alpha)
+
+
+def toggle_chevron(direction):
+    """Chevron for the menu toggle pill: transparent 56 x 24 dp canvas (2 px per dp), chevron pointing 'up' or 'down'."""
+    img = Image.new('RGBA', (112, 48), (0, 0, 0, 0))
+
+    def mark(d, n):
+        # drawn on a square mask of side n; the canvas is 112 x 48 so place the chevron in the middle of a square crop
+        s_ = n * 0.14 if direction == 'up' else -n * 0.14
+        cy = n / 2
+        d.line([(n * 0.40, cy + s_ * 0.5), (n * 0.5, cy - s_ * 0.5), (n * 0.60, cy + s_ * 0.5)], fill=255, width=int(n * 0.045), joint='curve')
+    k = 8
+    w, h = img.size
+    g = Image.new('L', (w * k, w * k), 0)        # square mask so the chevron math (centred at n / 2) lands in the middle band
+    mark(ImageDraw.Draw(g), w * k)            # square mask side = width, then crop the middle band
+    g = g.crop((0, (w * k - h * k) // 2, w * k, (w * k - h * k) // 2 + h * k)).resize(img.size, Image.LANCZOS)
+    white = Image.new('RGBA', img.size, (255, 255, 255, 255))
+    white.putalpha(g.point(lambda v: int(v * 0.95)))
+    out = img.copy()
+    out.alpha_composite(white)
+    return out

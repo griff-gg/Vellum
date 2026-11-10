@@ -33,6 +33,10 @@ for name, extra in PAGES:
         links.append('<link type="text/rcss" href="../styles/%s" />' % extra)
     links.append('<link type="text/rcss" href="../styles/glass_overlays.css" />')
     assert s.count('</head>') == 1, name
+    if name == 'game/menu.html':   # the toggle flips its chevron with the open state
+        old = '<button id="menu-toggle" data-event-click="expanded = !expanded" />'
+        assert s.count(old) == 1, old
+        s = s.replace(old, '<button id="menu-toggle" data-event-click="expanded = !expanded" data-class-open="expanded" />')
     s = s.replace('</head>', NL.join(links) + NL + '</head>')
     out = os.path.join(ROOT, 'src', name)
     os.makedirs(os.path.dirname(out), exist_ok=True)
