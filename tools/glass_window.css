@@ -196,3 +196,6 @@ W tabset > tabs {
     box-sizing: border-box; height: 30dp; padding: 3dp 0dp; gap: 0dp; margin-bottom: 8dp; border-width: 0dp;
     decorator: tiled-box(gl-track-tl, gl-track-t, gl-track-tr, gl-track-l, gl-track-c, gl-track-r, gl-track-bl, gl-track-b, gl-track-br);
 }
+
+/* pills positioned by glass_strips.lua (left / width are set from the tab's real position); the strip draws no static pill */
+W .ui-tab-strip > .gl-dyn { left: 0dp; width: 0dp; }

@@ -168,7 +168,7 @@ def scoped(css, ids):
 # STRIP_HEADERS: body id -> (strip selector, bar width dp, tab count for the sliding pill or 0 for a static pill).
 TAB_W = 76
 TABSET_HEADERS = {'game-clan': 2, 'game-friend-list': 2, 'game-mail': 2, 'game-personal-store': 2}
-STRIP_HEADERS = {'storage': ('#storage-tabs', 230, 4), 'npc-shop': ('#shop-tabs', 240, 0), 'skills': ('#skills-tabs', 340, 0)}
+STRIP_HEADERS = {'storage': ('#storage-tabs', 230, 4), 'npc-shop': ('#shop-tabs', 240, -1), 'skills': ('#skills-tabs', 340, -1)}   # count -1: tabs change at runtime, glass_strips.lua slides the pill
 IN_CONTENT_SLIDERS = {'game-avatar-store': 2}   # sliding pill in a strip that stays below the title
 
 
@@ -201,7 +201,9 @@ def tabs_css():
         out.append('body#%s %s { position: absolute; top: 21dp; right: 54dp; width: %ddp; height: 22dp; margin: 0dp; }' % (i, sel, w))
         out.append('body#%s %s > .ui-tab, body#%s %s > .ui-tab:hover { height: 16dp; line-height: 16dp; font-size: 11dp; padding: 0dp 2dp; '
                    'white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }' % (i, sel, i, sel))
-        if n:
+        if n == -1:
+            out.append('body#%s %s > .gl-slider { height: 16dp; }' % (i, sel))
+        if n > 0:
             out.append('body#%s %s > .gl-slider { height: 16dp; width: %.1f%%; left: 0.5%%; }' % (i, sel, 100.0 / n - 1))
             for k in range(1, n):
                 out.append('body#%s %s > .gl-slider.at%d { left: %.1f%%; }' % (i, sel, k, k * 100.0 / n + 0.5))
