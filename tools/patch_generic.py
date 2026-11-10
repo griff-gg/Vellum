@@ -35,7 +35,11 @@ PAGES = {
     'game/world_map.html': [],
     'game/gamearena_scoreboard.html': [],
     'game/personal_vending.html': [],
-    'game/item_mall.html': [],
+    'game/item_mall.html': [   # the points badge sits in the toolbar row instead of floating at the old frame's title bar
+        ('<div id="mall-balance" class="ui-currency content-box"><img sprite="mall-points" /><b id="mall-points">0</b><span>PTS</span></div>', ''),
+        ('<div class="mall-segments mall-layout ui-tab-strip">',
+         '<div id="mall-balance" class="ui-currency content-box"><img sprite="mall-points" /><b id="mall-points">0</b><span>PTS</span></div>'
+         '<div class="mall-segments mall-layout ui-tab-strip">')],
     'common/message_box.html': [],
     'external/character_create.html': [],
     'external/tos.html': [],

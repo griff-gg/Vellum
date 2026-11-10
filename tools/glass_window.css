@@ -199,3 +199,32 @@ W tabset > tabs {
 
 /* data-bound pills: hidden markers (span.gl-ix) say which tab is selected; generated rules in glass_tabs.css place the pill */
 W .gl-ix { display: none; }
+
+/* ---- item mall toolbar: Recommended / A-Z and grid / list are small segmented controls ---- */
+body#item-mall #mall-toolbar .mall-segments {
+    position: relative; display: flex; width: auto; height: 28dp; padding: 2dp; gap: 2dp; margin: 0dp; box-sizing: border-box; border-width: 0dp;
+    decorator: tiled-box(gl-track-tl, gl-track-t, gl-track-tr, gl-track-l, gl-track-c, gl-track-r, gl-track-bl, gl-track-b, gl-track-br);
+}
+body#item-mall #mall-toolbar .mall-segments .ui-tab,
+body#item-mall #mall-toolbar .mall-segments .ui-tab:hover,
+body#item-mall #mall-toolbar .mall-segments .ui-tab:active {
+    flex: none; width: auto; min-width: 32dp; height: 24dp; line-height: 24dp; padding: 0dp 10dp; margin: 0dp; box-sizing: border-box;
+    border-width: 0dp; border-radius: 12dp; decorator: none; background-color: transparent; transform: none;
+    color: rgba(255, 255, 255, 170); font-size: 12dp; font-effect: none; transition: background-color 0.16s cubic-out;
+}
+body#item-mall #mall-toolbar .mall-segments .ui-tab:hover { background-color: rgba(255, 255, 255, 30); color: rgb(255, 255, 255); }
+body#item-mall #mall-toolbar .mall-segments .ui-tab.active {
+    color: rgb(255, 255, 255); background-color: transparent;
+    decorator: tiled-box(gl-pill-tl, gl-pill-t, gl-pill-tr, gl-pill-l, gl-pill-c, gl-pill-r, gl-pill-bl, gl-pill-b, gl-pill-br);
+}
+body#item-mall #mall-toolbar .mall-layout { margin-left: 8dp; }
+body#item-mall #mall-toolbar .mall-layout .ui-tab,
+body#item-mall #mall-toolbar .mall-layout .ui-tab:hover,
+body#item-mall #mall-toolbar .mall-layout .ui-tab:active {
+    display: flex; align-items: center; justify-content: center; width: 32dp; min-width: 32dp; flex: 0 0 32dp; padding: 0dp;
+}
+body#item-mall #mall-toolbar .mall-layout .ui-tab i { background-color: rgba(255, 255, 255, 150); }
+body#item-mall #mall-toolbar .mall-layout .ui-tab.active i, body#item-mall #mall-toolbar .mall-layout .ui-tab:hover i { background-color: rgb(255, 255, 255); }
+body#item-mall #mall-balance {
+    position: static; top: auto; right: auto; margin-left: auto; flex-shrink: 0; height: 28dp; box-sizing: border-box; padding: 2dp 10dp;
+}

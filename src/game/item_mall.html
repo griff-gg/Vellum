@@ -31,7 +31,7 @@ end)
 </script>
 </head>
 <body open-sound="3" close-sound="4" id="item-mall" template="window-fixed-size">
-    <div id="mall-balance" class="ui-currency content-box"><img sprite="mall-points" /><b id="mall-points">0</b><span>PTS</span></div>
+    
     <div id="mall-shell">
         <div id="mall-toolbar">
             <input id="mall-search" type="text" maxlength="100" placeholder="Search the mall..." />
@@ -39,7 +39,7 @@ end)
                 <button id="mall-sort-featured" class="ui-tab active" data-sort="featured" mall-tooltip="Seasonal first, then curated order">Recommended</button>
                 <button id="mall-sort-name" class="ui-tab" data-sort="name" mall-tooltip="Sort Alphabetically">A–Z</button>
             </div>
-            <div class="mall-segments mall-layout ui-tab-strip">
+            <div id="mall-balance" class="ui-currency content-box"><img sprite="mall-points" /><b id="mall-points">0</b><span>PTS</span></div><div class="mall-segments mall-layout ui-tab-strip">
                 <button id="mall-grid" class="ui-tab active" data-layout="grid" mall-tooltip="Grid View"><span class="mall-grid-glyph"><i/><i/><i/><i/></span></button>
                 <button id="mall-list" class="ui-tab" data-layout="list" mall-tooltip="List View"><span class="mall-list-glyph"><i/><i/><i/></span></button>
             </div>

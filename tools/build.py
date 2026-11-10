@@ -172,7 +172,7 @@ STRIP_HEADERS = {'storage': ('#storage-tabs', 230, 4), 'npc-shop': ('#shop-tabs'
 IN_CONTENT_SLIDERS = {'game-avatar-store': 2}
 # Data-bound pills for tab rows whose tabs change at runtime: (body id, strip selector) -> most tabs.
 # The strip gets class nN (tab count), the selected tab leaves a hidden span.gl-ix[gl-i=K] before the pill.
-DB_STRIPS = {('skills', '#skills-tabs'): 8, ('skills', '#skills-pages'): 8, ('npc-shop', '#shop-tabs'): 4, ('npc-shop', '#shop-subtabs'): 4}   # sliding pill in a strip that stays below the title
+DB_STRIPS = {}   # 2026-11-10: data-bound pills for skills / shop broke in game; those rows use the static pill for now   # sliding pill in a strip that stays below the title
 
 
 def pill_decorator():
