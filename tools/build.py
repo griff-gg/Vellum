@@ -251,6 +251,38 @@ def glass_css():
     print('art', fn, im.size)
 
 
+# Monotone theme: every yellow / gold highlight in the stock sheets and pages becomes white (selection tints become white tints).
+# Only colour VALUES are touched; class names such as ".yellow" and tags such as fc_gold keep their names.
+MONO_LITERALS = (('#ffe178', '#ffffff'), ('#ffd66b', '#ffffff'), ('#f39c12', '#ffffff'),
+                 ('rgb(255, 247, 191)', 'rgb(255, 255, 255)'), ('rgb(255, 215, 57)', 'rgb(255, 255, 255)'),
+                 ('rgb(255, 217, 0)', 'rgb(255, 255, 255)'), ('rgb(255,217,0)', 'rgb(255, 255, 255)'),
+                 ('rgb(255, 255, 0)', 'rgb(255, 255, 255)'), ('rgb(246, 200, 118)', 'rgb(255, 255, 255)'),
+                 ('rgba(255, 225, 120, 35)', 'rgba(255, 255, 255, 55)'), ('rgba(220, 180, 20, 80)', 'rgba(255, 255, 255, 55)'),
+                 ('rgba(255, 255, 0, 120)', 'rgba(255, 255, 255, 70)'))
+YELLOW_VALUE = re.compile(r'((?:color|border(?:-[a-z]+)*|background(?:-color)?|outline(?:-color)?)\s*:[^;{}"\'<>]*?)(?<![\w.-])yellow(?![\w-])')
+
+
+def monotone_pass():
+    changed = 0
+    for dirpath, _, files in os.walk(OUT):
+        for f in files:
+            if not f.endswith(('.css', '.html')):
+                continue
+            path = os.path.join(dirpath, f)
+            text = open(path, encoding='utf-8').read()
+            new = text
+            for old, rep in MONO_LITERALS:
+                new = new.replace(old, rep)
+            prev = None
+            while prev != new:                      # several yellows can share one declaration
+                prev = new
+                new = YELLOW_VALUE.sub(lambda m: m.group(1) + 'rgb(255, 255, 255)', new)
+            if new != text:
+                open(path, 'w', encoding='utf-8', newline='').write(new)
+                changed += 1
+    print('monotone pass: %d files changed' % changed)
+
+
 def build():
     import runpy
     for script in ('patch_inventory.py', 'patch_windows.py', 'patch_zone.py', 'patch_generic.py', 'patch_tabs.py', 'patch_overlays.py'):   # regenerate src/game pages from upstream
@@ -265,6 +297,7 @@ def build():
             shutil.copy2(src, dst)
     glass_css()
     window_css()
+    monotone_pass()
     toml = os.path.join(OUT, 'theme.toml')
     text = re.sub(r'^name = ".*"', 'name = "%s"' % NAME, open(toml, encoding='utf-8').read(), flags=re.M)
     open(toml, 'w', encoding='utf-8', newline='').write(text)
