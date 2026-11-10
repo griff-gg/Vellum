@@ -32,15 +32,13 @@ body gauge.horizontal-sm-md.pink, body progress.horizontal-sm-md.pink {
     fill-image: gl-f-mid-md;
 }
 
-/* small: party and group hp / mp bars */
-body gauge.horizontal-sm-sm.red, body progress.horizontal-sm-sm.red {
-    decorator: tiled-box(gl-gbg-sm-tl, gl-gbg-sm-t, gl-gbg-sm-tr, gl-gbg-sm-l, gl-gbg-sm-c, gl-gbg-sm-r, gl-gbg-sm-bl, gl-gbg-sm-b, gl-gbg-sm-br);
-    fill-image: gl-f-dark-sm;
-}
+/* small: party and group hp / mp bars (about 4dp tall: flat art, no highlight lines) */
+body gauge.horizontal-sm-sm.red, body progress.horizontal-sm-sm.red,
 body gauge.horizontal-sm-sm.blue, body progress.horizontal-sm-sm.blue {
-    decorator: tiled-box(gl-gbg-xs-tl, gl-gbg-xs-t, gl-gbg-xs-tr, gl-gbg-xs-l, gl-gbg-xs-c, gl-gbg-xs-r, gl-gbg-xs-bl, gl-gbg-xs-b, gl-gbg-xs-br);
-    fill-image: gl-f-light-sm;
+    decorator: tiled-box(gl-gbg-flat-tl, gl-gbg-flat-t, gl-gbg-flat-tr, gl-gbg-flat-l, gl-gbg-flat-c, gl-gbg-flat-r, gl-gbg-flat-bl, gl-gbg-flat-b, gl-gbg-flat-br);
 }
+body gauge.horizontal-sm-sm.red, body progress.horizontal-sm-sm.red { fill-image: gl-f-dark-xs; }
+body gauge.horizontal-sm-sm.blue, body progress.horizontal-sm-sm.blue { fill-image: gl-f-light-xs; }
 
 /* text on gauges: the same soft shadow the windows use (no stock black outline) */
 body gauge > span, body progress > span { font-effect: shadow(0dp 1dp rgba(0, 0, 0, 175)); font-weight: 700; }

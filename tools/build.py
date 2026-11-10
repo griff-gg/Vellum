@@ -50,7 +50,8 @@ def _groove(radius):   # recessed frosted groove: dark inner edge on top, bright
 HUDWIN = dict(WINDOW, margin=6, shadow_dy=2, shadow_blur=2.5)   # the window glass with a tighter shadow that fits 6dp
 SLOT = dict(margin=0, radius=8, tint=(255, 255, 255, 26), rim_top=150, rim_mid=110, rim_bottom=170, sheen=0,
             shadow=0, shadow_dy=0, shadow_blur=1, inner_top=100)
-PIECES += (('gl-slot', SLOT), ('gl-gbg-lg', _groove(6)), ('gl-gbg-md', _groove(4)), ('gl-gbg-sm', _groove(2)), ('gl-gbg-xs', _groove(1)),
+PIECES += (('gl-gbg-flat', dict(margin=0, radius=2, tint=(255, 255, 255, 45), rim_top=45, rim_mid=45, rim_bottom=45, sheen=0,
+                                 shadow=0, shadow_dy=0, shadow_blur=1)), ('gl-slot', SLOT), ('gl-gbg-lg', _groove(6)), ('gl-gbg-md', _groove(4)), ('gl-gbg-sm', _groove(2)), ('gl-gbg-xs', _groove(1)),
            ('gl-slt', dict(SB_TRACK, radius=4)), ('gl-hud', HUDWIN))
 
 # Monotone gauge fills: HP dark, MP light, everything else mid-grey.
@@ -58,7 +59,10 @@ DARK = dict(top=(86, 92, 110), bottom=(26, 29, 40), alpha=135, rim=(255, 255, 25
 LIGHT = dict(top=(255, 255, 255), bottom=(206, 216, 232), alpha=120, rim=(255, 255, 255), rim_a=70, hl_a=255, rim_top_a=255, sheen=90)
 MID = dict(top=(214, 222, 234), bottom=(150, 159, 172), alpha=120, rim=(255, 255, 255), rim_a=60, hl_a=180, rim_top_a=235, sheen=80)
 # (name, w, h, radius, colours, inset dp): the large HUD bars sit inside their groove as slim glass pills
-FILLS = (('gl-f-dark-lg', 185, 18, 5, DARK, 2), ('gl-f-light-lg', 185, 18, 5, LIGHT, 2),
+DARK_FLAT = dict(DARK, rim_a=0, hl_a=0, rim_top_a=0, sheen=0)
+LIGHT_FLAT = dict(LIGHT, rim_a=0, hl_a=0, rim_top_a=0, sheen=0)
+FILLS = (('gl-f-dark-xs', 99, 4, 2, DARK_FLAT, 0), ('gl-f-light-xs', 99, 4, 2, LIGHT_FLAT, 0),
+         ('gl-f-dark-lg', 185, 18, 5, DARK, 2), ('gl-f-light-lg', 185, 18, 5, LIGHT, 2),
          ('gl-f-mid-exp', 185, 7, 3, MID, 1),
          ('gl-f-dark-md', 99, 11, 4, DARK, 1), ('gl-f-mid-md', 99, 11, 4, MID, 1),
          ('gl-f-dark-sm', 99, 7, 2, DARK, 0.5), ('gl-f-light-sm', 99, 7, 2, LIGHT, 0.5))
@@ -203,7 +207,7 @@ def tabs_css():
     for i, (sel, w, n) in STRIP_HEADERS.items():
         out.append('body#%s #window-content { position: static; overflow: visible; max-height: none; }' % i)
         out.append('body#%s %s { position: absolute; top: 22dp; right: 54dp; width: %ddp; height: 22dp; margin: 0dp; }' % (i, sel, w))
-        out.append('body#%s %s > .ui-tab, body#%s %s > .ui-tab:hover { height: 16dp; line-height: 16dp; font-size: 11dp; padding: 0dp 2dp; '
+        out.append('body#%s %s > .ui-tab, body#%s %s > .ui-tab:hover { height: 16dp; line-height: 16dp; font-size: 11dp; min-height: 16dp; padding: 0dp 2dp; '
                    'white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }' % (i, sel, i, sel))
         if n == -1:
             out.append('body#%s %s > .gl-slider { height: 16dp; }' % (i, sel))
@@ -301,7 +305,7 @@ def glass_css():
 
 # Monotone theme: every yellow / gold highlight in the stock sheets and pages becomes white (selection tints become white tints).
 # Only colour VALUES are touched; class names such as ".yellow" and tags such as fc_gold keep their names.
-MONO_LITERALS = (('#ffe178', '#ffffff'), ('#ffd66b', '#ffffff'), ('#f39c12', '#ffffff'),
+MONO_LITERALS = (('rgb(255, 112, 102)', 'rgb(255, 255, 255)'), ('#ffe178', '#ffffff'), ('#ffd66b', '#ffffff'), ('#f39c12', '#ffffff'),
                  ('rgb(255, 247, 191)', 'rgb(255, 255, 255)'), ('rgb(255, 215, 57)', 'rgb(255, 255, 255)'),
                  ('rgb(255, 217, 0)', 'rgb(255, 255, 255)'), ('rgb(255,217,0)', 'rgb(255, 255, 255)'),
                  ('rgb(255, 255, 0)', 'rgb(255, 255, 255)'), ('rgb(246, 200, 118)', 'rgb(255, 255, 255)'),
@@ -333,7 +337,7 @@ def monotone_pass():
 
 # Stock icon sprites that live in LOOSE picture files (imgs/controls.tga, imgs/glassui_0.dds) are repainted in place as minimal
 # glass. The repainted sheets get a content-hash file name: the game caches textures by path, so a reload would keep the old art.
-ICON_KIND = {'plus-button': 'plus', 'minus-button': 'minus', 'close-button': 'x', 'button-trash': 'trash', 'button-zulie': 'coin',
+ICON_KIND = {'plus-button': 'plus', 'minus-button': 'minus', 'close-button': 'x', 'button-trash': 'trash', 'button-zulie': 'zulie',
              'rw-close': 'x', 'rw-trash': 'trash', 'rw-window-title-close': 'x',
              'sq-up': 'tri-up', 'sq-down': 'tri-down', 'sq-left': 'tri-left', 'sq-right': 'tri-right', 'sq-plus': 'plus', 'sq-minus': 'minus'}
 SQ_STATE = {'n': 'n', 'h': 'h', 'p': 'p', 'a': 'p', 'd': 'd'}
@@ -363,8 +367,8 @@ def restyle_glassui():
         for m in matches:
             kind = ICON_KIND[m.group(1)]
             x, y, w, h = (int(m.group(i)) for i in (3, 4, 5, 6))
-            radius = w // 2 if kind == 'coin' else (6 if w <= 20 else 7)
-            icon = art.round_icon(kind, SQ_STATE[m.group(2)], radius=radius, size=min(w, h) if kind == 'coin' else w).resize((w, h), Image.LANCZOS)
+            radius = w // 2 if kind in ('coin', 'zulie') else (6 if w <= 20 else 7)
+            icon = art.round_icon(kind, SQ_STATE[m.group(2)], radius=radius, size=min(w, h) if kind in ('coin', 'zulie') else w).resize((w, h), Image.LANCZOS)
             sheet.paste(icon, (x, y))
             mask.paste(255, (x, y, x + w, y + h))
             total += 1
@@ -390,7 +394,9 @@ def retarget_sprites():
         path = os.path.join(OUT, 'styles', fname)
         text = open(path, encoding='utf-8').read().replace('\r\n', '\n')
         assert text.count(line) == 1, (fname, line)
-        open(path, 'w', encoding='utf-8', newline='').write(text.replace(line, ''))
+        text = text.replace(line, '')
+        text = re.sub(r'@spritesheet mall_currency\s*\{\s*src:[^;]*;\s*\}\s*', '', text)
+        open(path, 'w', encoding='utf-8', newline='').write(text)
 
 
 def build():
