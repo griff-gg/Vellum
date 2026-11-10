@@ -302,12 +302,13 @@ def _glyph(kind, n):
     return g
 
 
-def round_icon(kind, state, radius=10):
+def round_icon(kind, state, radius=10, size=None):
     """Round glass toolbar button with a white glyph. state: 'n' normal, 'h' hover, 'd' disabled (2 px per dp)."""
     tint, rt, rm, rb, sh, ga = {'n': (42, 225, 110, 70, 50, 0.92), 'h': (78, 245, 150, 95, 80, 1.0),
                                 'd': (16, 90, 50, 30, 14, 0.38)}[state]
     img, _, _ = glass_panel(margin=0, radius=radius, tint=(255, 255, 255, tint), rim_top=rt, rim_mid=rm,
-                            rim_bottom=rb, sheen=sh, shadow=0, shadow_dy=0, shadow_blur=1, edge=0)
+                            rim_bottom=rb, sheen=sh, shadow=0, shadow_dy=0, shadow_blur=1,
+                            edge=0 if size is None else size - 2 * radius)
     k = 8
     g = _glyph(kind, img.width * k).resize(img.size, Image.LANCZOS)
     white = Image.new('RGBA', img.size, (255, 255, 255, 255))

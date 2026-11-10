@@ -1,7 +1,7 @@
 
 /* ===== Glass: global overrides appended to components.css (every page that links it gets them) ===== */
-.ui-tooltip-surface { background: rgba(26, 30, 40, 238); border: 1dp rgba(255, 255, 255, 85); border-radius: 12dp; color: rgb(255, 255, 255); }
-body .tooltip .tooltiptext { background-color: rgba(26, 30, 40, 238); border: 1dp rgba(255, 255, 255, 85); border-radius: 10dp; color: rgb(255, 255, 255); }
+.ui-tooltip-surface { background: rgba(26, 30, 40, 150); border: 1dp rgba(255, 255, 255, 70); border-radius: 12dp; color: rgb(255, 255, 255); }
+body .tooltip .tooltiptext { background-color: rgba(26, 30, 40, 165); border: 1dp rgba(255, 255, 255, 70); border-radius: 10dp; color: rgb(255, 255, 255); }
 .ui-section-title { color: rgb(255, 255, 255); }
 .ui-detail-value { color: rgba(255, 255, 255, 205); }
 .ui-banner-text { font-effect: shadow(0dp 1dp rgba(0, 0, 0, 170)); }

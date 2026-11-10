@@ -72,13 +72,23 @@ MENU_KINDS = sorted(set(MENU.values()))
 
 
 def menu_css():
-    out = ['/* Glass menu strip (written by tools/build.py) */',
-           '#game-menu-hud button { width: 30dp; height: 30dp; opacity: 1; transition: transform 0.14s cubic-out; }',
+    """Control Center style menu: one glass card, 3 columns of 36dp rounded tiles, expands and collapses as before."""
+    hud = 'tiled-box(gl-hud-tl, gl-hud-t, gl-hud-tr, gl-hud-l, gl-hud-c, gl-hud-r, gl-hud-bl, gl-hud-b, gl-hud-br)'
+    out = ['/* Glass menu (written by tools/build.py) */',
+           '#game-menu-hud { width: 164dp; }',
+           '#game-menu-hud #button-container { width: 164dp; margin-left: 0dp; box-sizing: border-box; display: flex; flex-wrap: wrap; '
+           'gap: 8dp; padding: 0dp 20dp; text-align: left; justify-content: flex-start; align-content: flex-start; }',
+           '#game-menu-hud #button-container.expanded, #game-menu-hud #button-container.expanded-premium, '
+           '#game-menu-hud #button-container.expanded-scoreboard, #game-menu-hud #button-container.expanded-premium-scoreboard '
+           '{ height: 252dp; padding: 20dp; decorator: %s; }' % hud,
+           '#game-menu-hud .tooltip { width: 36dp; height: 36dp; }',
+           '#game-menu-hud button { width: 36dp; height: 36dp; opacity: 1; transition: transform 0.14s cubic-out; }',
            '#game-menu-hud button:hover { transform: scale(1.08); }', '#game-menu-hud button:active { transform: scale(0.92); }',
-           '#game-menu-hud #menu-toggle { margin-left: 16dp; }']
+           '#game-menu-hud #menu-toggle { width: 30dp; height: 30dp; margin-left: 67dp; }']
     for bid, kind in MENU.items():
-        out.append('#game-menu-hud #%s { decorator: image(gl-mb-%s); }' % (bid, kind))
-        out.append('#game-menu-hud #%s:hover, #game-menu-hud #%s:active { decorator: image(gl-mb-%s-h); }' % (bid, bid, kind))
+        art_name = 'gl-mb-%s' % kind if bid == 'menu-toggle' else 'gl-mt-%s' % kind
+        out.append('#game-menu-hud #%s { decorator: image(%s); }' % (bid, art_name))
+        out.append('#game-menu-hud #%s:hover, #game-menu-hud #%s:active { decorator: image(%s-h); }' % (bid, bid, art_name))
     return chr(10).join(out) + chr(10)
 
 
@@ -99,6 +109,9 @@ def sprites():
     for kind in MENU_KINDS:                                     # the right-hand menu strip, 30dp
         for st in ('n', 'h'):
             out.append(('gl-mb-%s%s' % (kind, '' if st == 'n' else '-h'), art.round_icon(kind, st, radius=15)))
+    for kind in MENU_KINDS:                                     # menu tiles, 36dp rounded squares
+        for st in ('n', 'h'):
+            out.append(('gl-mt-%s%s' % (kind, '' if st == 'n' else '-h'), art.round_icon(kind, st, radius=11, size=36)))
     for st in ('n', 'h'):                                       # notification bell, 36dp
         out.append(('gl-bell' + ('' if st == 'n' else '-h'), art.round_icon('bell', st, radius=18)))
     for kind in ('cb', 'rd'):
@@ -197,7 +210,9 @@ def window_css():
     open(os.path.join(OUT, 'styles', 'glass_menu.css'), 'w', encoding='utf-8', newline='').write(menu_css())
     comp = os.path.join(OUT, 'styles', 'components.css')
     shared = open(os.path.join(ROOT, 'tools', 'glass_shared.css'), encoding='utf-8').read()
-    open(comp, 'w', encoding='utf-8', newline='').write(open(comp, encoding='utf-8').read() + shared)
+    stock = open(comp, encoding='utf-8').read()   # read BEFORE opening for write (open(..., 'w') truncates the file)
+    assert len(stock) > 1000, 'components.css is empty'
+    open(comp, 'w', encoding='utf-8', newline='').write(stock + shared)
     # the art + rules load with the window templates; they only match the ids above (and the gauges/HUD pages)
     for tname in sorted(os.listdir(os.path.join(OUT, 'templates'))):
         if not tname.endswith('.html'):
@@ -209,8 +224,8 @@ def window_css():
             continue
         t = t.replace(old, old + chr(10) + '        <link type="text/rcss" href="../styles/glass_frame.css" />' + chr(10) +
                       '        <link type="text/rcss" href="../styles/glass_gauge.css" />' + chr(10) +
-                      '        <link type="text/rcss" href="../styles/glass_tabs.css" />' + chr(10) +
-                      '        <link type="text/rcss" href="../styles/glass_window.css" />')
+                      '        <link type="text/rcss" href="../styles/glass_window.css" />' + chr(10) +
+                      '        <link type="text/rcss" href="../styles/glass_tabs.css" />')
         open(tpl, 'w', encoding='utf-8', newline='').write(t)
     for name in ('glass_gauge.css', 'glass_hud.css', 'glass_options.css', 'glass_minimap.css', 'glass_overlays.css'):
         shutil.copy2(os.path.join(ROOT, 'tools', name), os.path.join(OUT, 'styles', name))
