@@ -36,12 +36,6 @@
     <style>
 @keyframes gl-open-a { 0% { opacity: 0; transform: translateY(5dp) scale(0.985); } 100% { opacity: 1; transform: translateY(0dp) scale(1); } }
 @keyframes gl-open-b { 0% { opacity: 0; transform: translateY(5dp) scale(0.985); } 100% { opacity: 1; transform: translateY(0dp) scale(1); } }
-
-#gl-strips-tick { position: absolute; left: 0dp; top: 0dp; width: 1dp; height: 1dp; opacity: 0; pointer-events: none; }
-#gl-strips-tick.tk-a { animation: 0.5s linear 1 gl-st-a; }
-#gl-strips-tick.tk-b { animation: 0.5s linear 1 gl-st-b; }
-@keyframes gl-st-a { from { opacity: 0; } to { opacity: 0.02; } }
-@keyframes gl-st-b { from { opacity: 0; } to { opacity: 0.02; } }
 </style>
 <script>
 -- Glass: each time the window opens it fades and settles in, then a streak of light crosses the glass.
@@ -59,81 +53,10 @@ pcall(function()
     opened()
 end)
 </script>
-<script>
-local STRIPS = {'skills-tabs', 'skills-pages'}
--- Glass tab rows whose tabs change at runtime (skills, shop): the pill glides to the clicked or selected tab.
--- It reads where the tab really is (offset_left / offset_width), so it works for any number of tabs.
--- The first line of this script (added per page) lists the strip ids; each strip has a pill div with id gl-dyn- followed by the strip id.
-pcall(function()
-    local doc = document
-    local function by_id(i) return doc:GetElementById(i) end
-
-    local function put(pill, tab)
-        local w = tab.offset_width
-        if not (w and w > 1) then return end
-        pill.style.left = tostring(tab.offset_left) .. 'px'
-        pill.style.width = tostring(w) .. 'px'
-    end
-    local function selected(c)
-        local ok, sel = pcall(function() return c:IsClassSet('selected') or c:IsClassSet('active') end)
-        return ok and sel
-    end
-    local function sync()
-        for _, id in ipairs(STRIPS) do
-            local strip, pill = by_id(id), by_id('gl-dyn-' .. id)
-            if strip and pill then
-                local c = strip.first_child
-                while c do
-                    if c ~= pill and selected(c) then
-                        put(pill, c)
-                        break
-                    end
-                    c = c.next_sibling
-                end
-            end
-        end
-    end
-
-    -- a click moves the pill straight away (the page marks the tab selected a moment later)
-    doc:AddEventListener('click', function(ev)
-        pcall(function()
-            local t = ev.target_element
-            while t and t ~= doc do
-                local p = t.parent_node
-                if p then
-                    for _, id in ipairs(STRIPS) do
-                        if p.id == id then
-                            local pill = by_id('gl-dyn-' .. id)
-                            if pill then put(pill, t) end
-                            return
-                        end
-                    end
-                end
-                t = p
-            end
-        end)
-    end)
-
-    -- a hidden element's short animation wakes us up twice a second: tabs appear and change with your class
-    local tick = by_id('gl-strips-tick')
-    local flip = false
-    local function step()
-        pcall(sync)
-        if tick then
-            flip = not flip
-            tick:SetClass('tk-a', flip)
-            tick:SetClass('tk-b', not flip)
-        end
-    end
-    if tick then tick:AddEventListener('animationend', function() pcall(step) end) end
-    doc:AddEventListener('show', function() pcall(sync) end)
-    pcall(step)
-end)
-</script>
 </head>
     <body open-sound="3" close-sound="4" template="window-fixed-size" id="skills">
         <div id="skills-model" data-model="skills">
-            <div id="skills-tabs" class="skills-tab-row ui-tab-strip gl-header-bar gl-slide" data-class-skills-single="tabs.size == 1" data-class-skills-pair="tabs.size == 2"><div class="gl-slider gl-dyn" id="gl-dyn-skills-tabs"></div><div id="gl-strips-tick"></div>
+            <div id="skills-tabs" class="skills-tab-row ui-tab-strip gl-header-bar gl-slide" data-class-n2="tabs.size == 2" data-class-n3="tabs.size == 3" data-class-n4="tabs.size == 4" data-class-n5="tabs.size == 5" data-class-n6="tabs.size == 6" data-class-n7="tabs.size == 7" data-class-n8="tabs.size == 8" data-class-skills-single="tabs.size == 1" data-class-skills-pair="tabs.size == 2"><span class="gl-ix" data-for="tab, i : tabs" data-if="selected_tab == tab.id" data-attr-gl-i="i"></span><div class="gl-slider"></div>
                 <label class="skills-tab-label" data-for="tab : tabs" data-if="tabs.size == 1">{{tab.label}}</label>
                 <tab class="ui-tab" data-for="tab : tabs" data-if="tabs.size > 1" data-attr-id="'skills-tab-' + tab.id" data-attr-onclick="'tab:' + tab.id" data-class-selected="selected_tab == tab.id" data-attrif-disabled="!tab.enabled">{{tab.label}}</tab>
             </div>
@@ -143,7 +66,7 @@ end)
                 <span class="ui-detail-value" data-if="selected_tab == 5"><str string-id="46">Clan Points</str>: {{clan_points}}</span>
             </div>
             <div class="skills-job-description ui-status" data-if="selected_tab == 1">{{job_description}}</div>
-            <div id="skills-pages" class="skills-tab-row ui-tab-strip gl-slide" data-class-skills-single="pages.size == 1" data-class-skills-pair="pages.size == 2"><div class="gl-slider gl-dyn" id="gl-dyn-skills-pages"></div>
+            <div id="skills-pages" class="skills-tab-row ui-tab-strip gl-slide" data-class-n2="pages.size == 2" data-class-n3="pages.size == 3" data-class-n4="pages.size == 4" data-class-n5="pages.size == 5" data-class-n6="pages.size == 6" data-class-n7="pages.size == 7" data-class-n8="pages.size == 8" data-class-skills-single="pages.size == 1" data-class-skills-pair="pages.size == 2"><span class="gl-ix" data-for="page, i : pages" data-if="selected_page == page.id" data-attr-gl-i="i"></span><div class="gl-slider"></div>
                 <label class="skills-tab-label" data-for="page : pages" data-if="pages.size == 1">{{page.label}}</label>
                 <tab class="ui-tab" data-for="page : pages" data-if="pages.size > 1" data-attr-id="'skills-page-' + page.id" data-attr-onclick="'page:' + page.id" data-class-selected="selected_page == page.id" data-attrif-disabled="!page.enabled">{{page.label}}</tab>
             </div>

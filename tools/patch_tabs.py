@@ -14,25 +14,26 @@ NL = chr(10)
 TABSETS = {   # page -> number of tabs
     'game/clan.html': 2, 'game/friend_list.html': 2, 'game/mail.html': 2, 'game/personal_store.html': 2,
 }
-TICK = '<div id="gl-strips-tick"></div>'
 STRIPS = {
     'game/storage.html': [('<div class="ui-tab-strip" id="storage-tabs">',
                            '<div class="ui-tab-strip gl-header-bar gl-slide" id="storage-tabs">',
                            '<div class="gl-slider" data-class-at1="tabs[1].active" data-class-at2="tabs[2].active" data-class-at3="tabs[3].active"></div>')],
     'game/avatar_store.html': [('<div class="ui-tab-strip">', '<div class="ui-tab-strip gl-slide">',
                                 '<div class="gl-slider" data-class-at1="buy"></div>')],
-    'game/npc_shop.html': [('<div class="ui-tab-strip" id="shop-tabs"', '<div class="ui-tab-strip gl-header-bar gl-slide" id="shop-tabs"',
-                            '<div class="gl-slider gl-dyn" id="gl-dyn-shop-tabs"></div>' + TICK),
-                           ('<div class="ui-tab-strip" id="shop-subtabs"', '<div class="ui-tab-strip gl-slide" id="shop-subtabs"',
-                            '<div class="gl-slider gl-dyn" id="gl-dyn-shop-subtabs"></div>')],
+    'game/npc_shop.html': [('<div class="ui-tab-strip" id="shop-tabs"',
+                            '<div class="ui-tab-strip gl-header-bar gl-slide" id="shop-tabs" data-class-n2="tabs[0].visible + tabs[1].visible + tabs[2].visible + tabs[3].visible == 2" data-class-n3="tabs[0].visible + tabs[1].visible + tabs[2].visible + tabs[3].visible == 3" data-class-n4="tabs[0].visible + tabs[1].visible + tabs[2].visible + tabs[3].visible == 4"',
+                            '<span class="gl-ix" gl-i="0" data-if="tabs[0].active"></span><span class="gl-ix" gl-i="0" data-if="tabs[1].active &amp;&amp; tabs[0].visible + 0 == 0"></span><span class="gl-ix" gl-i="1" data-if="tabs[1].active &amp;&amp; tabs[0].visible + 0 == 1"></span><span class="gl-ix" gl-i="0" data-if="tabs[2].active &amp;&amp; tabs[0].visible + tabs[1].visible == 0"></span><span class="gl-ix" gl-i="1" data-if="tabs[2].active &amp;&amp; tabs[0].visible + tabs[1].visible == 1"></span><span class="gl-ix" gl-i="2" data-if="tabs[2].active &amp;&amp; tabs[0].visible + tabs[1].visible == 2"></span><span class="gl-ix" gl-i="0" data-if="tabs[3].active &amp;&amp; tabs[0].visible + tabs[1].visible + tabs[2].visible == 0"></span><span class="gl-ix" gl-i="1" data-if="tabs[3].active &amp;&amp; tabs[0].visible + tabs[1].visible + tabs[2].visible == 1"></span><span class="gl-ix" gl-i="2" data-if="tabs[3].active &amp;&amp; tabs[0].visible + tabs[1].visible + tabs[2].visible == 2"></span><span class="gl-ix" gl-i="3" data-if="tabs[3].active &amp;&amp; tabs[0].visible + tabs[1].visible + tabs[2].visible == 3"></span><div class="gl-slider"></div>'),
+                           ('<div class="ui-tab-strip" id="shop-subtabs"',
+                            '<div class="ui-tab-strip gl-slide" id="shop-subtabs" data-class-n2="subtabs[0].visible + subtabs[1].visible + subtabs[2].visible + subtabs[3].visible == 2" data-class-n3="subtabs[0].visible + subtabs[1].visible + subtabs[2].visible + subtabs[3].visible == 3" data-class-n4="subtabs[0].visible + subtabs[1].visible + subtabs[2].visible + subtabs[3].visible == 4"',
+                            '<span class="gl-ix" gl-i="0" data-if="subtabs[0].active"></span><span class="gl-ix" gl-i="0" data-if="subtabs[1].active &amp;&amp; subtabs[0].visible + 0 == 0"></span><span class="gl-ix" gl-i="1" data-if="subtabs[1].active &amp;&amp; subtabs[0].visible + 0 == 1"></span><span class="gl-ix" gl-i="0" data-if="subtabs[2].active &amp;&amp; subtabs[0].visible + subtabs[1].visible == 0"></span><span class="gl-ix" gl-i="1" data-if="subtabs[2].active &amp;&amp; subtabs[0].visible + subtabs[1].visible == 1"></span><span class="gl-ix" gl-i="2" data-if="subtabs[2].active &amp;&amp; subtabs[0].visible + subtabs[1].visible == 2"></span><span class="gl-ix" gl-i="0" data-if="subtabs[3].active &amp;&amp; subtabs[0].visible + subtabs[1].visible + subtabs[2].visible == 0"></span><span class="gl-ix" gl-i="1" data-if="subtabs[3].active &amp;&amp; subtabs[0].visible + subtabs[1].visible + subtabs[2].visible == 1"></span><span class="gl-ix" gl-i="2" data-if="subtabs[3].active &amp;&amp; subtabs[0].visible + subtabs[1].visible + subtabs[2].visible == 2"></span><span class="gl-ix" gl-i="3" data-if="subtabs[3].active &amp;&amp; subtabs[0].visible + subtabs[1].visible + subtabs[2].visible == 3"></span><div class="gl-slider"></div>')],
     'game/skills.html': [('<div id="skills-tabs" class="skills-tab-row ui-tab-strip"',
-                          '<div id="skills-tabs" class="skills-tab-row ui-tab-strip gl-header-bar gl-slide"',
-                          '<div class="gl-slider gl-dyn" id="gl-dyn-skills-tabs"></div>' + TICK),
+                          '<div id="skills-tabs" class="skills-tab-row ui-tab-strip gl-header-bar gl-slide" data-class-n2="tabs.size == 2" data-class-n3="tabs.size == 3" data-class-n4="tabs.size == 4" data-class-n5="tabs.size == 5" data-class-n6="tabs.size == 6" data-class-n7="tabs.size == 7" data-class-n8="tabs.size == 8"',
+                          '<span class="gl-ix" data-for="tab, i : tabs" data-if="selected_tab == tab.id" data-attr-gl-i="i"></span><div class="gl-slider"></div>'),
                          ('<div id="skills-pages" class="skills-tab-row ui-tab-strip"',
-                          '<div id="skills-pages" class="skills-tab-row ui-tab-strip gl-slide"',
-                          '<div class="gl-slider gl-dyn" id="gl-dyn-skills-pages"></div>')],
+                          '<div id="skills-pages" class="skills-tab-row ui-tab-strip gl-slide" data-class-n2="pages.size == 2" data-class-n3="pages.size == 3" data-class-n4="pages.size == 4" data-class-n5="pages.size == 5" data-class-n6="pages.size == 6" data-class-n7="pages.size == 7" data-class-n8="pages.size == 8"',
+                          '<span class="gl-ix" data-for="page, i : pages" data-if="selected_page == page.id" data-attr-gl-i="i"></span><div class="gl-slider"></div>')],
 }
-DYN = {'game/npc_shop.html': ['shop-tabs', 'shop-subtabs'], 'game/skills.html': ['skills-tabs', 'skills-pages']}
+DYN = {}   # no scripted pills any more: every pill is data-bound
 OTHER = {     # nested tabset (Sell / Buy): only needs the ui-tab class so the shared glass tab rules apply
     'game/personal_store_management.html': [('<tab class="default">Sell</tab>', '<tab class="ui-tab default">Sell</tab>'),
                                             ('<tab class="default">Buy</tab>', '<tab class="ui-tab default">Buy</tab>')],
@@ -40,8 +41,7 @@ OTHER = {     # nested tabset (Sell / Buy): only needs the ui-tab class so the s
 
 lua = open(os.path.join(ROOT, 'tools', 'glass_open.lua'), encoding='utf-8').read()
 tabs_lua = open(os.path.join(ROOT, 'tools', 'glass_tabs_header.lua'), encoding='utf-8').read()
-strips_lua = open(os.path.join(ROOT, 'tools', 'glass_strips.lua'), encoding='utf-8').read()
-for text in (lua, tabs_lua, strips_lua):
+for text in (lua, tabs_lua):
     assert '<' not in text and '&' not in text   # the page is XML
 KEYFRAMES = (NL + '@keyframes gl-open-a { 0% { opacity: 0; transform: translateY(5dp) scale(0.985); } 100% { opacity: 1; transform: translateY(0dp) scale(1); } }' +
              NL + '@keyframes gl-open-b { 0% { opacity: 0; transform: translateY(5dp) scale(0.985); } 100% { opacity: 1; transform: translateY(0dp) scale(1); } }' + NL)

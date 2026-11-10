@@ -169,7 +169,10 @@ def scoped(css, ids):
 TAB_W = 76
 TABSET_HEADERS = {'game-clan': 2, 'game-friend-list': 2, 'game-mail': 2, 'game-personal-store': 2}
 STRIP_HEADERS = {'storage': ('#storage-tabs', 230, 4), 'npc-shop': ('#shop-tabs', 240, -1), 'skills': ('#skills-tabs', 340, -1)}   # count -1: tabs change at runtime, glass_strips.lua slides the pill
-IN_CONTENT_SLIDERS = {'game-avatar-store': 2}   # sliding pill in a strip that stays below the title
+IN_CONTENT_SLIDERS = {'game-avatar-store': 2}
+# Data-bound pills for tab rows whose tabs change at runtime: (body id, strip selector) -> most tabs.
+# The strip gets class nN (tab count), the selected tab leaves a hidden span.gl-ix[gl-i=K] before the pill.
+DB_STRIPS = {('skills', '#skills-tabs'): 8, ('skills', '#skills-pages'): 8, ('npc-shop', '#shop-tabs'): 4, ('npc-shop', '#shop-subtabs'): 4}   # sliding pill in a strip that stays below the title
 
 
 def pill_decorator():
@@ -211,6 +214,12 @@ def tabs_css():
         out.append('body#%s .ui-tab-strip.gl-slide > .gl-slider { width: %.1f%%; left: 0.5%%; }' % (i, 100.0 / n - 1))
         for k in range(1, n):
             out.append('body#%s .ui-tab-strip.gl-slide > .gl-slider.at%d { left: %.1f%%; }' % (i, k, k * 100.0 / n + 0.5))
+    for (i, sel), top in DB_STRIPS.items():
+        out.append('body#%s %s > .gl-slider { width: 0dp; left: 0.5%%; }' % (i, sel))
+        for n in range(2, top + 1):
+            out.append('body#%s %s.n%d > .gl-slider { width: %.2f%%; }' % (i, sel, n, 100.0 / n - 1))
+            for k in range(1, n):
+                out.append('body#%s %s.n%d > .gl-ix[gl-i="%d"] ~ .gl-slider { left: %.2f%%; }' % (i, sel, n, k, k * 100.0 / n + 0.5))
     return chr(10).join(out) + chr(10)
 
 
