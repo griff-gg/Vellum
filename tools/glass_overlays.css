@@ -61,11 +61,12 @@ body#common-modal-overlay { background: rgba(12, 16, 24, 150); }
 #target-name { font-effect: shadow(0dp 1dp rgba(0, 0, 0, 180)); }
 
 /* ---- chat box: ONE frosted glass card around messages, system messages and input; layout untouched ---- */
-body#game-chat-box { background-color: rgba(26, 30, 40, 125); border: 1dp rgba(255, 255, 255, 70); border-radius: 16dp; }
+/* the glass reaches 14dp further left (margin and padding cancel out, so the text stays put) and the scrollbars sit inside it */
+body#game-chat-box { background-color: rgba(26, 30, 40, 125); border: 1dp rgba(255, 255, 255, 70); border-radius: 16dp; margin-left: -11dp; padding-left: 14dp; }
 #virtual-messages, #virtual-system { decorator: none; background-color: transparent; font-effect: shadow(0dp 1dp rgba(0, 0, 0, 180)); }
 #chat-separator { background-color: rgba(255, 255, 255, 45); }
 #input-container { decorator: none; background-color: transparent; border-top: 1dp rgba(255, 255, 255, 45); }
-#input-tab-container { font-effect: shadow(0dp 1dp rgba(0, 0, 0, 180)); }
+#input-tab-container { font-effect: shadow(0dp 1dp rgba(0, 0, 0, 180)); border-width: 0dp; }
 #game-chat-box #input-tab-container .ui-tab, #game-chat-box #input-tab-container .ui-tab:hover {
     decorator: none; background-color: transparent; border-width: 0dp; border-radius: 8dp; color: rgba(255, 255, 255, 170); font-effect: none;
     transition: background-color 0.2s cubic-out;

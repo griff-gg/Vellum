@@ -305,7 +305,8 @@ def glass_css():
 
 # Monotone theme: every yellow / gold highlight in the stock sheets and pages becomes white (selection tints become white tints).
 # Only colour VALUES are touched; class names such as ".yellow" and tags such as fc_gold keep their names.
-MONO_LITERALS = (('rgb(255, 112, 102)', 'rgb(255, 255, 255)'), ('#ffe178', '#ffffff'), ('#ffd66b', '#ffffff'), ('#f39c12', '#ffffff'),
+MONO_LITERALS = (('rgb(120, 75, 69)', 'rgba(255, 255, 255, 60)'), ('rgb(120,75,69)', 'rgba(255, 255, 255, 60)'),
+                 ('rgb(190, 64, 53)', 'rgb(255, 255, 255)'), ('rgb(255, 112, 102)', 'rgb(255, 255, 255)'), ('#ffe178', '#ffffff'), ('#ffd66b', '#ffffff'), ('#f39c12', '#ffffff'),
                  ('rgb(255, 247, 191)', 'rgb(255, 255, 255)'), ('rgb(255, 215, 57)', 'rgb(255, 255, 255)'),
                  ('rgb(255, 217, 0)', 'rgb(255, 255, 255)'), ('rgb(255,217,0)', 'rgb(255, 255, 255)'),
                  ('rgb(255, 255, 0)', 'rgb(255, 255, 255)'), ('rgb(246, 200, 118)', 'rgb(255, 255, 255)'),
