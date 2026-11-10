@@ -331,6 +331,15 @@ def _glyph(kind, n):
         d.line([(c - 0.17 * n, c - 0.2 * n), (c + 0.17 * n, c - 0.2 * n), (c - 0.17 * n, c + 0.2 * n), (c + 0.17 * n, c + 0.2 * n)],
                fill=255, width=wd, joint='curve')
         d.line((c, c - 0.29 * n, c, c + 0.29 * n), fill=255, width=max(wd - 1, 2))
+    elif kind == 'letter-h':
+        d.line((c - 0.16 * n, c - 0.23 * n, c - 0.16 * n, c + 0.23 * n), fill=255, width=wd)
+        d.line((c + 0.16 * n, c - 0.23 * n, c + 0.16 * n, c + 0.23 * n), fill=255, width=wd)
+        d.line((c - 0.16 * n, c, c + 0.16 * n, c), fill=255, width=wd)
+    elif kind == 'letter-v':
+        d.line([(c - 0.2 * n, c - 0.22 * n), (c, c + 0.23 * n), (c + 0.2 * n, c - 0.22 * n)], fill=255, width=wd, joint='curve')
+    elif kind == 'letter-p':
+        d.line((c - 0.14 * n, c - 0.24 * n, c - 0.14 * n, c + 0.26 * n), fill=255, width=wd)
+        d.rounded_rectangle((c - 0.14 * n, c - 0.24 * n, c + 0.16 * n, c + 0.06 * n), radius=int(n * 0.12), outline=255, width=wd)
     elif kind == 'menu':
         for dy in (-0.14, 0, 0.14):
             d.line((c - 0.2 * n, c + dy * n, c + 0.2 * n, c + dy * n), fill=255, width=wd)
