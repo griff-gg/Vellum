@@ -433,7 +433,7 @@ def restyle_gauge():
 
 # Currency icons (currencyicon-0..15) come from the game archive; the stock sheet is replaced by a loose glass sheet.
 # CURRENCY_GLYPH maps a currency index to a glyph once known; until then each icon shows its index number (diagnostic build).
-CURRENCY_GLYPH = {1: 'zulie', 2: 'letter-h', 3: 'letter-v', 4: 'letter-p', 5: 'star'}
+CURRENCY_GLYPH = {0: 'zulie', 1: 'letter-h', 2: 'letter-v', 5: 'letter-p'}   # confirmed from the user's screenshot of the numbered build
 DEFAULT_CURRENCY_GLYPH = 'coin'
 
 
