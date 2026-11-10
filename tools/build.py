@@ -109,6 +109,7 @@ def sprites():
     for kind in ('options', 'leave', 'kick', 'entrust'):
         for st in ('n', 'h', 'd'):
             out.append(('gl-i-%s%s' % (kind, '' if st == 'n' else '-' + st), art.round_icon(kind, st)))
+    out += [('inventory-weight', art.round_icon('weight', 'n', radius=11)), ('mall-points', art.round_icon('gem', 'n', radius=11))]
     for kind in ('globe', 'bars', 'gift', 'bag', 'minus', 'plus'):       # minimap buttons, 22dp
         for st in ('n', 'h'):
             out.append(('gl-m-%s%s' % (kind, '' if st == 'n' else '-h'), art.round_icon(kind, st, radius=11)))
@@ -330,39 +331,66 @@ def monotone_pass():
     print('monotone pass: %d files changed' % changed)
 
 
-# The stock square arrow / plus / minus buttons (sq-*, plus-button, minus-button) live in one picture, glassui_0.dds.
-# They are repainted in place as minimal glass squares, so every window that uses them changes with no page edits.
-SQ_GLYPH = {'up': 'tri-up', 'down': 'tri-down', 'left': 'tri-left', 'right': 'tri-right', 'plus': 'plus', 'minus': 'minus'}
+# Stock icon sprites that live in LOOSE picture files (imgs/controls.tga, imgs/glassui_0.dds) are repainted in place as minimal
+# glass. The repainted sheets get a content-hash file name: the game caches textures by path, so a reload would keep the old art.
+ICON_KIND = {'plus-button': 'plus', 'minus-button': 'minus', 'close-button': 'x', 'button-trash': 'trash', 'button-zulie': 'coin',
+             'rw-close': 'x', 'rw-trash': 'trash', 'rw-window-title-close': 'x',
+             'sq-up': 'tri-up', 'sq-down': 'tri-down', 'sq-left': 'tri-left', 'sq-right': 'tri-right', 'sq-plus': 'plus', 'sq-minus': 'minus'}
 SQ_STATE = {'n': 'n', 'h': 'h', 'p': 'p', 'a': 'p', 'd': 'd'}
+SPRITE_LINE = re.compile(r'^\s+([\w-]+)-([nhpad]):\s*(\d+)px\s+(\d+)px\s+(\d+)px\s+(\d+)px;')
 
 
 def restyle_glassui():
-    """Repaint each sq-* / plus-button / minus-button sprite inside the picture file its own spritesheet block points to."""
+    """Repaint each listed sprite inside the picture file its own spritesheet block points to; verify nothing else changed."""
+    from PIL import ImageChops
+    css_path = os.path.join(OUT, 'styles', 'spritesheet_glassui.css')
     css = open(os.path.join(UP, 'styles', 'spritesheet_glassui.css'), encoding='utf-8').read()
-    pat = re.compile(r'^\s+((?:sq-(up|down|left|right|plus|minus))|(plus|minus)-button)-([nhpad]):\s*(\d+)px\s+(\d+)px\s+(\d+)px\s+(\d+)px;')
     cur, jobs = None, {}
     for line in css.splitlines():
         m = re.match(r'\s*src:\s*([^;]+);', line)
         if m:
             cur = m.group(1).strip()
             continue
-        m = pat.match(line)
-        if m and cur and cur.startswith('../imgs/'):
+        m = SPRITE_LINE.match(line)
+        if m and cur and cur.startswith('../imgs/') and m.group(1) in ICON_KIND:
             jobs.setdefault(cur, []).append(m)
-    total = 0
+    total, new_css = 0, open(css_path, encoding='utf-8').read()
     for src, matches in jobs.items():
         path = os.path.normpath(os.path.join(OUT, 'styles', src))
-        sheet = Image.open(path).convert('RGBA')
+        original = Image.open(path).convert('RGBA')
+        sheet = original.copy()
+        mask = Image.new('L', sheet.size, 0)
         for m in matches:
-            kind = m.group(2) or m.group(3)
-            x, y, w, h = (int(m.group(i)) for i in (5, 6, 7, 8))
-            radius = 6 if w <= 20 else 7
-            icon = art.round_icon(SQ_GLYPH[kind], SQ_STATE[m.group(4)], radius=radius, size=w).resize((w, h), Image.LANCZOS)
+            kind = ICON_KIND[m.group(1)]
+            x, y, w, h = (int(m.group(i)) for i in (3, 4, 5, 6))
+            radius = w // 2 if kind == 'coin' else (6 if w <= 20 else 7)
+            icon = art.round_icon(kind, SQ_STATE[m.group(2)], radius=radius, size=min(w, h) if kind == 'coin' else w).resize((w, h), Image.LANCZOS)
             sheet.paste(icon, (x, y))
+            mask.paste(255, (x, y, x + w, y + h))
             total += 1
-        (art.write_tga if path.endswith('.tga') else art.write_dds)(path, sheet)
-        print('  repainted %d sprites in %s' % (len(matches), os.path.basename(path)))
-    print('glass square buttons repainted:', total)
+        outside = ImageChops.subtract(ImageChops.difference(original, sheet).convert('L').point(lambda v: 255 if v else 0), mask)
+        assert outside.getbbox() is None, 'repaint touched pixels outside its sprites in ' + src
+        base, ext = os.path.splitext(os.path.basename(path))
+        h8 = hashlib.sha1(sheet.tobytes()).hexdigest()[:8]
+        new_name = '%s_%s%s' % (base, h8, ext)
+        (art.write_tga if ext == '.tga' else art.write_dds)(os.path.join(OUT, 'imgs', new_name), sheet)
+        os.remove(path)
+        assert new_css.count(src) == 1, src
+        new_css = new_css.replace(src, '../imgs/' + new_name)
+        print('  repainted %d sprites -> %s' % (len(matches), new_name))
+    open(css_path, 'w', encoding='utf-8', newline='').write(new_css)
+    print('glass icon sprites repainted:', total)
+
+
+def retarget_sprites():
+    """inventory-weight and mall-points are defined inside the game's own archive sheets; drop those two definitions so the
+    glass versions (defined in glass_frame.css under the same names) are the only ones."""
+    for fname, line in (('spritesheet_inventory.css', '    inventory-weight: 133px 257px 21px 21px;\n'),
+                        ('spritesheet_icons.css', '    mall-points: 89px 433px 21px 21px;\n')):
+        path = os.path.join(OUT, 'styles', fname)
+        text = open(path, encoding='utf-8').read().replace('\r\n', '\n')
+        assert text.count(line) == 1, (fname, line)
+        open(path, 'w', encoding='utf-8', newline='').write(text.replace(line, ''))
 
 
 def build():
@@ -379,6 +407,7 @@ def build():
             shutil.copy2(src, dst)
     glass_css()
     restyle_glassui()
+    retarget_sprites()
     window_css()
     monotone_pass()
     toml = os.path.join(OUT, 'theme.toml')

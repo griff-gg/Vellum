@@ -306,6 +306,27 @@ def _glyph(kind, n):
         d.polygon([(c - 0.21 * n, c + 0.13 * n), (c + 0.21 * n, c + 0.13 * n), (c, c - 0.21 * n)], fill=255)
     elif kind == 'tri-down':
         d.polygon([(c - 0.21 * n, c - 0.13 * n), (c + 0.21 * n, c - 0.13 * n), (c, c + 0.21 * n)], fill=255)
+    elif kind == 'x':
+        d.line((c - 0.2 * n, c - 0.2 * n, c + 0.2 * n, c + 0.2 * n), fill=255, width=wd)
+        d.line((c - 0.2 * n, c + 0.2 * n, c + 0.2 * n, c - 0.2 * n), fill=255, width=wd)
+    elif kind == 'trash':
+        t = max(wd - 1, 2)
+        d.line((c - 0.23 * n, c - 0.13 * n, c + 0.23 * n, c - 0.13 * n), fill=255, width=t)
+        d.line([(c - 0.07 * n, c - 0.13 * n), (c - 0.07 * n, c - 0.22 * n), (c + 0.07 * n, c - 0.22 * n), (c + 0.07 * n, c - 0.13 * n)], fill=255, width=t, joint='curve')
+        d.polygon([(c - 0.17 * n, c - 0.07 * n), (c + 0.17 * n, c - 0.07 * n), (c + 0.14 * n, c + 0.26 * n), (c - 0.14 * n, c + 0.26 * n)], outline=255, width=t)
+        d.line((c - 0.05 * n, c, c - 0.045 * n, c + 0.18 * n), fill=255, width=t)
+        d.line((c + 0.05 * n, c, c + 0.045 * n, c + 0.18 * n), fill=255, width=t)
+    elif kind == 'coin':
+        d.ellipse((c - 0.23 * n, c - 0.23 * n, c + 0.23 * n, c + 0.23 * n), outline=255, width=wd)
+        r = 0.07 * n
+        d.ellipse((c - r, c - r, c + r, c + r), fill=255)
+    elif kind == 'weight':
+        d.polygon([(c - 0.2 * n, c + 0.26 * n), (c + 0.2 * n, c + 0.26 * n), (c + 0.15 * n, c - 0.02 * n), (c - 0.15 * n, c - 0.02 * n)], fill=255)
+        d.arc((c - 0.1 * n, c - 0.27 * n, c + 0.1 * n, c + 0.05 * n), 180, 360, fill=255, width=wd)
+    elif kind == 'gem':
+        t = max(wd - 1, 2)
+        d.polygon([(c, c - 0.25 * n), (c + 0.22 * n, c - 0.05 * n), (c, c + 0.25 * n), (c - 0.22 * n, c - 0.05 * n)], outline=255, width=t)
+        d.line((c - 0.22 * n, c - 0.05 * n, c + 0.22 * n, c - 0.05 * n), fill=255, width=t)
     elif kind == 'menu':
         for dy in (-0.14, 0, 0.14):
             d.line((c - 0.2 * n, c + dy * n, c + 0.2 * n, c + dy * n), fill=255, width=wd)
