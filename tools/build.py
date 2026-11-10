@@ -431,6 +431,41 @@ def restyle_gauge():
     print('gauge sprites repainted:', n, '->', new_name)
 
 
+# Currency icons (currencyicon-0..15) come from the game archive; the stock sheet is replaced by a loose glass sheet.
+# CURRENCY_GLYPH maps a currency index to a glyph once known; until then each icon shows its index number (diagnostic build).
+CURRENCY_GLYPH = {}
+
+
+def currency_sheet():
+    from PIL import ImageDraw, ImageFont
+    cell, cols = 64, 8
+    sheet = Image.new('RGBA', (cell * cols, cell * 2), (0, 0, 0, 0))
+    try:
+        font = ImageFont.truetype(r'C:\Windows\Fonts\arialbd.ttf', 26)
+    except Exception:
+        font = ImageFont.load_default()
+    lines = ['/* Glass currency icons (written by tools/build.py). */', '@spritesheet theme {', '    src: %s;', '    resolution: 2x;']
+    for i in range(16):
+        x, y = (i % cols) * cell, (i // cols) * cell
+        if i in CURRENCY_GLYPH:
+            icon = art.round_icon(CURRENCY_GLYPH[i], 'n', radius=16)
+        else:
+            icon, _, _ = art.glass_panel(margin=0, radius=16, tint=(255, 255, 255, 42), rim_top=225, rim_mid=110, rim_bottom=70, sheen=50,
+                                         shadow=0, shadow_dy=0, shadow_blur=1, edge=0)
+            d = ImageDraw.Draw(icon)
+            label = str(i)
+            box = d.textbbox((0, 0), label, font=font)
+            d.text(((cell - (box[2] - box[0])) / 2 - box[0], (cell - (box[3] - box[1])) / 2 - box[1]), label, font=font, fill=(255, 255, 255, 240))
+        sheet.paste(icon, (x, y))
+        lines.append('    currencyicon-%d: %dpx %dpx %dpx %dpx;' % (i, x, y, cell, cell))
+    lines.append('}')
+    name = 'glass_currency_%s.dds' % hashlib.sha1(sheet.tobytes()).hexdigest()[:8]
+    art.write_dds(os.path.join(OUT, 'imgs', name), sheet)
+    text = chr(10).join(lines) % ('../imgs/' + name) + chr(10)
+    open(os.path.join(OUT, 'styles', 'spritesheet_currencyicon.css'), 'w', encoding='utf-8', newline='').write(text)
+    print('currency sheet:', name, '(numbered diagnostic)' if not CURRENCY_GLYPH else '')
+
+
 def check_no_empty_sprite_blocks():
     bad = []
     for dirpath, _, files in os.walk(os.path.join(OUT, 'styles')):
@@ -472,6 +507,7 @@ def build():
     glass_css()
     restyle_glassui()
     restyle_gauge()
+    currency_sheet()
     retarget_sprites()
     check_no_empty_sprite_blocks()
     window_css()
