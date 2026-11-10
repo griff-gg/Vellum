@@ -4,7 +4,7 @@
 body#game-options #window-content { position: static; overflow: visible; max-height: none; }
 body#game-options tabset { gap: 0dp; }
 body#game-options tabset > tabs {
-    position: absolute; top: 21dp; right: 54dp; width: 490dp; height: 22dp; box-sizing: border-box;
+    position: absolute; top: 22dp; right: 54dp; width: 490dp; height: 22dp; box-sizing: border-box;
     padding: 3dp 0dp; gap: 0dp; flex-direction: row; border-width: 0dp;
     decorator: tiled-box(gl-track-tl, gl-track-t, gl-track-tr, gl-track-l, gl-track-c, gl-track-r, gl-track-bl, gl-track-b, gl-track-br);
 }
@@ -23,7 +23,7 @@ body#game-options tabset > tabs > .ui-tab.selected {
 
 /* the sliding pill: right-anchored, one step of 70dp per tab */
 body#game-options .gl-opt-slider {
-    position: absolute; top: 24dp; width: 66dp; height: 16dp; right: 476dp; pointer-events: none;
+    position: absolute; top: 25dp; width: 66dp; height: 16dp; right: 476dp; pointer-events: none;
     decorator: tiled-box(gl-pill-tl, gl-pill-t, gl-pill-tr, gl-pill-l, gl-pill-c, gl-pill-r, gl-pill-bl, gl-pill-b, gl-pill-br);
     transition: right 0.28s cubic-out;
 }

@@ -189,19 +189,19 @@ def tabs_css():
     for i, n in TABSET_HEADERS.items():
         w = n * TAB_W
         out.append('body#%s #window-content { position: static; overflow: visible; max-height: none; }' % i)
-        out.append('body#%s tabset > tabs { position: absolute; top: 21dp; right: 54dp; width: %ddp; height: 22dp; box-sizing: border-box; '
+        out.append('body#%s tabset > tabs { position: absolute; top: 22dp; right: 54dp; width: %ddp; height: 22dp; box-sizing: border-box; '
                    'padding: 3dp 0dp; gap: 0dp; margin: 0dp; flex-direction: row; border-width: 0dp; decorator: %s; }' % (i, w, track))
         out.append('body#%s tabset > tabs > .ui-tab, body#%s tabset > tabs > .ui-tab:hover { %s width: %ddp; }' % (i, i, tab, TAB_W))
         out.append('body#%s tabset > tabs > .ui-tab:hover { color: rgb(255, 255, 255); }' % i)
         out.append('body#%s tabset > tabs > .ui-tab:selected, body#%s tabset > tabs > .ui-tab.selected { decorator: none; '
                    'background-color: transparent; border-width: 0dp; color: rgb(255, 255, 255); }' % (i, i))
-        out.append('body#%s .gl-slider { position: absolute; top: 24dp; width: %ddp; height: 16dp; right: %ddp; pointer-events: none; '
+        out.append('body#%s .gl-slider { position: absolute; top: 25dp; width: %ddp; height: 16dp; right: %ddp; pointer-events: none; '
                    'decorator: %s; transition: right 0.28s cubic-out; }' % (i, TAB_W - 4, 54 + (n - 1) * TAB_W + 2, pill_decorator()))
         for k in range(1, n):
             out.append('body#%s .gl-slider.at%d { right: %ddp; }' % (i, k, 54 + (n - 1 - k) * TAB_W + 2))
     for i, (sel, w, n) in STRIP_HEADERS.items():
         out.append('body#%s #window-content { position: static; overflow: visible; max-height: none; }' % i)
-        out.append('body#%s %s { position: absolute; top: 21dp; right: 54dp; width: %ddp; height: 22dp; margin: 0dp; }' % (i, sel, w))
+        out.append('body#%s %s { position: absolute; top: 22dp; right: 54dp; width: %ddp; height: 22dp; margin: 0dp; }' % (i, sel, w))
         out.append('body#%s %s > .ui-tab, body#%s %s > .ui-tab:hover { height: 16dp; line-height: 16dp; font-size: 11dp; padding: 0dp 2dp; '
                    'white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }' % (i, sel, i, sel))
         if n == -1:
@@ -330,6 +330,41 @@ def monotone_pass():
     print('monotone pass: %d files changed' % changed)
 
 
+# The stock square arrow / plus / minus buttons (sq-*, plus-button, minus-button) live in one picture, glassui_0.dds.
+# They are repainted in place as minimal glass squares, so every window that uses them changes with no page edits.
+SQ_GLYPH = {'up': 'tri-up', 'down': 'tri-down', 'left': 'tri-left', 'right': 'tri-right', 'plus': 'plus', 'minus': 'minus'}
+SQ_STATE = {'n': 'n', 'h': 'h', 'p': 'p', 'a': 'p', 'd': 'd'}
+
+
+def restyle_glassui():
+    """Repaint each sq-* / plus-button / minus-button sprite inside the picture file its own spritesheet block points to."""
+    css = open(os.path.join(UP, 'styles', 'spritesheet_glassui.css'), encoding='utf-8').read()
+    pat = re.compile(r'^\s+((?:sq-(up|down|left|right|plus|minus))|(plus|minus)-button)-([nhpad]):\s*(\d+)px\s+(\d+)px\s+(\d+)px\s+(\d+)px;')
+    cur, jobs = None, {}
+    for line in css.splitlines():
+        m = re.match(r'\s*src:\s*([^;]+);', line)
+        if m:
+            cur = m.group(1).strip()
+            continue
+        m = pat.match(line)
+        if m and cur and cur.startswith('../imgs/'):
+            jobs.setdefault(cur, []).append(m)
+    total = 0
+    for src, matches in jobs.items():
+        path = os.path.normpath(os.path.join(OUT, 'styles', src))
+        sheet = Image.open(path).convert('RGBA')
+        for m in matches:
+            kind = m.group(2) or m.group(3)
+            x, y, w, h = (int(m.group(i)) for i in (5, 6, 7, 8))
+            radius = 6 if w <= 20 else 7
+            icon = art.round_icon(SQ_GLYPH[kind], SQ_STATE[m.group(4)], radius=radius, size=w).resize((w, h), Image.LANCZOS)
+            sheet.paste(icon, (x, y))
+            total += 1
+        (art.write_tga if path.endswith('.tga') else art.write_dds)(path, sheet)
+        print('  repainted %d sprites in %s' % (len(matches), os.path.basename(path)))
+    print('glass square buttons repainted:', total)
+
+
 def build():
     import runpy
     for script in ('patch_inventory.py', 'patch_windows.py', 'patch_zone.py', 'patch_generic.py', 'patch_tabs.py', 'patch_overlays.py'):   # regenerate src/game pages from upstream
@@ -343,6 +378,7 @@ def build():
             os.makedirs(os.path.dirname(dst), exist_ok=True)
             shutil.copy2(src, dst)
     glass_css()
+    restyle_glassui()
     window_css()
     monotone_pass()
     toml = os.path.join(OUT, 'theme.toml')

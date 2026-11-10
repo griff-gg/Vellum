@@ -23,7 +23,7 @@ W > .window-title {
 
 /* round glass close button (baked circle with the x) */
 W > button.window-title-close {
-    top: 21dp; right: 22dp; width: 26dp; height: 26dp; min-width: 26dp; padding: 0dp;
+    top: 20dp; right: 22dp; width: 26dp; height: 26dp; min-width: 26dp; padding: 0dp;
     box-sizing: border-box; background-color: transparent; border-width: 0dp;
     decorator: image(gl-close);
 }
@@ -74,7 +74,7 @@ W .ui-tab-strip > .gl-slider.at1 { left: 34.2%; }
 W .ui-tab-strip > .gl-slider.at2 { left: 67.5%; }
 
 /* tab bar in the title row (like the inventory's Avatar / Costume / PAT) */
-W > .ui-tab-strip.gl-header-tabs { position: absolute; top: 21dp; right: 54dp; width: 210dp; height: 22dp; margin: 0dp; }
+W > .ui-tab-strip.gl-header-tabs { position: absolute; top: 22dp; right: 54dp; width: 210dp; height: 22dp; margin: 0dp; }
 W > .gl-header-tabs > .ui-tab { flex: none; width: 33.333%; height: 16dp; line-height: 16dp; font-size: 11dp; }
 W > .gl-header-tabs > .ui-tab.selected, W > .gl-header-tabs > .ui-tab:selected { decorator: none; }
 W > .gl-header-tabs > .gl-slider { height: 16dp; }
@@ -191,7 +191,7 @@ body#respawn.waiting { decorator: none; }
 
 /* a strip with its own sliding pill does not also draw the static one; header bars sit in the title row */
 W .ui-tab-strip.gl-slide > .ui-tab.active, W .ui-tab-strip.gl-slide > .ui-tab.selected, W .ui-tab-strip.gl-slide > .ui-tab:selected { decorator: none; }
-W .gl-header-bar { position: absolute; top: 21dp; right: 54dp; margin: 0dp; height: 22dp; }
+W .gl-header-bar { position: absolute; top: 22dp; right: 54dp; margin: 0dp; height: 22dp; }
 W tabset > tabs {
     box-sizing: border-box; height: 30dp; padding: 3dp 0dp; gap: 0dp; margin-bottom: 8dp; border-width: 0dp;
     decorator: tiled-box(gl-track-tl, gl-track-t, gl-track-tr, gl-track-l, gl-track-c, gl-track-r, gl-track-bl, gl-track-b, gl-track-br);

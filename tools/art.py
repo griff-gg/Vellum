@@ -298,6 +298,14 @@ def _glyph(kind, n):
         bx, by = c - 0.22 * n, c + 0.22 * n
         d.line((bx, by, bx + 0.15 * n, by), fill=255, width=wd)
         d.line((bx, by, bx, by - 0.15 * n), fill=255, width=wd)
+    elif kind == 'tri-right':
+        d.polygon([(c - 0.13 * n, c - 0.21 * n), (c - 0.13 * n, c + 0.21 * n), (c + 0.21 * n, c)], fill=255)
+    elif kind == 'tri-left':
+        d.polygon([(c + 0.13 * n, c - 0.21 * n), (c + 0.13 * n, c + 0.21 * n), (c - 0.21 * n, c)], fill=255)
+    elif kind == 'tri-up':
+        d.polygon([(c - 0.21 * n, c + 0.13 * n), (c + 0.21 * n, c + 0.13 * n), (c, c - 0.21 * n)], fill=255)
+    elif kind == 'tri-down':
+        d.polygon([(c - 0.21 * n, c - 0.13 * n), (c + 0.21 * n, c - 0.13 * n), (c, c + 0.21 * n)], fill=255)
     elif kind == 'menu':
         for dy in (-0.14, 0, 0.14):
             d.line((c - 0.2 * n, c + dy * n, c + 0.2 * n, c + dy * n), fill=255, width=wd)
@@ -321,7 +329,7 @@ def _glyph(kind, n):
 def round_icon(kind, state, radius=10, size=None):
     """Round glass toolbar button with a white glyph. state: 'n' normal, 'h' hover, 'd' disabled (2 px per dp)."""
     tint, rt, rm, rb, sh, ga = {'n': (42, 225, 110, 70, 50, 0.92), 'h': (78, 245, 150, 95, 80, 1.0),
-                                'd': (16, 90, 50, 30, 14, 0.38)}[state]
+                                'd': (16, 90, 50, 30, 14, 0.38), 'p': (14, 120, 95, 150, 0, 0.8)}[state]
     img, _, _ = glass_panel(margin=0, radius=radius, tint=(255, 255, 255, tint), rim_top=rt, rim_mid=rm,
                             rim_bottom=rb, sheen=sh, shadow=0, shadow_dy=0, shadow_blur=1,
                             edge=0 if size is None else size - 2 * radius)
@@ -440,3 +448,14 @@ def toggle_chevron(direction):
     out = img.copy()
     out.alpha_composite(white)
     return out
+
+
+def write_tga(path, img):
+    """32-bit TGA, top-left origin, like Rednim's controls.tga."""
+    img = img.convert('RGBA')
+    w, h = img.size
+    hdr = struct.pack('<BBBHHBHHHHBB', 0, 0, 2, 0, 0, 0, 0, 0, w, h, 32, 0x28)
+    r, g, b, a = img.split()
+    with open(path, 'wb') as f:
+        f.write(hdr)
+        f.write(Image.merge('RGBA', (b, g, r, a)).tobytes())
