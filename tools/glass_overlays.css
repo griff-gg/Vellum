@@ -65,14 +65,17 @@ body#game-chat-box { background-color: rgba(26, 30, 40, 125); border: 1dp rgba(2
 #virtual-messages, #virtual-system { decorator: none; background-color: transparent; font-effect: shadow(0dp 1dp rgba(0, 0, 0, 180)); }
 #chat-separator { background-color: rgba(255, 255, 255, 45); }
 #input-container { decorator: none; background-color: transparent; border-top: 1dp rgba(255, 255, 255, 45); }
-#input-tab-container { font-effect: shadow(0dp 1dp rgba(0, 0, 0, 180)); border-width: 0dp; }
+/* chat tabs: a row of glass chips, vertically centred in their 34dp row, the selected one is the glass pill
+   (22dp tall, text centred in it, 10dp of air either side, 4dp between chips, 6dp in from the card's edge) */
+#input-tab-container { font-effect: shadow(0dp 1dp rgba(0, 0, 0, 180)); border-width: 0dp; align-items: center; padding: 0dp 6dp; gap: 4dp; box-sizing: border-box; }
 #game-chat-box #input-tab-container .ui-tab, #game-chat-box #input-tab-container .ui-tab:hover {
+    height: 22dp; min-height: 22dp; line-height: 22dp; margin: 0dp; padding: 0dp 10dp; box-sizing: border-box;
     decorator: none; background-color: transparent; border-width: 0dp; border-radius: 8dp; color: rgba(255, 255, 255, 170); font-effect: none;
     transition: background-color 0.2s cubic-out;
 }
-#game-chat-box #input-tab-container .ui-tab:hover { color: rgb(255, 255, 255); background-color: rgba(255, 255, 255, 55); }
+#game-chat-box #input-tab-container .ui-tab:hover { color: rgb(255, 255, 255); background-color: rgba(255, 255, 255, 40); }
 #game-chat-box #input-tab-container .ui-tab.selected, #game-chat-box #input-tab-container .ui-tab:selected, #game-chat-box #input-tab-container .ui-tab.active {
-    color: rgb(255, 255, 255);
+    color: rgb(255, 255, 255); background-color: transparent;
     decorator: tiled-box(gl-pill-tl, gl-pill-t, gl-pill-tr, gl-pill-l, gl-pill-c, gl-pill-r, gl-pill-bl, gl-pill-b, gl-pill-br);
 }
 

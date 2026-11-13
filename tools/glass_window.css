@@ -44,15 +44,16 @@ W .ui-footer { border-top: 1dp rgba(255, 255, 255, 60); }
 W .ui-status { color: rgba(255, 255, 255, 150); }
 W .ui-currency { color: rgb(255, 255, 255); }
 
-/* tab strips: recessed glass bar, selected tab is a glass pill; each tab is exactly a third */
+/* tab strips: recessed glass bar with 3dp of track showing around the pill on EVERY side (top, bottom and ends);
+   tabs share the inner width equally, a selected tab is a glass pill exactly the size of its tab */
 W .ui-tab-strip {
-    box-sizing: border-box; height: 30dp; padding: 3dp 0dp; gap: 0dp; margin-bottom: 8dp;
+    box-sizing: border-box; height: 30dp; padding: 3dp; gap: 0dp; margin-bottom: 8dp;
     background-color: transparent; border-width: 0dp;
     decorator: tiled-box(gl-track-tl, gl-track-t, gl-track-tr, gl-track-l, gl-track-c, gl-track-r, gl-track-bl, gl-track-b, gl-track-br);
 }
 W .ui-tab,
 W .ui-tab:hover {
-    flex: 1 1 0%; width: auto; min-width: 0; height: 24dp; line-height: 24dp; padding: 0dp 2dp; box-sizing: border-box;
+    flex: 1 1 0%; width: auto; min-width: 0; height: 24dp; min-height: 0dp; line-height: 24dp; margin: 0dp; padding: 0dp 4dp; box-sizing: border-box;
     text-align: center; font-size: 12dp; font-effect: none;
     decorator: none; background-color: transparent; border-width: 0dp; border-radius: 0dp;
     color: rgba(255, 255, 255, 170);
@@ -63,22 +64,24 @@ W .ui-tab.selected, W .ui-tab.active, W .ui-tab:selected {
     color: rgb(255, 255, 255); background-color: transparent; border-width: 0dp;
     decorator: tiled-box(gl-pill-tl, gl-pill-t, gl-pill-tr, gl-pill-l, gl-pill-c, gl-pill-r, gl-pill-bl, gl-pill-b, gl-pill-br);
 }
-/* the glass pill is its own element that slides under the selected tab (a script moves it: at1 / at2) */
+/* sliding pill: div.gl-rail covers exactly the tabs' area (3dp in from the track edge), the pill inside it is one
+   tab wide and moves by whole tab widths (at1, at2, ...); tabs come later in the strip so their text paints on top */
 W .ui-tab-strip { position: relative; }
 W .ui-tab { position: relative; }
-W .ui-tab-strip > .gl-slider {
-    position: absolute; top: 3dp; left: 0.9%; width: 31.5%; height: 24dp; pointer-events: none;
+W .ui-tab-strip > .gl-rail { position: absolute; top: 3dp; left: 3dp; right: 3dp; height: 24dp; pointer-events: none; }
+W .gl-rail > .gl-slider {
+    position: absolute; top: 0dp; left: 0%; width: 33.333%; height: 24dp; pointer-events: none;
     decorator: tiled-box(gl-pill-tl, gl-pill-t, gl-pill-tr, gl-pill-l, gl-pill-c, gl-pill-r, gl-pill-bl, gl-pill-b, gl-pill-br);
     transition: left 0.28s cubic-out;
 }
-W .ui-tab-strip > .gl-slider.at1 { left: 34.2%; }
-W .ui-tab-strip > .gl-slider.at2 { left: 67.5%; }
+W .gl-rail > .gl-slider.at1 { left: 33.333%; }
+W .gl-rail > .gl-slider.at2 { left: 66.667%; }
 
-/* tab bar in the title row (like the inventory's Avatar / Costume / PAT) */
+/* tab bar in the title row (like the inventory's Avatar / Costume / PAT): 22dp bar, 16dp tabs and pill */
 W > .ui-tab-strip.gl-header-tabs { position: absolute; top: 22dp; right: 54dp; width: 210dp; height: 22dp; margin: 0dp; }
-W > .gl-header-tabs > .ui-tab { flex: none; width: 33.333%; height: 16dp; line-height: 16dp; font-size: 11dp; }
+W > .gl-header-tabs > .ui-tab { flex: 1 1 0%; height: 16dp; line-height: 16dp; font-size: 11dp; }
 W > .gl-header-tabs > .ui-tab.selected, W > .gl-header-tabs > .ui-tab:selected { decorator: none; }
-W > .gl-header-tabs > .gl-slider { height: 16dp; }
+W > .gl-header-tabs > .gl-rail, W > .gl-header-tabs > .gl-rail > .gl-slider { height: 16dp; }
 
 /* glass buttons (look only: each window keeps its own size). The glass art stays the same in every state;
    the fill and text colour fade and the button presses down a little, because artwork can't cross-fade. */
@@ -192,9 +195,10 @@ body#respawn.waiting { decorator: none; }
 
 /* a strip with its own sliding pill does not also draw the static one; header bars sit in the title row */
 W .ui-tab-strip.gl-slide > .ui-tab.active, W .ui-tab-strip.gl-slide > .ui-tab.selected, W .ui-tab-strip.gl-slide > .ui-tab:selected { decorator: none; }
-W .gl-header-bar { position: absolute; top: 22dp; right: 54dp; margin: 0dp; height: 22dp; }
+W .gl-header-bar { position: absolute; top: 22dp; right: 54dp; margin: 0dp; height: 22dp; padding: 3dp; }
+W .gl-header-bar > .gl-rail, W .gl-header-bar > .gl-rail > .gl-slider { height: 16dp; }
 W tabset > tabs {
-    box-sizing: border-box; height: 30dp; padding: 3dp 0dp; gap: 0dp; margin-bottom: 8dp; border-width: 0dp;
+    box-sizing: border-box; height: 30dp; padding: 3dp; gap: 0dp; margin-bottom: 8dp; border-width: 0dp;
     decorator: tiled-box(gl-track-tl, gl-track-t, gl-track-tr, gl-track-l, gl-track-c, gl-track-r, gl-track-bl, gl-track-b, gl-track-br);
 }
 

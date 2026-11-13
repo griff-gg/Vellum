@@ -41,7 +41,7 @@ end)
     <body open-sound="5" close-sound="4" id="game-avatar-store" template="window-fixed-size">
         <div data-model="avatar-store">
         <div id="store-company" data-if="company != ''">{{ company }}</div>
-        <div class="ui-tab-strip gl-slide"><div class="gl-slider" data-class-at1="buy"></div>
+        <div class="ui-tab-strip gl-slide"><div class="gl-rail"><div class="gl-slider" data-class-at1="buy"></div></div>
             <tab id="sell-tab" class="ui-tab" onclick="sell" data-class-active="!buy">Sell</tab>
             <tab id="buy-tab" class="ui-tab" onclick="buy" data-class-active="buy">Buy</tab>
         </div>

@@ -17,9 +17,9 @@ TABSETS = {   # page -> number of tabs
 STRIPS = {
     'game/storage.html': [('<div class="ui-tab-strip" id="storage-tabs">',
                            '<div class="ui-tab-strip gl-header-bar gl-slide" id="storage-tabs">',
-                           '<div class="gl-slider" data-class-at1="tabs[1].active" data-class-at2="tabs[2].active" data-class-at3="tabs[3].active"></div>')],
+                           '<div class="gl-rail"><div class="gl-slider" data-class-at1="tabs[1].active" data-class-at2="tabs[2].active" data-class-at3="tabs[3].active"></div></div>')],
     'game/avatar_store.html': [('<div class="ui-tab-strip">', '<div class="ui-tab-strip gl-slide">',
-                                '<div class="gl-slider" data-class-at1="buy"></div>')],
+                                '<div class="gl-rail"><div class="gl-slider" data-class-at1="buy"></div></div>')],
     'game/npc_shop.html': [('<div class="ui-tab-strip" id="shop-tabs"', '<div class="ui-tab-strip gl-header-bar" id="shop-tabs"', '')],
     'game/skills.html': [('<div id="skills-tabs" class="skills-tab-row ui-tab-strip"',
                           '<div id="skills-tabs" class="skills-tab-row ui-tab-strip gl-header-bar"', '')],

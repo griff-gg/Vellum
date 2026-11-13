@@ -4,13 +4,13 @@
 body#game-options #window-content { position: static; overflow: visible; max-height: none; }
 body#game-options tabset { gap: 0dp; }
 body#game-options tabset > tabs {
-    position: absolute; top: 22dp; right: 54dp; width: 490dp; height: 22dp; box-sizing: border-box;
-    padding: 3dp 0dp; gap: 0dp; flex-direction: row; border-width: 0dp;
+    position: absolute; top: 22dp; right: 54dp; width: 496dp; height: 22dp; box-sizing: border-box;
+    padding: 3dp; gap: 0dp; margin: 0dp; flex-direction: row; border-width: 0dp;
     decorator: tiled-box(gl-track-tl, gl-track-t, gl-track-tr, gl-track-l, gl-track-c, gl-track-r, gl-track-bl, gl-track-b, gl-track-br);
 }
 body#game-options tabset > tabs > .ui-tab,
 body#game-options tabset > tabs > .ui-tab:hover {
-    flex: none; width: 70dp; height: 16dp; line-height: 16dp; margin: 0dp; padding: 0dp 2dp; box-sizing: border-box;
+    flex: none; width: 70dp; height: 16dp; min-height: 16dp; line-height: 16dp; margin: 0dp; padding: 0dp 2dp; box-sizing: border-box;
     text-align: center; font-size: 11dp; font-weight: 700; font-effect: none;
     decorator: none; background-color: transparent; border-width: 0dp; border-radius: 8dp;
     color: rgba(255, 255, 255, 170); position: relative; transition: background-color 0.16s cubic-out, color 0.16s cubic-out, border-color 0.16s cubic-out, transform 0.16s cubic-out, opacity 0.16s cubic-out;
@@ -21,18 +21,18 @@ body#game-options tabset > tabs > .ui-tab.selected {
     decorator: none; background-color: transparent; border-width: 0dp; color: rgb(255, 255, 255);
 }
 
-/* the sliding pill: right-anchored, one step of 70dp per tab */
+/* the sliding pill: exactly one 70dp tab, right-anchored, 3dp in from the bar like every pill */
 body#game-options .gl-opt-slider {
-    position: absolute; top: 25dp; width: 66dp; height: 16dp; right: 476dp; pointer-events: none;
+    position: absolute; top: 25dp; width: 70dp; height: 16dp; right: 477dp; pointer-events: none;
     decorator: tiled-box(gl-pill-tl, gl-pill-t, gl-pill-tr, gl-pill-l, gl-pill-c, gl-pill-r, gl-pill-bl, gl-pill-b, gl-pill-br);
     transition: right 0.28s cubic-out;
 }
-body#game-options .gl-opt-slider.at1 { right: 406dp; }
-body#game-options .gl-opt-slider.at2 { right: 336dp; }
-body#game-options .gl-opt-slider.at3 { right: 266dp; }
-body#game-options .gl-opt-slider.at4 { right: 196dp; }
-body#game-options .gl-opt-slider.at5 { right: 126dp; }
-body#game-options .gl-opt-slider.at6 { right: 56dp; }
+body#game-options .gl-opt-slider.at1 { right: 407dp; }
+body#game-options .gl-opt-slider.at2 { right: 337dp; }
+body#game-options .gl-opt-slider.at3 { right: 267dp; }
+body#game-options .gl-opt-slider.at4 { right: 197dp; }
+body#game-options .gl-opt-slider.at5 { right: 127dp; }
+body#game-options .gl-opt-slider.at6 { right: 57dp; }
 
 /* panels + section boxes */
 body#game-options tabset > panels { flex: 1; }

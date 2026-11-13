@@ -20,9 +20,9 @@ MARGIN = 12
 WINDOW = dict(margin=MARGIN, radius=18, tint=(24, 28, 38, 175),
               rim_top=190, rim_mid=80, rim_bottom=45, sheen=34,
               shadow=120, shadow_dy=4, shadow_blur=5)
-# Segmented bar: darker recessed glass with the same light-from-above rim.
-TRACK = dict(margin=0, radius=11, tint=(0, 0, 0, 60), rim_top=170, rim_mid=75, rim_bottom=40, sheen=22,
-             shadow=0, shadow_dy=0, shadow_blur=1)
+# Segmented bar: a quiet recessed groove (no sheen, light lower lip) so only the pill on it catches the light.
+TRACK = dict(margin=0, radius=11, tint=(0, 0, 0, 70), rim_top=55, rim_mid=40, rim_bottom=75, sheen=0,
+             shadow=0, shadow_dy=0, shadow_blur=1, inner_top=90)
 # Selected pill: brighter glass that catches the light.
 PILL = dict(margin=0, radius=8, tint=(255, 255, 255, 62), rim_top=240, rim_mid=140, rim_bottom=85, sheen=70,
             shadow=0, shadow_dy=0, shadow_blur=1)
@@ -184,41 +184,48 @@ def pill_decorator():
     return 'tiled-box(gl-pill-tl, gl-pill-t, gl-pill-tr, gl-pill-l, gl-pill-c, gl-pill-r, gl-pill-bl, gl-pill-b, gl-pill-br)'
 
 
+PILL_INSET = 3   # dp of track visible around a pill on every side (matches the tab strips' padding)
+
+
+def rail_steps(sel, n):
+    """A pill inside a .gl-rail with n equal tabs: one tab wide, at1..at(n-1) move it by whole tabs."""
+    rules = ['%s { left: 0%%; width: %.3f%%; }' % (sel, 100.0 / n)]
+    rules += ['%s.at%d { left: %.3f%%; }' % (sel, k, k * 100.0 / n) for k in range(1, n)]
+    return rules
+
+
 def tabs_css():
     out = ['/* Tabs in the title row (written by tools/build.py) */']
     track = 'tiled-box(gl-track-tl, gl-track-t, gl-track-tr, gl-track-l, gl-track-c, gl-track-r, gl-track-bl, gl-track-b, gl-track-br)'
-    tab = ('flex: none; height: 16dp; line-height: 16dp; margin: 0dp; padding: 0dp 2dp; box-sizing: border-box; text-align: center; '
+    tab = ('flex: none; height: 16dp; min-height: 16dp; line-height: 16dp; margin: 0dp; padding: 0dp 4dp; box-sizing: border-box; text-align: center; '
            'font-size: 11dp; font-weight: 700; font-effect: none; decorator: none; background-color: transparent; border-width: 0dp; '
            'white-space: nowrap; border-radius: 8dp; color: rgba(255, 255, 255, 170); position: relative; '
            'transition: background-color 0.16s cubic-out, color 0.16s cubic-out;')
     for i, n in TABSET_HEADERS.items():
         w = n * TAB_W
         out.append('body#%s #window-content { position: static; overflow: visible; max-height: none; }' % i)
+        t = (w - 2 * PILL_INSET) / n   # every tab (and the pill) is exactly this wide, 3dp of track around it
         out.append('body#%s tabset > tabs { position: absolute; top: 22dp; right: 54dp; width: %ddp; height: 22dp; box-sizing: border-box; '
-                   'padding: 3dp 0dp; gap: 0dp; margin: 0dp; flex-direction: row; border-width: 0dp; decorator: %s; }' % (i, w, track))
-        out.append('body#%s tabset > tabs > .ui-tab, body#%s tabset > tabs > .ui-tab:hover { %s width: %ddp; }' % (i, i, tab, TAB_W))
+                   'padding: %ddp; gap: 0dp; margin: 0dp; flex-direction: row; border-width: 0dp; decorator: %s; }' % (i, w, PILL_INSET, track))
+        out.append('body#%s tabset > tabs > .ui-tab, body#%s tabset > tabs > .ui-tab:hover { %s width: %gdp; }' % (i, i, tab, t))
         out.append('body#%s tabset > tabs > .ui-tab:hover { color: rgb(255, 255, 255); }' % i)
         out.append('body#%s tabset > tabs > .ui-tab:selected, body#%s tabset > tabs > .ui-tab.selected { decorator: none; '
                    'background-color: transparent; border-width: 0dp; color: rgb(255, 255, 255); }' % (i, i))
-        out.append('body#%s .gl-slider { position: absolute; top: 25dp; width: %ddp; height: 16dp; right: %ddp; pointer-events: none; '
-                   'decorator: %s; transition: right 0.28s cubic-out; }' % (i, TAB_W - 4, 54 + (n - 1) * TAB_W + 2, pill_decorator()))
+        # the pill sits outside the tab bar (the tabset owns its tabs element), so it is placed in dp from the window's right edge
+        right = lambda k: 54 + PILL_INSET + (n - 1 - k) * t
+        out.append('body#%s .gl-slider { position: absolute; top: %ddp; width: %gdp; height: 16dp; right: %gdp; pointer-events: none; '
+                   'decorator: %s; transition: right 0.28s cubic-out; }' % (i, 22 + PILL_INSET, t, right(0), pill_decorator()))
         for k in range(1, n):
-            out.append('body#%s .gl-slider.at%d { right: %ddp; }' % (i, k, 54 + (n - 1 - k) * TAB_W + 2))
+            out.append('body#%s .gl-slider.at%d { right: %gdp; }' % (i, k, right(k)))
     for i, (sel, w, n) in STRIP_HEADERS.items():
         out.append('body#%s #window-content { position: static; overflow: visible; max-height: none; }' % i)
         out.append('body#%s %s { position: absolute; top: 22dp; right: 54dp; width: %ddp; height: 22dp; margin: 0dp; }' % (i, sel, w))
-        out.append('body#%s %s > .ui-tab, body#%s %s > .ui-tab:hover { height: 16dp; line-height: 16dp; font-size: 11dp; min-height: 16dp; padding: 0dp 2dp; '
+        out.append('body#%s %s > .ui-tab, body#%s %s > .ui-tab:hover { height: 16dp; line-height: 16dp; font-size: 11dp; min-height: 16dp; padding: 0dp 4dp; '
                    'white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }' % (i, sel, i, sel))
-        if n == -1:
-            out.append('body#%s %s > .gl-slider { height: 16dp; }' % (i, sel))
         if n > 0:
-            out.append('body#%s %s > .gl-slider { height: 16dp; width: %.1f%%; left: 0.5%%; }' % (i, sel, 100.0 / n - 1))
-            for k in range(1, n):
-                out.append('body#%s %s > .gl-slider.at%d { left: %.1f%%; }' % (i, sel, k, k * 100.0 / n + 0.5))
+            out.extend(rail_steps('body#%s %s > .gl-rail > .gl-slider' % (i, sel), n))
     for i, n in IN_CONTENT_SLIDERS.items():
-        out.append('body#%s .ui-tab-strip.gl-slide > .gl-slider { width: %.1f%%; left: 0.5%%; }' % (i, 100.0 / n - 1))
-        for k in range(1, n):
-            out.append('body#%s .ui-tab-strip.gl-slide > .gl-slider.at%d { left: %.1f%%; }' % (i, k, k * 100.0 / n + 0.5))
+        out.extend(rail_steps('body#%s .ui-tab-strip.gl-slide > .gl-rail > .gl-slider' % i, n))
     for (i, sel), top in DB_STRIPS.items():
         out.append('body#%s %s > .gl-slider { width: 0dp; left: 0.5%%; }' % (i, sel))
         for n in range(2, top + 1):

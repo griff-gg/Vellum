@@ -47,7 +47,7 @@ for name in PAGES:
         strip = s[a:b]
         s = s[:a] + s[b:]
         strip = strip.replace('<div class="ui-tab-strip">',
-                              '<div class="ui-tab-strip gl-header-tabs"><div class="gl-slider" id="gl-arena-slider"></div>')
+                              '<div class="ui-tab-strip gl-header-tabs"><div class="gl-rail"><div class="gl-slider" id="gl-arena-slider"></div></div>')
         body_open = '<body open-sound="3" close-sound="4" template="window-fixed-size" id="game-arena">'
         s = swap(s, body_open, '<body open-sound="3" close-sound="4" class="window-fixed-size" id="game-arena">' + NL +
                  '<handle class="window-title" move_target="#document" id="window-title-text"></handle>' + NL +

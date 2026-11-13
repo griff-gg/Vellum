@@ -30,7 +30,7 @@ for f in files:
     if f.endswith('glass_frame.css'):
         continue
     used |= set(re.findall(r'(?<![\w-])(gl-(?:[a-z0-9]+-)*[a-z0-9]+)(?=[,)\s;])', open(f, encoding='utf-8').read()))
-skip = ('gl-open', 'gl-shown', 'gl-slider', 'gl-label', 'gl-opt-', 'gl-arena', 'gl-header', 'gl-tab', 'gl-dn', 'gl-day', 'gl-night',
+skip = ('gl-open', 'gl-shown', 'gl-slider', 'gl-rail', 'gl-label', 'gl-opt-', 'gl-arena', 'gl-header', 'gl-tab', 'gl-dn', 'gl-day', 'gl-night',
         'gl-mq', 'gl-pill-a', 'gl-pill-b', 'gl-panel', 'gl-tk', 'gl-tick', 'gl-slide', 'gl-island', 'gl-zn', 'gl-drop', 'gl-zt', 'gl-dyn', 'gl-st-', 'gl-strips', 'gl-ix')
 print('MISSING sprites:', sorted(n for n in used if n not in defined and not n.startswith(skip)))
 print('sprites defined:', len(defined))

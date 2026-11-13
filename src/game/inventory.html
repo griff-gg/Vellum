@@ -74,7 +74,7 @@
             /* segmented controls (top mode tabs + bag tabs) */
             body#inventory-window .inventory-mode-tabs,
             body#inventory-window #inventory-bag-tabs {
-                box-sizing: border-box; padding: 3dp 0dp; gap: 0dp;
+                box-sizing: border-box; padding: 3dp; gap: 0dp;
                 background-color: transparent; border-width: 0dp;
                 decorator: tiled-box(gl-track-tl, gl-track-t, gl-track-tr, gl-track-l, gl-track-c, gl-track-r, gl-track-bl, gl-track-b, gl-track-br);
             }
@@ -82,7 +82,7 @@
             body#inventory-window #inventory-bag-tabs { position: relative; height: 26dp; margin: 2dp 0dp 8dp 0dp; border-radius: 13dp; }
             body#inventory-window .inventory-tab,
             body#inventory-window .inventory-tab:hover {
-                flex: none; width: 33.333%; min-width: 0; padding: 0dp 2dp; text-align: center; box-sizing: border-box;
+                flex: 1 1 0%; width: auto; min-width: 0; margin: 0dp; padding: 0dp 4dp; text-align: center; box-sizing: border-box;
                 decorator: none; background-color: transparent;
                 border-width: 0dp; font-effect: none;
                 color: rgba(255,255,255,170);
@@ -99,19 +99,18 @@
             }
 
             /* the glass pill slides under the selected tab (tabs paint above it: position relative, later in the page).
-               Lefts/widths in dp: track padding 3dp, gap 2dp, three equal tabs. */
+               div.gl-rail = the tabs' area (3dp in from the track edge), the pill is exactly one tab of it. */
+            body#inventory-window .gl-rail { position: absolute; top: 3dp; left: 3dp; right: 3dp; pointer-events: none; }
             body#inventory-window .gl-slider {
-                position: absolute; top: 3dp;
+                position: absolute; top: 0dp; left: 0%; width: 33.333%;
                 decorator: tiled-box(gl-pill-tl, gl-pill-t, gl-pill-tr, gl-pill-l, gl-pill-c, gl-pill-r, gl-pill-bl, gl-pill-b, gl-pill-br);
                 transition: left 0.28s cubic-out;
                 pointer-events: none;
             }
-            /* thirds of the track: each pill is 31.5% wide, centred in its third */
-            body#inventory-window .gl-slider { left: 0.9%; width: 31.5%; }
-            body#inventory-window .gl-slider.at1 { left: 34.2%; }
-            body#inventory-window .gl-slider.at2 { left: 67.5%; }
-            body#inventory-window .inventory-mode-tabs > .gl-slider { height: 16dp; }
-            body#inventory-window #inventory-bag-tabs > .gl-slider { height: 20dp; }
+            body#inventory-window .gl-slider.at1 { left: 33.333%; }
+            body#inventory-window .gl-slider.at2 { left: 66.667%; }
+            body#inventory-window .inventory-mode-tabs > .gl-rail, body#inventory-window .inventory-mode-tabs .gl-slider { height: 16dp; }
+            body#inventory-window #inventory-bag-tabs > .gl-rail, body#inventory-window #inventory-bag-tabs .gl-slider { height: 20dp; }
             body#inventory-window .inventory-bag-label { color: white; text-align: center; line-height: 20dp; height: 20dp; }
 
             /* slots */
@@ -157,7 +156,7 @@ end)
     <body open-sound="3" close-sound="4" class="window-fixed-size" id="inventory-window" data-model="inventory-window">
         <handle class="window-title" move_target="#document" id="window-title-text"></handle>
         <button class="window-title-close" onclick="close"><span>&#215;</span></button>
-        <div class="inventory-mode-tabs"><div class="gl-slider" data-class-at1="mode == 0" data-class-at2="mode == 2"></div>
+        <div class="inventory-mode-tabs"><div class="gl-rail"><div class="gl-slider" data-class-at1="mode == 0" data-class-at2="mode == 2"></div></div>
             <tab id="inventory-gear" class="inventory-tab ui-tab" onclick="mode:1" data-class-selected="mode == 1"><str string-id="839">Gear</str></tab>
             <tab id="inventory-costume" class="inventory-tab ui-tab" onclick="mode:0" data-class-selected="mode == 0"><str string-id="975">Costume</str></tab>
             <tab id="inventory-vehicle" class="inventory-tab ui-tab" onclick="mode:2" data-class-selected="mode == 2"><str string-id="930">PAT</str></tab>
@@ -197,7 +196,7 @@ end)
                 <div class="equipment-cell" style="left: 202dp; top: 0dp;"><img sprite="GEN_INVSLOT27" /><item-slot id="item-139" /></div>
                 <div class="vehicle-stats"><div class="vehicle-stat"><str string-id="732" /><span>{{vehicle[0]}}</span></div><div class="vehicle-stat"><str string-id="735" /><span>{{vehicle[1]}}</span></div><div class="vehicle-stat"><str string-id="736" /><span>{{vehicle[2]}}</span></div><div class="vehicle-stat"><str string-id="1404" /><span>{{vehicle[3]}}</span></div><div class="vehicle-stat"><str string-id="738" /><span>{{vehicle[4]}}</span></div><div class="vehicle-stat"><str string-id="1407" /><span>{{vehicle[5]}}</span></div><div class="vehicle-stat"><str string-id="1408" /><span>{{vehicle[6]}}</span></div></div>
             </div>
-            <div class="ui-tab-strip" id="inventory-bag-tabs"><div class="gl-slider" data-if="mode != 2" data-class-at1="bag == 1" data-class-at2="bag == 2"></div>
+            <div class="ui-tab-strip" id="inventory-bag-tabs"><div class="gl-rail" data-if="mode != 2"><div class="gl-slider" data-class-at1="bag == 1" data-class-at2="bag == 2"></div></div>
                 <tab id="inventory-equipment" class="inventory-tab ui-tab" onclick="bag:0" data-class-selected="bag == 0" data-if="mode != 2"><str string-id="840">Equipment</str></tab>
                 <label id="inventory-vehicle-equipment" class="inventory-bag-label" data-if="mode == 2"><str string-id="840">Equipment</str></label>
                 <tab id="inventory-consume" class="inventory-tab ui-tab" onclick="bag:1" data-class-selected="bag == 1" data-if="mode != 2"><str string-id="841">Consume</str></tab>
