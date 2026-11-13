@@ -39,6 +39,10 @@ for name, extra in PAGES:
         old = '<button id="menu-toggle" data-event-click="expanded = !expanded" />'
         assert s.count(old) == 1, old
         s = s.replace(old, '<button id="menu-toggle" data-event-click="expanded = !expanded" data-class-open="expanded" />')
+    if name == 'game/speech_bubbles.html':   # stock tints the text per message for a light bubble; ours is dark glass
+        old = 'world-text="text" world-color="color"/>'
+        assert s.count(old) == 1, old
+        s = s.replace(old, 'world-text="text"/>')
     s = s.replace('</head>', NL.join(links) + NL + '</head>')
     out = os.path.join(ROOT, 'src', name)
     os.makedirs(os.path.dirname(out), exist_ok=True)
