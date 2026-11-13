@@ -7,7 +7,7 @@ import os, re, shutil, sys, tempfile, zipfile
 
 ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 BUILD = os.path.join(ROOT, 'build', 'glass')
-NAME, FOLDER, VERSION = 'Vellum', 'vellum', '0.1'
+NAME, FOLDER, VERSION = 'Vellum', 'vellum', '0.1.1'
 ZIP = os.path.join(os.path.expanduser('~'), 'Desktop', 'Vellum_ROSE_UI_theme_v%s.zip' % VERSION)
 
 README = '''VELLUM  -  a frosted glass UI theme for ROSE Online          version %(v)s
