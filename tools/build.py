@@ -23,6 +23,8 @@ MARGIN = 12
 WINDOW = dict(margin=MARGIN, radius=18, tint=(24, 28, 38, 175),
               rim_top=190, rim_mid=80, rim_bottom=45, sheen=34,
               shadow=120, shadow_dy=4, shadow_blur=5)
+if CLEAR:   # Clear: almost no tint and no shadow, only the rim catches the light
+    WINDOW = dict(WINDOW, tint=(24, 28, 38, 22), sheen=10, shadow=0)
 # Segmented bar: a quiet recessed groove (no sheen, light lower lip) so only the pill on it catches the light.
 TRACK = dict(margin=0, radius=11, tint=(0, 0, 0, 70), rim_top=55, rim_mid=40, rim_bottom=75, sheen=0,
              shadow=0, shadow_dy=0, shadow_blur=1, inner_top=90)
@@ -50,8 +52,6 @@ PIECES = (('gl-win', WINDOW), ('gl-track', TRACK), ('gl-pill', PILL),
 def _groove(radius):   # recessed frosted groove: dark inner edge on top, bright lower lip
     return dict(margin=0, radius=radius, tint=(255, 255, 255, 30), rim_top=120, rim_mid=110, rim_bottom=190, sheen=0,
                 shadow=0, shadow_dy=0, shadow_blur=1, inner_top=110)
-if CLEAR:   # Clear: almost no tint and no shadow, only the rim catches the light
-    WINDOW = dict(WINDOW, tint=(24, 28, 38, 22), sheen=10, shadow=0)
 HUDWIN = dict(WINDOW, margin=6, shadow_dy=2, shadow_blur=2.5)   # the window glass with a tighter shadow that fits 6dp
 SLOT = dict(margin=0, radius=8, tint=(255, 255, 255, 26), rim_top=150, rim_mid=110, rim_bottom=170, sheen=0,
             shadow=0, shadow_dy=0, shadow_blur=1, inner_top=100)
