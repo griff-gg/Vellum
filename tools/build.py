@@ -243,6 +243,9 @@ def tabs_css():
 def window_css():
     css = open(os.path.join(ROOT, 'tools', 'glass_window.css'), encoding='utf-8').read()
     text = '/* Shared glass window look (written by tools/build.py) */\n' + scoped(css, GLASS_WINDOWS) + '\n' + OPEN_KEYFRAMES
+    # buttons that sit outside their window (Enter World on character select) still get the glass button look
+    buttons = css[css.index('/* glass buttons'):css.index('/* text boxes')]
+    text += scoped(buttons, ('external-avatar-selection',))
     # crafting keeps its title and close button one level down (inside a data-model div), so those rules use descendant selectors
     text = text.replace('body#game-crafting > ', 'body#game-crafting ')
     open(os.path.join(OUT, 'styles', 'glass_window.css'), 'w', encoding='utf-8', newline='').write(text)
