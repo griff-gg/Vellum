@@ -545,7 +545,8 @@ def clear_pass():
             path = os.path.join(dirpath, f)
             text = open(path, encoding='utf-8').read()
             head = text.find('</head>')
-            if head < 0:
+            # in-world overlays keep their own outlines (a shadow over their flat panels z-fights in the world layer)
+            if head < 0 or re.search('ui-world-layer|world-template|nameplate', text):
                 continue
             i = text.rfind('</style>', 0, head)
             if i < 0:
