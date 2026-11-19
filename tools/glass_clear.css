@@ -1,0 +1,14 @@
+            /* ===== Clear variant (build.py --clear): appended to every page. The window art itself is near see-through
+               (WINDOW tint in build.py); here slots keep a soft dark fill, text over open glass gets a thin dark edge,
+               and the gliding tab pills breathe. ===== */
+            .window-title, .window-title span { font-effect: outline(1dp rgba(0, 0, 0, 150)); }
+            body#inventory-window .bag-row > .bag-cell,
+            body#inventory-window equipment-cell {
+                box-sizing: border-box;
+                background-color: rgba(8, 10, 16, 120);
+                border: 1dp rgba(255, 255, 255, 60);
+                border-radius: 8dp;
+            }
+            body#inventory-window .inventory-footer { font-effect: outline(1dp rgba(0, 0, 0, 150)); }
+            .gl-slider { animation: 2.5s sine-in-out infinite alternate gl-breathe; }
+            @keyframes gl-breathe { 0% { opacity: 1; } 100% { opacity: 0.55; } }

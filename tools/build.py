@@ -2,6 +2,7 @@
 
     python tools/build.py            build
     python tools/build.py --install  build and copy to the game's data/ui/themes/glass
+    add --clear for the Clear variant (near see-through windows): build/glass_clear -> themes/glass_clear
 """
 import hashlib, os, re, shutil, sys
 
@@ -11,9 +12,11 @@ sys.path.insert(0, os.path.dirname(__file__))
 import art
 
 ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
-UP, SRC, OUT = (os.path.join(ROOT, p) for p in ('upstream', 'src', os.path.join('build', 'glass')))
-GAME = r'C:\Program Files\ROSE Online\data\ui\themes\glass'
-NAME = 'Glass (test)'
+CLEAR = '--clear' in sys.argv
+FOLDER = 'glass_clear' if CLEAR else 'glass'
+UP, SRC, OUT = (os.path.join(ROOT, p) for p in ('upstream', 'src', os.path.join('build', FOLDER)))
+GAME = os.path.join(r'C:\Program Files\ROSE Online\data\ui\themes', FOLDER)
+NAME = 'Glass Clear (test)' if CLEAR else 'Glass (test)'
 
 # Window glass. MARGIN (dp) is the shadow room around the glass: windows add it to their padding.
 MARGIN = 12
@@ -47,6 +50,8 @@ PIECES = (('gl-win', WINDOW), ('gl-track', TRACK), ('gl-pill', PILL),
 def _groove(radius):   # recessed frosted groove: dark inner edge on top, bright lower lip
     return dict(margin=0, radius=radius, tint=(255, 255, 255, 30), rim_top=120, rim_mid=110, rim_bottom=190, sheen=0,
                 shadow=0, shadow_dy=0, shadow_blur=1, inner_top=110)
+if CLEAR:   # Clear: almost no tint and no shadow, only the rim catches the light
+    WINDOW = dict(WINDOW, tint=(24, 28, 38, 22), sheen=10, shadow=0)
 HUDWIN = dict(WINDOW, margin=6, shadow_dy=2, shadow_blur=2.5)   # the window glass with a tighter shadow that fits 6dp
 SLOT = dict(margin=0, radius=8, tint=(255, 255, 255, 26), rim_top=150, rim_mid=110, rim_bottom=170, sheen=0,
             shadow=0, shadow_dy=0, shadow_blur=1, inner_top=100)
@@ -521,10 +526,35 @@ def build():
     check_no_empty_sprite_blocks()
     window_css()
     monotone_pass()
+    if CLEAR:
+        clear_pass()
     toml = os.path.join(OUT, 'theme.toml')
     text = re.sub(r'^name = ".*"', 'name = "%s"' % NAME, open(toml, encoding='utf-8').read(), flags=re.M)
     open(toml, 'w', encoding='utf-8', newline='').write(text)
     print('built', OUT)
+
+
+def clear_pass():
+    """Clear variant: glass_clear.css goes at the end of each page's last style block (a new one if it has none), so it wins."""
+    css = open(os.path.join(ROOT, 'tools', 'glass_clear.css'), encoding='utf-8').read()
+    count = 0
+    for dirpath, _, files in os.walk(OUT):
+        for f in files:
+            if not f.endswith('.html'):
+                continue
+            path = os.path.join(dirpath, f)
+            text = open(path, encoding='utf-8').read()
+            head = text.find('</head>')
+            if head < 0:
+                continue
+            i = text.rfind('</style>', 0, head)
+            if i < 0:
+                i, css_block = head, '    <style>' + chr(10) + css + '        </style>' + chr(10) + '    '
+            else:
+                css_block = css
+            open(path, 'w', encoding='utf-8', newline='').write(text[:i] + css_block + text[i:])
+            count += 1
+    print('clear pass:', count, 'pages')
 
 
 def install():
